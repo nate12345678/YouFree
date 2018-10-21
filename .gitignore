@@ -61,3 +61,6 @@ fastlane/readme.md
 
 # Mac
 .DS_Store
+
+#Angular Node Libraries
+**/node_modules

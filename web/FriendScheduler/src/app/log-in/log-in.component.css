@@ -1,0 +1,21 @@
+
+body {
+  display: flex;
+  height: 500px;
+}
+
+.logInCard {
+  width: 300px;
+  margin: auto;
+  background: #fafafa;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 300px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}

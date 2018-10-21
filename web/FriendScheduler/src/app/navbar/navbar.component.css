@@ -1,0 +1,11 @@
+.space {
+  flex: 0.002 1 auto;
+}
+
+.firstSpace {
+  flex: 0.01 1 auto;
+}
+
+.end {
+  flex: 1 1 auto;
+}
