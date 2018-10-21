@@ -8,14 +8,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.*
 import java.io.IOException
 import java.lang.Long
-import android.R.attr.password
-import team.gif.friendscheduler.Globals.token
-import team.gif.friendscheduler.Globals.user
 
 
 class Login : AppCompatActivity() {
@@ -53,8 +49,8 @@ class Login : AppCompatActivity() {
                 @Throws(IOException::class)
                 override fun onResponse(call: Call, response: Response) {
                     if (!response.isSuccessful) {
-                        Log.w("test", "Unexpected code $response" + " " + response.code())
-                        if(response.code() != 401) {
+                        Log.w("test", "Unexpected code $response")
+                        if (response.code() != 401) {
                             val request = Request.Builder()
                                 .url(Globals.BASE_URL + "/user")
                                 .addHeader("username", Globals.user.username)
@@ -73,14 +69,14 @@ class Login : AppCompatActivity() {
                                     .get()
                                     .build()
                                 val signinResponse = client.newCall(requestSignin).execute()
-                                if(signinResponse.isSuccessful) {
-                                    val user = signinResponse.body()!!.string() // TODO: convert from JSON to Java object
+                                if (signinResponse.isSuccessful) {
+                                    val user =
+                                        signinResponse.body()!!.string() // TODO: convert from JSON to Java object
                                     val token = java.lang.Long.parseLong(signinResponse.header("token")!!)
                                     runOnUiThread {
                                         Globals.user = User.userFromJson(user)
                                         Globals.token = token
                                         startActivity(Intent(applicationContext, MainActivity::class.java))
-                                        Toast.makeText(applicationContext, "suck my peanus", Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }
@@ -89,12 +85,10 @@ class Login : AppCompatActivity() {
                     } else {
                         val user = response.body()!!.string() // TODO: convert from JSON to Java object
                         val token = java.lang.Long.parseLong(response.header("token")!!)
-                        Log.w("test", "peanus")
                         runOnUiThread {
                             Globals.user = User.userFromJson(user)
                             Globals.token = token
                             startActivity(Intent(applicationContext, MainActivity::class.java))
-                            Toast.makeText(applicationContext, "suck my dick", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

@@ -1,11 +1,9 @@
 package team.gif.friendscheduler;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,12 +15,8 @@ import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import okhttp3.*;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,20 +72,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 } else {
                     final String friends = response.body().string(); // TODO: convert from JSON to Java object
-
-                    Log.w("test", "peanus");
-                    runOnUiThread(() ->{
+                    runOnUiThread(() -> {
                         try {
                             JSONArray ja = new JSONArray(friends);
                             Globals.friendsList = new ArrayList<>();
-                            for(int i = 0; i < ja.length(); i++) {
+                            for (int i = 0; i < ja.length(); i++) {
                                 Globals.friendsList.add(User.userFromJson(ja.getJSONObject(i).toString()));
                             }
                             friendManager = new LinearLayoutManager(MainActivity.this);
                             friendRecycler.setLayoutManager(friendManager);
                             friendAdapter = new FriendAdapter();
                             friendRecycler.setAdapter(friendAdapter);
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                        }
                     });
                 }
             }
@@ -121,12 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.w("test", "Unexpected code " + response);
 
                 } else {
-                    final String friends = response.body().string(); // TODO: convert from JSON to Java object
 
-                    Log.w("test", "peanus");
-                    runOnUiThread(() ->{
-
-                    });
                 }
             }
         });
@@ -161,8 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getFriends();
 
         fab.setOnClickListener((view) -> {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Peanus", null).show();
+
         });
 
         toggle = new ActionBarDrawerToggle(
@@ -221,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -383,7 +369,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Provide a suitable constructor (depends on the kind of dataset)
         public FriendAdapter() {
-            Toast.makeText(MainActivity.this, Globals.friendsList.size() + "", Toast.LENGTH_SHORT).show();
         }
 
         // Create new views (invoked by the layout manager)
@@ -416,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (Globals.friendsList.get(position).schedule[day][i] == 0) {
                     holder.friendNextAvailText.setText(i / 4 + ":" + i % 4 * 15);
                     break;
-                } else if(i == 95) {
+                } else if (i == 95) {
                     holder.friendNextAvailText.setText("None");
                 }
             }

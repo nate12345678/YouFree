@@ -2,8 +2,6 @@ package team.gif.friendscheduler;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-
 public class User {
     long id;
     String username;
