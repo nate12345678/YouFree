@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                             android:id="@+id/scheduleCoordinator">
+
+    <TextView
+            android:text="Time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/mondayScheduleText9" android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/mondayScheduleText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textAlignment="center" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+            android:layout_marginStart="2dp" android:layout_marginEnd="2dp"/>
+    <TextView
+            android:text="Mon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/mondayScheduleText" android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/mondayScheduleText9"
+            app:layout_constraintEnd_toStartOf="@+id/mondayScheduleText2"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="@+id/mondayScheduleText9"
+            app:layout_constraintBottom_toBottomOf="@+id/mondayScheduleText9" android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"/>
+    <TextView
+            android:text="Tue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/mondayScheduleText2" android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/mondayScheduleText"
+            app:layout_constraintEnd_toStartOf="@+id/mondayScheduleText3"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="@+id/mondayScheduleText"
+            app:layout_constraintBottom_toBottomOf="@+id/mondayScheduleText" android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"/>
+    <TextView
+            android:text="Wed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/mondayScheduleText3" android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/mondayScheduleText2"
+            app:layout_constraintEnd_toStartOf="@+id/mondayScheduleText5"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="@+id/mondayScheduleText2"
+            app:layout_constraintBottom_toBottomOf="@+id/mondayScheduleText2" android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"/>
+    <TextView
+            android:text="Thu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/mondayScheduleText5" android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/mondayScheduleText3"
+            app:layout_constraintEnd_toStartOf="@+id/mondayScheduleText6"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="@+id/mondayScheduleText3"
+            app:layout_constraintBottom_toBottomOf="@+id/mondayScheduleText3" android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"/>
+    <TextView
+            android:text="Fri"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/mondayScheduleText6" android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/mondayScheduleText5"
+            app:layout_constraintEnd_toStartOf="@+id/mondayScheduleText7"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="@+id/mondayScheduleText5"
+            app:layout_constraintBottom_toBottomOf="@+id/mondayScheduleText5" android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"/>
+    <TextView
+            android:text="Sat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/mondayScheduleText7" android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/mondayScheduleText6"
+            app:layout_constraintEnd_toStartOf="@+id/mondayScheduleText8"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="@+id/mondayScheduleText6"
+            app:layout_constraintBottom_toBottomOf="@+id/mondayScheduleText6" android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"/>
+    <TextView
+            android:text="Sun"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/mondayScheduleText8" android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/mondayScheduleText7"
+            app:layout_constraintEnd_toEndOf="parent" android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="@+id/mondayScheduleText7"
+            app:layout_constraintBottom_toBottomOf="@+id/mondayScheduleText7" android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"/>
+    <android.support.v7.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/mondayScheduleText9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" tools:listitem="@layout/schedule_line"
+            android:id="@+id/scheduleRecycler" app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
+</android.support.constraint.ConstraintLayout>

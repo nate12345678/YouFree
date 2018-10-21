@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_friends"
+                android:icon="@drawable/baseline_contacts_black_24"
+                android:title="Friends"/>
+        <item
+                android:id="@+id/nav_my_schedule"
+                android:icon="@drawable/baseline_view_list_black_24"
+                android:title="My Schedule"/>
+        <item
+                android:id="@+id/nav_daily"
+                android:icon="@drawable/baseline_calendar_view_day_black_24"
+                android:title="Daily Schedule"/>
+        <item
+                android:id="@+id/nav_current"
+                android:icon="@drawable/baseline_calendar_today_black_24"
+                android:title="Current Availability"/>
+    </group>
+
+
+
+</menu>
