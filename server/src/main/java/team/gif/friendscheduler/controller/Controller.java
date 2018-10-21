@@ -52,7 +52,7 @@ public class Controller {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		
-		return ResponseEntity.status(HttpStatus.OK).header("token", username).body(target);
+		return ResponseEntity.status(HttpStatus.OK).header("token", "" + target.getId()).body(target);
 	}
 	
 	
@@ -103,13 +103,14 @@ public class Controller {
 	
 	// TODO: uses token to update self, rather than taking ID target
 	@ApiOperation("Updates the schedule of the logged-in user")
-	@PutMapping("/schedule/{id}")
+	@PutMapping("/schedule")
 	public ResponseEntity<Void> updateSchedule(
-			@ApiParam @PathVariable Long id,
+			@ApiParam @RequestHeader("token") Long token,
 			@ApiParam @RequestHeader("day") int day,
 			@ApiParam @RequestHeader("block") int block,
 			@ApiParam @RequestHeader("status") Integer status) {
-		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+		
+		User user = userRepository.findById(token).orElseThrow(() -> new UserNotFoundException(token));
 		user.updateSchedule(day, block, status);
 		
 		userRepository.save(user);
