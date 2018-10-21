@@ -64,3 +64,4 @@ fastlane/readme.md
 
 #Angular Node Libraries
 **/node_modules
+**/e2e
