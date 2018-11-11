@@ -1,6 +1,5 @@
 package team.gif.friendscheduler.exception;
 
-import lombok.Getter;
 
 public class UserNotFoundException extends RuntimeException {
 	

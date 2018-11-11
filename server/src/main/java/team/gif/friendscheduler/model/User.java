@@ -1,6 +1,5 @@
 package team.gif.friendscheduler.model;
 
-import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,9 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Arrays;
 
-@Data
 @Entity
 @Table(name = "USERS")
 public class User {
@@ -35,9 +32,6 @@ public class User {
 	private Integer[][] schedule;
 	
 	
-	public User() {}
-	
-	
 	public User(String username, String password, String email, String displayName) {
 		this.username = username;
 		this.password = password;
@@ -50,6 +44,26 @@ public class User {
 				schedule[i][j] = 0;
 			}
 		}
+	}
+	
+	
+	public Long getId() {
+		return id;
+	}
+	
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	
+	public Integer[][] getSchedule() {
+		return schedule;
 	}
 	
 	

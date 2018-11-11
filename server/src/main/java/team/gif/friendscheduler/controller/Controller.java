@@ -1,8 +1,5 @@
 package team.gif.friendscheduler.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.UserRepository;
 import team.gif.friendscheduler.exception.AccessDeniedException;
@@ -24,7 +20,6 @@ import team.gif.friendscheduler.model.User;
 import java.util.LinkedList;
 import java.util.List;
 
-@Api
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Controller {
@@ -32,18 +27,16 @@ public class Controller {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@ApiOperation("Hello World")
 	@GetMapping("/hello")
 	public ResponseEntity<String> hello() {
 		return ResponseEntity.ok("Hello world");
 	}
 	
 	
-	@ApiOperation("Login")
 	@GetMapping("/login")
 	public ResponseEntity<User> login(
-			@ApiParam @RequestHeader("username") String username,
-			@ApiParam @RequestHeader("password") String password) {
+			@RequestHeader("username") String username,
+			@RequestHeader("password") String password) {
 		User target = userRepository
 				.findUserByUsername(username)
 				.orElseThrow(() -> new UserNotFoundException(username));
@@ -56,13 +49,12 @@ public class Controller {
 	}
 	
 	
-	@ApiOperation("Create a new user")
 	@PostMapping("/user")
 	public ResponseEntity<Void> createUser(
-			@ApiParam @RequestHeader("username") String username,
-			@ApiParam @RequestHeader("password") String password,
-			@ApiParam @RequestHeader("email") String email,
-			@ApiParam @RequestHeader("displayName") String displayName) {
+			@RequestHeader("username") String username,
+			@RequestHeader("password") String password,
+			@RequestHeader("email") String email,
+			@RequestHeader("displayName") String displayName) {
 		
 		User user = new User(username, password, email, displayName);
 		
@@ -72,10 +64,10 @@ public class Controller {
 	}
 	
 	
-	@ApiOperation("Get the list of friends of the user currently logged in")
 	@GetMapping("/friends")
 	public ResponseEntity<List<User>> getFriends(
-			@ApiParam @RequestHeader("token") Long token) {
+			@RequestHeader("token") Long token) {
+		
 		// Currently, the token is the ID of the user making the request
 		Iterable<User> users = userRepository.findAll();
 		
@@ -86,11 +78,10 @@ public class Controller {
 	}
 	
 	
-	@ApiOperation("Get the schedule of the specified user")
 	@GetMapping("/schedule/{id}")
 	public ResponseEntity<Integer[][]> getSchedule(
-			@ApiParam @PathVariable Long id,
-			@ApiParam @RequestHeader String token) {
+			@PathVariable Long id,
+			@RequestHeader String token) {
 		// TODO: see if target user is in friends list of requester. Throw exception if not
 		
 		User user = userRepository
@@ -102,13 +93,12 @@ public class Controller {
 	
 	
 	// TODO: uses token to update self, rather than taking ID target
-	@ApiOperation("Updates the schedule of the logged-in user")
 	@PutMapping("/schedule")
 	public ResponseEntity<Void> updateSchedule(
-			@ApiParam @RequestHeader("token") Long token,
-			@ApiParam @RequestHeader("day") int day,
-			@ApiParam @RequestHeader("block") int block,
-			@ApiParam @RequestHeader("status") Integer status) {
+			@RequestHeader("token") Long token,
+			@RequestHeader("day") int day,
+			@RequestHeader("block") int block,
+			@RequestHeader("status") Integer status) {
 		
 		User user = userRepository.findById(token).orElseThrow(() -> new UserNotFoundException(token));
 		user.updateSchedule(day, block, status);
