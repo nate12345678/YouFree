@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.UserRepository;
 import team.gif.friendscheduler.exception.AccessDeniedException;
+import team.gif.friendscheduler.exception.InvalidFieldException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
 import team.gif.friendscheduler.model.User;
+import team.gif.friendscheduler.service.FieldValidator;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +29,9 @@ public class Controller {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	private FieldValidator fieldValidator = new FieldValidator(); // TODO: make this an actual service?
+	
 	
 	@GetMapping("/hello")
 	public ResponseEntity<String> hello() {
@@ -49,15 +55,11 @@ public class Controller {
 	}
 	
 	
-	@PostMapping("/user")
+	@PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Void> createUser(
-			@RequestHeader("username") String username,
-			@RequestHeader("password") String password,
-			@RequestHeader("email") String email,
-			@RequestHeader("displayName") String displayName) {
+			@RequestBody User user) {
 		
-		User user = new User(username, password, email, displayName);
-		
+		fieldValidator.validateUser(user);
 		userRepository.save(user);
 		
 		return ResponseEntity.created(null).build();
@@ -106,6 +108,12 @@ public class Controller {
 		userRepository.save(user);
 		
 		return ResponseEntity.ok().build();
+	}
+	
+	
+	@ExceptionHandler
+	public ResponseEntity<String> handleInvalidFieldException(InvalidFieldException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 	
 	

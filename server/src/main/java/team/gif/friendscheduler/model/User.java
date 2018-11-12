@@ -28,9 +28,11 @@ public class User {
 	@Column(nullable = false)
 	private String displayName;
 	
-	@Column(nullable = false)
+	@Column
 	private Integer[][] schedule;
 	
+	
+	public User() {}
 	
 	public User(String username, String password, String email, String displayName) {
 		this.username = username;
@@ -59,6 +61,16 @@ public class User {
 	
 	public String getPassword() {
 		return password;
+	}
+	
+	
+	public String getEmail() {
+		return email;
+	}
+	
+	
+	public String getDisplayName() {
+		return displayName;
 	}
 	
 	
