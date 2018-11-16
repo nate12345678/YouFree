@@ -43,6 +43,7 @@ public class Controller {
 	public ResponseEntity<User> login(
 			@RequestHeader("username") String username,
 			@RequestHeader("password") String password) {
+		
 		User target = userRepository
 				.findUserByUsername(username)
 				.orElseThrow(() -> new UserNotFoundException(username));
