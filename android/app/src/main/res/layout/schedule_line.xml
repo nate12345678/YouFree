@@ -17,7 +17,7 @@
             android:layout_marginEnd="2dp"/>
     <ImageView
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="24dp"
             android:id="@+id/mondayView"
             app:layout_constraintEnd_toStartOf="@+id/tuesdayView"
             android:layout_marginEnd="2dp" app:layout_constraintTop_toTopOf="parent"
