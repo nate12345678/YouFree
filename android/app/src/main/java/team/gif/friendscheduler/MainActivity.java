@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import okhttp3.*;
 import org.json.JSONArray;
 
@@ -84,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             friendAdapter = new FriendAdapter();
                             friendRecycler.setAdapter(friendAdapter);
                         } catch (Exception e) {
+                            Toast.makeText(MainActivity.this, "Failed to load friends list from database",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

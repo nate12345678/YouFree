@@ -23,16 +23,17 @@ class Login : AppCompatActivity() {
 
 
     fun login(v: View) {
+        var password = ""
         if (usernameText.text.isNotEmpty()) {
             if (passwordText.text.isNotEmpty()) {
-                Globals.user = User(usernameText.text.toString(), passwordText.text.toString())
-            } else {
-                Globals.user = User(usernameText.text.toString())
+                password = passwordText.text.toString()
             }
+            Globals.user = User(usernameText.text.toString())
+
             val request = Request.Builder()
                 .url(Globals.BASE_URL + "/login")
                 .addHeader("username", Globals.user.username)
-                .addHeader("password", Globals.user.password)
+                .addHeader("password", password)
                 .get()
                 .build()
 
@@ -54,7 +55,7 @@ class Login : AppCompatActivity() {
                             val request = Request.Builder()
                                 .url(Globals.BASE_URL + "/user")
                                 .addHeader("username", Globals.user.username)
-                                .addHeader("password", Globals.user.password)
+                                .addHeader("password", password)
                                 .addHeader("email", Globals.user.email)
                                 .addHeader("displayName", Globals.user.displayName)
                                 .post(RequestBody.create(null, ""))
@@ -65,7 +66,7 @@ class Login : AppCompatActivity() {
                                 val requestSignin = Request.Builder()
                                     .url(Globals.BASE_URL + "/login")
                                     .addHeader("username", Globals.user.username)
-                                    .addHeader("password", Globals.user.password)
+                                    .addHeader("password", password)
                                     .get()
                                     .build()
                                 val signinResponse = client.newCall(requestSignin).execute()
