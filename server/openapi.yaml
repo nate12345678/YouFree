@@ -45,7 +45,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/User'
+                $ref: '#/components/schemas/User'
         '401':
           description: Incorrect username or password
 
@@ -59,7 +59,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/NewUser'
+              $ref: '#/components/schemas/NewUser'
       responses:
         '201':
           description: successful operation
@@ -68,7 +68,7 @@ paths:
 
   /friends:
     get:
-      summary: Get the list of friends of the user currently logged in
+      summary: List friends of logged-in user
       operationId: getFriends
       parameters:
         - name: token
@@ -84,7 +84,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/User'
+                  $ref: '#/components/schemas/User'
 
   '/schedule/{id}':
     get:
@@ -153,36 +153,36 @@ paths:
           description: User not found
 
 components:
-  NewUser:
-    type: object
-    properties:
-      username:
-        type: string
-      password:
-        type: string
-      email:
-        type: string
-      displayName:
-        type: string
+  schemas:
+    NewUser:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        displayName:
+          type: string
 
-  User:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      username:
-        type: string
-      password:
-        type: string
-      email:
-        type: string
-      displayName:
-        type: string
-      schedule:
-        type: array
-        items:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        displayName:
+          type: string
+        schedule:
           type: array
           items:
-            type: integer
-            format: int32
+            type: array
+            items:
+              type: integer
+              format: int32
