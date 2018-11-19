@@ -1,6 +1,8 @@
 package team.gif.friendscheduler.model;
 
 
+import team.gif.friendscheduler.Globals;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,17 +31,25 @@ public class User {
 	private String displayName;
 	
 	@Column
-	private Integer[][] schedule;
+	private int[][] schedule;
 	
 	
-	public User() {}
+	public User() {
+		this.schedule = new int[Globals.NUM_DAYS_IN_WEEK][Globals.NUM_BLOCKS_IN_DAY];
+		
+		for (int i = 0; i < schedule.length; i++) {
+			for (int j = 0; j < schedule[i].length; j++) {
+				schedule[i][j] = 0;
+			}
+		}
+	}
 	
 	public User(String username, String password, String email, String displayName) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.displayName = displayName;
-		this.schedule = new Integer[7][96];
+		this.schedule = new int[Globals.NUM_DAYS_IN_WEEK][Globals.NUM_BLOCKS_IN_DAY];
 		
 		for (int i = 0; i < schedule.length; i++) {
 			for (int j = 0; j < schedule[i].length; j++) {
@@ -74,13 +84,13 @@ public class User {
 	}
 	
 	
-	public Integer[][] getSchedule() {
+	public int[][] getSchedule() {
 		return schedule;
 	}
 	
 	
-	public void updateSchedule(int day, int block, Integer status) {
-		this.schedule[day][block] = status;
+	public void updateSchedule(TimeBlock interval) {
+		this.schedule[interval.getDay()][interval.getBlock()] = interval.getStatus();
 	}
 	
 }

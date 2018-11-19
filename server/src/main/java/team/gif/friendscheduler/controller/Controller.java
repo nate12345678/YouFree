@@ -17,6 +17,7 @@ import team.gif.friendscheduler.UserRepository;
 import team.gif.friendscheduler.exception.AccessDeniedException;
 import team.gif.friendscheduler.exception.InvalidFieldException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
+import team.gif.friendscheduler.model.TimeBlock;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.service.FieldValidator;
 
@@ -43,6 +44,7 @@ public class Controller {
 	public ResponseEntity<User> login(
 			@RequestHeader("username") String username,
 			@RequestHeader("password") String password) {
+		
 		User target = userRepository
 				.findUserByUsername(username)
 				.orElseThrow(() -> new UserNotFoundException(username));
@@ -51,18 +53,22 @@ public class Controller {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		
-		return ResponseEntity.status(HttpStatus.OK).header("token", "" + target.getId()).body(target);
+		return ResponseEntity.status(HttpStatus.OK)
+				.header("token", "" + target.getId())
+				.body(target);
 	}
 	
 	
 	@PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> createUser(
+	public ResponseEntity<User> createUser(
 			@RequestBody User user) {
 		
 		fieldValidator.validateUser(user);
 		userRepository.save(user);
 		
-		return ResponseEntity.created(null).build();
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.header("token", "" + user.getId())
+				.body(user);
 	}
 	
 	
@@ -81,7 +87,7 @@ public class Controller {
 	
 	
 	@GetMapping("/schedule/{id}")
-	public ResponseEntity<Integer[][]> getSchedule(
+	public ResponseEntity<int[][]> getSchedule(
 			@PathVariable Long id,
 			@RequestHeader String token) {
 		// TODO: see if target user is in friends list of requester. Throw exception if not
@@ -94,16 +100,13 @@ public class Controller {
 	}
 	
 	
-	// TODO: uses token to update self, rather than taking ID target
 	@PutMapping("/schedule")
 	public ResponseEntity<Void> updateSchedule(
 			@RequestHeader("token") Long token,
-			@RequestHeader("day") int day,
-			@RequestHeader("block") int block,
-			@RequestHeader("status") Integer status) {
+			@RequestBody TimeBlock interval) {
 		
 		User user = userRepository.findById(token).orElseThrow(() -> new UserNotFoundException(token));
-		user.updateSchedule(day, block, status);
+		user.updateSchedule(interval);
 		
 		userRepository.save(user);
 		
