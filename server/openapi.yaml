@@ -7,7 +7,7 @@ info:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: 'http://192.168.0.0:61234/api/v1'
+  - url: 'http://192.168.0.0:8080/api/v1'
     description: Dev server
 
 paths:
@@ -86,7 +86,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
 
-  '/schedule/{id}':
+  /schedule/{id}:
     get:
       summary: Get the schedule of the specified user
       description: ''
@@ -122,30 +122,21 @@ paths:
       operationId: updateSchedule
       parameters:
         - name: id
-          description: The ID of the user to modify
-          deprecated: true
           in: path
           required: true
           schema:
             type: string
-        - name: day
-          description: 'The day of the week (0:Monday - 6:Sunday) to modify'
+        - name: token
           in: header
           required: true
           schema:
             type: string
-        - name: block
-          description: 'The block of time (15 minute interval, 0 - 95) within the day'
-          in: header
-          required: true
-          schema:
-            type: string
-        - name: status
-          description: The desired status number to set for this time block
-          in: header
-          required: true
-          schema:
-            type: string
+      requestBody:
+        description: New user to add to the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeBlock'
       responses:
         '200':
           description: Successful operation
@@ -186,3 +177,16 @@ components:
             items:
               type: integer
               format: int32
+
+    TimeBlock:
+      type: object
+      properties:
+        day:
+          type: integer
+          format: int32
+        block:
+          type: integer
+          format: int32
+        status:
+          type: integer
+          format: int32
