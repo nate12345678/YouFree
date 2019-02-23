@@ -96,12 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     void updateSchedule(int day, int time, int val) {
         Request request = new Request.Builder()
-                .url(Globals.BASE_URL + "/schedule")
-                .addHeader("day", "" + day)
-                .addHeader("block", "" + time)
-                .addHeader("status", "" + val)
-                .addHeader("token", "" + Globals.token)
-                .put(RequestBody.create(null, ""))
+                .url(Globals.BASE_URL + "/schedule/" + Globals.user.id)
+                .addHeader("token", Globals.token + "")
+                .put(RequestBody.create(null, "{\"day\": " + day + ",\"block\": " + time + ",\"status\": " + val + "}"))
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -252,8 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Create new views (invoked by the layout manager)
         @Override
-        public ScheduleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                             int viewType) {
+        public ScheduleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             // create a new view
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.schedule_line, parent, false);

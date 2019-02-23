@@ -7,6 +7,7 @@ public class User {
     String username;
     String email;
     String displayName;
+    long discordSnowflake;
     int[][] schedule;
 
 
@@ -39,6 +40,8 @@ public class User {
         this.email = email;
         this.displayName = displayName;
         this.schedule = schedule;
+
+        this.discordSnowflake = 0;
     }
 
     static User userFromJson(String json) {

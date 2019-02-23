@@ -40,6 +40,7 @@ class Login : AppCompatActivity() {
                 .build()
 
 
+            Log.w("loginrequest", "making request")
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -50,6 +51,8 @@ class Login : AppCompatActivity() {
 
                 @Throws(IOException::class)
                 override fun onResponse(call: Call, response: Response) {
+                    Log.w("loginrequest", response.code().toString())
+
                     if (!response.isSuccessful) {
                         Log.w("test", "Unexpected code $response")
                         if (response.code() != 401) {
@@ -118,21 +121,16 @@ class Login : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 Log.w("test", "shit")
 
-                e.printStackTrace()
+//                e.printStackTrace()
             }
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 if(response.code() == 200) {
                     val output = response.body()!!.string()
-
-                    runOnUiThread {
-                        Snackbar.make(usernameText, output, Snackbar.LENGTH_LONG).show()
-                    }
+                    Log.w("ApiTest", output);
                 } else {
-                    runOnUiThread {
-                        Snackbar.make(usernameText, "failed to connect", Snackbar.LENGTH_LONG).show()
-                    }
+                    Log.w("ApiTest", "Api not functional");
                 }
             }
         })
