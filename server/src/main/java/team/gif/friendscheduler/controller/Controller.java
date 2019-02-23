@@ -72,6 +72,20 @@ public class Controller {
 	}
 	
 	
+	@PutMapping(value = "/user/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> updateUser(
+			@RequestHeader("token") Long token,
+			@RequestBody User user) {
+		
+		User target = userRepository.findById(token).orElseThrow(() -> new UserNotFoundException(token));
+		target.setDiscordSnowflake(user.getDiscordSnowflake());
+		
+		userRepository.save(user);
+		
+		return ResponseEntity.ok(user);
+	}
+	
+	
 	@GetMapping("/friends")
 	public ResponseEntity<List<User>> getFriends(
 			@RequestHeader("token") Long token) {

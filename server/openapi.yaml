@@ -65,6 +65,26 @@ paths:
           description: successful operation
         '400':
           description: Fields cannot be null or empty
+    put:
+      summary: Update a user (only discordSnowflakes accepted currently)
+      description: ''
+      operationId: updateUser
+      requestBody:
+        description: User object with updated Discord snowflake
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User could not be found
+
 
   /friends:
     get:

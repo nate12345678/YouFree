@@ -18,6 +18,9 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@Column
+	private Long discordSnowflake;
+	
 	@Column(nullable = false)
 	private String username;
 	
@@ -45,6 +48,7 @@ public class User {
 	}
 	
 	public User(String username, String password, String email, String displayName) {
+		this.discordSnowflake = null;
 		this.username = username;
 		this.password = password;
 		this.email = email;
@@ -61,6 +65,11 @@ public class User {
 	
 	public Long getId() {
 		return id;
+	}
+	
+	
+	public Long getDiscordSnowflake() {
+		return discordSnowflake;
 	}
 	
 	
@@ -86,6 +95,11 @@ public class User {
 	
 	public int[][] getSchedule() {
 		return schedule;
+	}
+	
+	
+	public void setDiscordSnowflake(Long snowflake) {
+		this.discordSnowflake = snowflake;
 	}
 	
 	
