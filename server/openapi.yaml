@@ -136,16 +136,13 @@ paths:
                     format: int32
         '404':
           description: User not found
+
+  /schedule:
     put:
       summary: Updates the schedule of the logged-in user
       description: ''
       operationId: updateSchedule
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
         - name: token
           in: header
           required: true
