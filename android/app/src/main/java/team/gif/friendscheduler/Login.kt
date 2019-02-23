@@ -2,12 +2,14 @@ package team.gif.friendscheduler
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.*
 import java.io.IOException
@@ -37,7 +39,6 @@ class Login : AppCompatActivity() {
                 .get()
                 .build()
 
-//            Globals.makecall(request, client, this)
 
 
             client.newCall(request).enqueue(object : Callback {
@@ -107,6 +108,34 @@ class Login : AppCompatActivity() {
 
         usernameText = findViewById(R.id.usernameText)
         passwordText = findViewById(R.id.passwordText)
+
+        val request = Request.Builder()
+            .url(Globals.BASE_URL + "/hello")
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.w("test", "shit")
+
+                e.printStackTrace()
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if(response.code() == 200) {
+                    val output = response.body()!!.string()
+
+                    runOnUiThread {
+                        Snackbar.make(usernameText, output, Snackbar.LENGTH_LONG).show()
+                    }
+                } else {
+                    runOnUiThread {
+                        Snackbar.make(usernameText, "failed to connect", Snackbar.LENGTH_LONG).show()
+                    }
+                }
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
