@@ -106,6 +106,27 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
 
+  /friends/discord:
+    get:
+      summary: List Discord snowflake IDs of logged-in user
+      operationId: getDiscordFriends
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int64
+
   /schedule/{id}:
     get:
       summary: Get the schedule of the specified user

@@ -86,6 +86,7 @@ public class Controller {
 	}
 	
 	
+	// TODO: Make 'get friends' service
 	@GetMapping("/friends")
 	public ResponseEntity<List<User>> getFriends(
 			@RequestHeader("token") Long token) {
@@ -95,6 +96,20 @@ public class Controller {
 		
 		LinkedList<User> list = new LinkedList<>();
 		users.forEach(list::addLast);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	@GetMapping("/friends/discord")
+	public ResponseEntity<List<Long>> getDiscordFriends(
+			@RequestHeader("token") Long token,
+			@RequestHeader(name = "snowflake", required = false) Long snowflake) {
+		
+		Iterable<User> users = userRepository.findAll();
+		
+		LinkedList<Long> list = new LinkedList<>();
+		users.forEach(user -> list.add(user.getDiscordSnowflake()));
 		
 		return ResponseEntity.ok(list);
 	}
