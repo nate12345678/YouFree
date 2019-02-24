@@ -103,6 +103,16 @@ public class User {
 	}
 	
 	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	
+	
 	public void updateSchedule(TimeBlock interval) {
 		this.schedule[interval.getDay()][interval.getBlock()] = interval.getStatus();
 	}

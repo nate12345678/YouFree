@@ -112,6 +112,7 @@ paths:
       operationId: getDiscordFriends
       parameters:
         - name: snowflake
+          description: The snowflake ID of the user in Discord
           in: header
           required: true
           schema:

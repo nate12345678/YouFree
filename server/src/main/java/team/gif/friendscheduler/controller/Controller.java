@@ -78,7 +78,15 @@ public class Controller {
 			@RequestBody User user) {
 		
 		User target = userRepository.findById(token).orElseThrow(() -> new UserNotFoundException(token));
-		target.setDiscordSnowflake(user.getDiscordSnowflake());
+		
+		if (user.getDiscordSnowflake() != null)
+			target.setDiscordSnowflake(user.getDiscordSnowflake());
+		
+		if (user.getEmail() != null)
+			target.setEmail(user.getEmail());
+		
+		if (user.getDisplayName() != null)
+			target.setDisplayName(user.getDisplayName());
 		
 		userRepository.save(user);
 		
