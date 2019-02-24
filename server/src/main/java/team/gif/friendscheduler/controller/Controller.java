@@ -136,13 +136,13 @@ public class Controller {
 	}
 	
 	
-	@GetMapping("/schedule/discord/{id}")
+	@GetMapping("/schedule/discord/{snowflake}")
 	public ResponseEntity<int[][]> getDiscordSchedule(
-			@PathVariable Long discordSnowflake) {
+			@PathVariable Long snowflake) {
 		
 		User user = userRepository
-				.findUserByDiscordSnowflake(discordSnowflake)
-				.orElseThrow(() -> new UserNotFoundException(discordSnowflake));
+				.findUserByDiscordSnowflake(snowflake)
+				.orElseThrow(() -> new UserNotFoundException(snowflake));
 		
 		return ResponseEntity.ok(user.getSchedule());
 	}
