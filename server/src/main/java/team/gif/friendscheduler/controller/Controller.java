@@ -103,8 +103,7 @@ public class Controller {
 	
 	@GetMapping("/friends/discord")
 	public ResponseEntity<List<Long>> getDiscordFriends(
-			@RequestHeader("token") Long token,
-			@RequestHeader(name = "snowflake", required = false) Long snowflake) {
+			@RequestHeader("snowflake") Long snowflake) {
 		
 		Iterable<User> users = userRepository.findAll();
 		

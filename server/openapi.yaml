@@ -111,11 +111,12 @@ paths:
       summary: List Discord snowflake IDs of logged-in user
       operationId: getDiscordFriends
       parameters:
-        - name: token
+        - name: snowflake
           in: header
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         '200':
           description: Successful operation
