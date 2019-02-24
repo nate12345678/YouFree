@@ -72,7 +72,7 @@ public class Controller {
 	}
 	
 	
-	@PutMapping(value = "/user/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> updateUser(
 			@RequestHeader("token") Long token,
 			@RequestBody User user) {
@@ -88,9 +88,9 @@ public class Controller {
 		if (user.getDisplayName() != null)
 			target.setDisplayName(user.getDisplayName());
 		
-		userRepository.save(user);
+		userRepository.save(target);
 		
-		return ResponseEntity.ok(user);
+		return ResponseEntity.ok(target);
 	}
 	
 	

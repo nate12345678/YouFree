@@ -42,6 +42,10 @@ paths:
       responses:
         '200':
           description: successful operation
+          headers:
+            token:
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -69,6 +73,12 @@ paths:
       summary: Update a user (only discordSnowflakes accepted currently)
       description: ''
       operationId: updateUser
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         description: User object with updated Discord snowflake
         content:
@@ -81,7 +91,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserUpdate'
         '404':
           description: User could not be found
 
@@ -221,11 +231,25 @@ components:
         displayName:
           type: string
 
+    UserUpdate:
+      type: object
+      properties:
+        discordSnowflake:
+          type: integer
+          format: int64
+        email:
+          type: string
+        displayName:
+          type: string
+
     User:
       type: object
       properties:
         id:
           type: string
+        discordSnowflake:
+          type: integer
+          format: int64
         username:
           type: string
         password:
