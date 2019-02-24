@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import okhttp3.*;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Calendar currentTime;
 
     void getFriends() {
+
+
         Request request = new Request.Builder()
                 .url(Globals.BASE_URL + "/friends")
                 .addHeader("token", Globals.token + "")
@@ -95,10 +99,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void updateSchedule(int day, int time, int val) {
+        Log.w("Ss", Globals.token+"");
         Request request = new Request.Builder()
-                .url(Globals.BASE_URL + "/schedule/" + Globals.user.id)
+                .url(Globals.BASE_URL + "/schedule")
                 .addHeader("token", Globals.token + "")
-                .put(RequestBody.create(null, "{\"day\": " + day + ",\"block\": " + time + ",\"status\": " + val + "}"))
+                .put(RequestBody.create(Globals.JSON, "{\n" +
+                        "\"day\": " + day + ",\n" +
+                        "\"block\": " + time + ",\n" +
+                        "\"status\": " + val + "\n" +
+                        "}"))
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override

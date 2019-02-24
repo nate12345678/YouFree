@@ -23,7 +23,7 @@ public class User {
     }
 
     public User(long id, String username) {
-        this(id, username, "n/a");
+        this(id, username, "none@example.com");
     }
 
     public User(long id, String username, String email) {

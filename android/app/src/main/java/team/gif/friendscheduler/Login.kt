@@ -9,11 +9,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.*
+import team.gif.friendscheduler.Globals.user
 import java.io.IOException
-import java.lang.Long
 
 
 class Login : AppCompatActivity() {
@@ -54,39 +53,13 @@ class Login : AppCompatActivity() {
                     Log.w("loginrequest", response.code().toString())
 
                     if (!response.isSuccessful) {
-                        Log.w("test", "Unexpected code $response")
-                        if (response.code() != 401) {
-                            val request = Request.Builder()
-                                .url(Globals.BASE_URL + "/user")
-                                .addHeader("username", Globals.user.username)
-                                .addHeader("password", password)
-                                .addHeader("email", Globals.user.email)
-                                .addHeader("displayName", Globals.user.displayName)
-                                .post(RequestBody.create(null, ""))
-                                .build()
-
-                            val newResponse = client.newCall(request).execute()
-                            if (newResponse.isSuccessful) {
-                                val requestSignin = Request.Builder()
-                                    .url(Globals.BASE_URL + "/login")
-                                    .addHeader("username", Globals.user.username)
-                                    .addHeader("password", password)
-                                    .get()
-                                    .build()
-                                val signinResponse = client.newCall(requestSignin).execute()
-                                if (signinResponse.isSuccessful) {
-                                    val user =
-                                        signinResponse.body()!!.string() // TODO: convert from JSON to Java object
-                                    val token = java.lang.Long.parseLong(signinResponse.header("token")!!)
-                                    runOnUiThread {
-                                        Globals.user = User.userFromJson(user)
-                                        Globals.token = token
-                                        startActivity(Intent(applicationContext, MainActivity::class.java))
-                                    }
-                                }
+                        if (response.code() == 404) {
+                            runOnUiThread {
+                                var snacc = Snackbar.make(findViewById(R.id.loginCoordinator), "User does not exist",Snackbar.LENGTH_LONG)
+                                snacc.setAction("New User") { addUser(password) }
+                                snacc.show()
                             }
                         }
-
                     } else {
                         val user = response.body()!!.string() // TODO: convert from JSON to Java object
                         val token = java.lang.Long.parseLong(response.header("token")!!)
@@ -103,6 +76,36 @@ class Login : AppCompatActivity() {
 
     }
 
+
+    fun addUser(password: String) {
+        Log.w("test", "{\"username\": \"" + Globals.user.username +
+                "\",\"password\": \"" + password + "\",\"email\": \"" +
+                Globals.user.email + "\",\"displayName\": \"" + Globals.user.displayName + "\"}")
+        val request = Request.Builder()
+            .url(Globals.BASE_URL + "/user")
+            .post(RequestBody.create(Globals.JSON, "{\"username\": \"" + Globals.user.username +
+                    "\",\"password\": \"" + password + "\",\"email\": \"" +
+                    Globals.user.email + "\",\"displayName\": \"" + Globals.user.displayName + "\"}"
+            ))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.w("test", "shit")
+
+//                e.printStackTrace()
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator), "User created", Snackbar.LENGTH_LONG).show()
+                } else {
+                    Log.w("test", "Unexpected code $response")
+                }
+            }
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,7 +129,7 @@ class Login : AppCompatActivity() {
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     val output = response.body()!!.string()
                     Log.w("ApiTest", output);
                 } else {
