@@ -72,7 +72,7 @@ public class Controller {
 	}
 	
 	
-	@PutMapping(value = "/user/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> updateUser(
 			@RequestHeader("token") Long token,
 			@RequestBody User user) {
