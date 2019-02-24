@@ -13,8 +13,10 @@
              android:id="@+id/friendInclude"/>
     <include layout="@layout/content_daily"
              android:id="@+id/dailyInclude"/>
-    <include
-            layout="@layout/content_schedule" android:id="@+id/scheduleInclude"/>
+    <include layout="@layout/content_schedule"
+             android:id="@+id/scheduleInclude"/>
+    <include layout="@layout/content_profile"
+             android:id="@+id/profileInclude"/>
     <android.support.design.widget.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"

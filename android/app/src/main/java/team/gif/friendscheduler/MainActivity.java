@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawer;
     TextView nameNavLabel;
     TextView usernamedNavLabel;
+    TextView usernameText;
+    TextView displayNameText;
+    TextView emailText;
+    ImageView profileImage;
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
     CoordinatorLayout mainCoordinator;
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     View dailyInclude;
     View scheduleInclude;
     View friendsInclude;
-
+    View profileInclude;
     RecyclerView scheduleRecycler;
     RecyclerView.Adapter scheduleAdapter;
     RecyclerView.LayoutManager scheduleManager;
@@ -54,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Calendar currentTime;
 
     void getFriends() {
-
-
         Request request = new Request.Builder()
                 .url(Globals.BASE_URL + "/friends")
                 .addHeader("token", Globals.token + "")
@@ -137,10 +139,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         headerview = navigationView.getHeaderView(0);
         nameNavLabel = headerview.findViewById(R.id.nameNavLabel);
         usernamedNavLabel = headerview.findViewById(R.id.usernameNavLabel);
+        usernameText = findViewById(R.id.usernameText);
+        displayNameText = findViewById(R.id.displayNameText);
+        emailText = findViewById(R.id.emailText);
         currentInclude = findViewById(R.id.currentInclude);
         dailyInclude = findViewById(R.id.dailyInclude);
         scheduleInclude = findViewById(R.id.scheduleInclude);
         friendsInclude = findViewById(R.id.friendInclude);
+        profileInclude = findViewById(R.id.profileInclude);
         scheduleRecycler = findViewById(R.id.scheduleRecycler);
         friendRecycler = findViewById(R.id.friendRecycler);
     }
@@ -171,9 +177,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         nameNavLabel.setText(Globals.user.displayName);
         usernamedNavLabel.setText(Globals.user.username);
 
+        usernameText.setText(Globals.user.username);
+        displayNameText.setText(Globals.user.displayName);
+        emailText.setText(Globals.user.email);
+
         currentInclude.setVisibility(View.GONE);
         dailyInclude.setVisibility(View.GONE);
         scheduleInclude.setVisibility(View.GONE);
+        profileInclude.setVisibility(View.GONE);
         friendsInclude.setVisibility(View.VISIBLE);
 
         scheduleRecycler.setHasFixedSize(true);
@@ -225,22 +236,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dailyInclude.setVisibility(View.GONE);
         scheduleInclude.setVisibility(View.GONE);
         friendsInclude.setVisibility(View.GONE);
+        profileInclude.setVisibility(View.GONE);
 
-        if (id == R.id.nav_current) {
-            getSupportActionBar().setTitle("Current Availability");
-            currentInclude.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_daily) {
-            getSupportActionBar().setTitle("Daily Schedule");
-            dailyInclude.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_my_schedule) {
-            getSupportActionBar().setTitle("My Schedule");
-            scheduleInclude.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_friends) {
-            getSupportActionBar().setTitle("Friends");
-            getFriends();
-            friendsInclude.setVisibility(View.VISIBLE);
+        switch(id) {
+            case R.id.nav_current:
+                getSupportActionBar().setTitle("Current Availability");
+                currentInclude.setVisibility(View.VISIBLE);
+                break;
+            case R.id.nav_daily:
+                getSupportActionBar().setTitle("Daily Schedule");
+                dailyInclude.setVisibility(View.VISIBLE);
+                break;
+            case R.id.nav_my_schedule:
+                getSupportActionBar().setTitle("My Schedule");
+                scheduleInclude.setVisibility(View.VISIBLE);
+                break;
+            case R.id.nav_friends:
+                getSupportActionBar().setTitle("Friends");
+                getFriends();
+                friendsInclude.setVisibility(View.VISIBLE);
+                break;
+            case R.id.nav_profile:
+                getSupportActionBar().setTitle("My Profile");
+                profileInclude.setVisibility(View.VISIBLE);
+                break;
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
