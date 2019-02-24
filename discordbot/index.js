@@ -69,17 +69,28 @@ function listSchedule(msg){
 			console.log(now.getDay());
 			console.log(now.getHours());
 			console.log(now.getMinutes());
+			
+			body = body.replace(/[^0-9]/g, '');
 			console.log(body);
-			if(body[1 + now.getDay() * 194 + 1 + now.getHours * 16]==='0'){
+			if(body[96* now.getDay() + (now.getHours() + Math.round(now.getMinutes() / 15))]==='0'){
 				for(let [snowflake,guildMember] of guildList){
 					if(snowflake === user)
-						msg.reply(guildMember.user.username + " is currently free!");
+						msg.channel.send(guildMember.user.username + " is currently free!");
 				}
 			}
-			for(let [snowflake,guildMember] of guildList){
-                                        if(snowflake === user)
-                                                msg.reply(guildMember.user.username + " is currently free!");
-                                }
+			var looped = 0
+			//else{
+			//	while(!looped){
+			//		for(i = now.getDay(); i < 7;i++){
+			//			for(j = (now.getHours() + Math.round(now.getMinutes() / 15)); j < 96; j++){
+			//				if(body[96* now.getDay() + (now.getHours() + Math.round(now.getMinutes() / 15))]==='0'){
+			//					msg.reply(
+			//	}
+			//}
+			//for(let [snowflake,guildMember] of guildList){
+                                  //      if(snowflake === user)
+                                //                msg.reply(guildMember.user.username + " is currently free!");
+                              //  }
 
 		});
 	}
