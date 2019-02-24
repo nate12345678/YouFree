@@ -52,19 +52,37 @@ function listSchedule(msg){
 	var guildList = msg.guild.members;
         var c = [];
 	var i = 0;
-        for(let [snowflake] of guildList){
+        for(let [snowflake,guildMember] of guildList){
+		console.log(guildMember.user.username);
 		if(friendlist.indexOf(snowflake) != -1)
 			c[i++] = snowflake;
 	}
 	//console.log(c);
-	
+	var now = new Date()
+	for(var user of c){
+		var request = require('request');
+        	request('http://216.171.4.52:8080/api/v1/schedule/discord/' + user, function(err, response, body) {
+        		if(err) { console.log(err); return; }
+			
+			console.log(body);
+			
+			console.log(now.getDay());
+			console.log(now.getHours());
+			console.log(now.getMinutes());
+			console.log(body);
+			if(body[1 + now.getDay() * 194 + 1 + now.getHours * 16]==='0'){
+				for(let [snowflake,guildMember] of guildList){
+					if(snowflake === user)
+						msg.reply(guildMember.user.username + " is currently free!");
+				}
+			}
+			for(let [snowflake,guildMember] of guildList){
+                                        if(snowflake === user)
+                                                msg.reply(guildMember.user.username + " is currently free!");
+                                }
 
-	var request = require('request');
-        request('http://216.171.4.52:8080/api/v1/schedule/discord/' + c[0], function(err, response, body) {
-        if(err) { console.log(err); return; }
-	msg.reply(body);
-	console.log(body);
-	});
+		});
+	}
 	});
 }
 
