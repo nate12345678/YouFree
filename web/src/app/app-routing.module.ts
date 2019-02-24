@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LogInComponent } from "./log-in/log-in.component";
-import { HomeComponent } from "./home/home.component";
-import { ScheduleComponent } from "./schedule/schedule.component";
-import { FriendsComponent } from "./friends/friends.component";
+import { LogInComponent } from './log-in/log-in.component';
+import { HomeComponent } from './home/home.component';
+import { ScheduleComponent } from './schedule/schedule.component';
+import { FriendsComponent } from './friends/friends.component';
+import {CalendarComponent} from './calendar/calendar.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'friends',
     component: FriendsComponent
+  },
+  {
+    path: 'calendar',
+    component: CalendarComponent
   },
   {
     path: '',

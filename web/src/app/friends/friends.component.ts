@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Sort } from "@angular/material";
+import { Sort } from '@angular/material';
 
-export interface Friends{
+export interface Friends {
   name: string;
   isAvail: string;
   nextAvail: string;
@@ -14,8 +14,8 @@ export interface Friends{
 })
 export class FriendsComponent implements OnInit {
 
-  friends:Friends[] = [];
-  sortedData:Friends[];
+  friends: Friends[] = [];
+  sortedData: Friends[];
 
   constructor() { }
 
