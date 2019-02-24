@@ -17,6 +17,7 @@ import team.gif.friendscheduler.UserRepository;
 import team.gif.friendscheduler.exception.AccessDeniedException;
 import team.gif.friendscheduler.exception.InvalidFieldException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
+import team.gif.friendscheduler.model.TimeBlock;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.service.FieldValidator;
 
@@ -52,21 +53,48 @@ public class Controller {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		
-		return ResponseEntity.status(HttpStatus.OK).header("token", "" + target.getId()).body(target);
+		return ResponseEntity.status(HttpStatus.OK)
+				.header("token", "" + target.getId())
+				.body(target);
 	}
 	
 	
 	@PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> createUser(
+	public ResponseEntity<User> createUser(
 			@RequestBody User user) {
 		
 		fieldValidator.validateUser(user);
 		userRepository.save(user);
 		
-		return ResponseEntity.created(null).build();
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.header("token", "" + user.getId())
+				.body(user);
 	}
 	
 	
+	@PutMapping(value = "/user/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> updateUser(
+			@RequestHeader("token") Long token,
+			@RequestBody User user) {
+		
+		User target = userRepository.findById(token).orElseThrow(() -> new UserNotFoundException(token));
+		
+		if (user.getDiscordSnowflake() != null)
+			target.setDiscordSnowflake(user.getDiscordSnowflake());
+		
+		if (user.getEmail() != null)
+			target.setEmail(user.getEmail());
+		
+		if (user.getDisplayName() != null)
+			target.setDisplayName(user.getDisplayName());
+		
+		userRepository.save(user);
+		
+		return ResponseEntity.ok(user);
+	}
+	
+	
+	// TODO: Make 'get friends' service
 	@GetMapping("/friends")
 	public ResponseEntity<List<User>> getFriends(
 			@RequestHeader("token") Long token) {
@@ -81,8 +109,21 @@ public class Controller {
 	}
 	
 	
+	@GetMapping("/friends/discord")
+	public ResponseEntity<List<Long>> getDiscordFriends(
+			@RequestHeader("snowflake") Long snowflake) {
+		
+		Iterable<User> users = userRepository.findAll();
+		
+		LinkedList<Long> list = new LinkedList<>();
+		users.forEach(user -> list.add(user.getDiscordSnowflake()));
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
 	@GetMapping("/schedule/{id}")
-	public ResponseEntity<Integer[][]> getSchedule(
+	public ResponseEntity<int[][]> getSchedule(
 			@PathVariable Long id,
 			@RequestHeader String token) {
 		// TODO: see if target user is in friends list of requester. Throw exception if not
@@ -95,16 +136,25 @@ public class Controller {
 	}
 	
 	
-	// TODO: uses token to update self, rather than taking ID target
+	@GetMapping("/schedule/discord/{snowflake}")
+	public ResponseEntity<int[][]> getDiscordSchedule(
+			@PathVariable Long snowflake) {
+		
+		User user = userRepository
+				.findUserByDiscordSnowflake(snowflake)
+				.orElseThrow(() -> new UserNotFoundException(snowflake));
+		
+		return ResponseEntity.ok(user.getSchedule());
+	}
+	
+	
 	@PutMapping("/schedule")
 	public ResponseEntity<Void> updateSchedule(
 			@RequestHeader("token") Long token,
-			@RequestHeader("day") int day,
-			@RequestHeader("block") int block,
-			@RequestHeader("status") Integer status) {
+			@RequestBody TimeBlock interval) {
 		
 		User user = userRepository.findById(token).orElseThrow(() -> new UserNotFoundException(token));
-		user.updateSchedule(day, block, status);
+		user.updateSchedule(interval);
 		
 		userRepository.save(user);
 		

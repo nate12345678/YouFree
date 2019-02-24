@@ -2,6 +2,7 @@ package team.gif.friendscheduler
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -10,8 +11,8 @@ import android.view.View
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.*
+import team.gif.friendscheduler.Globals.user
 import java.io.IOException
-import java.lang.Long
 
 
 class Login : AppCompatActivity() {
@@ -23,21 +24,22 @@ class Login : AppCompatActivity() {
 
 
     fun login(v: View) {
+        var password = ""
         if (usernameText.text.isNotEmpty()) {
             if (passwordText.text.isNotEmpty()) {
-                Globals.user = User(usernameText.text.toString(), passwordText.text.toString())
-            } else {
-                Globals.user = User(usernameText.text.toString())
+                password = passwordText.text.toString()
             }
+            Globals.user = User(usernameText.text.toString())
+
             val request = Request.Builder()
                 .url(Globals.BASE_URL + "/login")
                 .addHeader("username", Globals.user.username)
-                .addHeader("password", Globals.user.password)
+                .addHeader("password", password)
                 .get()
                 .build()
 
-//            Globals.makecall(request, client, this)
 
+            Log.w("loginrequest", "making request")
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -48,40 +50,16 @@ class Login : AppCompatActivity() {
 
                 @Throws(IOException::class)
                 override fun onResponse(call: Call, response: Response) {
-                    if (!response.isSuccessful) {
-                        Log.w("test", "Unexpected code $response")
-                        if (response.code() != 401) {
-                            val request = Request.Builder()
-                                .url(Globals.BASE_URL + "/user")
-                                .addHeader("username", Globals.user.username)
-                                .addHeader("password", Globals.user.password)
-                                .addHeader("email", Globals.user.email)
-                                .addHeader("displayName", Globals.user.displayName)
-                                .post(RequestBody.create(null, ""))
-                                .build()
+                    Log.w("loginrequest", response.code().toString())
 
-                            val newResponse = client.newCall(request).execute()
-                            if (newResponse.isSuccessful) {
-                                val requestSignin = Request.Builder()
-                                    .url(Globals.BASE_URL + "/login")
-                                    .addHeader("username", Globals.user.username)
-                                    .addHeader("password", Globals.user.password)
-                                    .get()
-                                    .build()
-                                val signinResponse = client.newCall(requestSignin).execute()
-                                if (signinResponse.isSuccessful) {
-                                    val user =
-                                        signinResponse.body()!!.string() // TODO: convert from JSON to Java object
-                                    val token = java.lang.Long.parseLong(signinResponse.header("token")!!)
-                                    runOnUiThread {
-                                        Globals.user = User.userFromJson(user)
-                                        Globals.token = token
-                                        startActivity(Intent(applicationContext, MainActivity::class.java))
-                                    }
-                                }
+                    if (!response.isSuccessful) {
+                        if (response.code() == 404) {
+                            runOnUiThread {
+                                var snacc = Snackbar.make(findViewById(R.id.loginCoordinator), "User does not exist",Snackbar.LENGTH_LONG)
+                                snacc.setAction("New User") { addUser(password) }
+                                snacc.show()
                             }
                         }
-
                     } else {
                         val user = response.body()!!.string() // TODO: convert from JSON to Java object
                         val token = java.lang.Long.parseLong(response.header("token")!!)
@@ -99,6 +77,36 @@ class Login : AppCompatActivity() {
     }
 
 
+    fun addUser(password: String) {
+        Log.w("test", "{\"username\": \"" + Globals.user.username +
+                "\",\"password\": \"" + password + "\",\"email\": \"" +
+                Globals.user.email + "\",\"displayName\": \"" + Globals.user.displayName + "\"}")
+        val request = Request.Builder()
+            .url(Globals.BASE_URL + "/user")
+            .post(RequestBody.create(Globals.JSON, "{\"username\": \"" + Globals.user.username +
+                    "\",\"password\": \"" + password + "\",\"email\": \"" +
+                    Globals.user.email + "\",\"displayName\": \"" + Globals.user.displayName + "\"}"
+            ))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.w("test", "shit")
+
+//                e.printStackTrace()
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator), "User created", Snackbar.LENGTH_LONG).show()
+                } else {
+                    Log.w("test", "Unexpected code $response")
+                }
+            }
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -106,6 +114,29 @@ class Login : AppCompatActivity() {
 
         usernameText = findViewById(R.id.usernameText)
         passwordText = findViewById(R.id.passwordText)
+
+        val request = Request.Builder()
+            .url(Globals.BASE_URL + "/hello")
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.w("test", "shit")
+
+//                e.printStackTrace()
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (response.code() == 200) {
+                    val output = response.body()!!.string()
+                    Log.w("ApiTest", output);
+                } else {
+                    Log.w("ApiTest", "Api not functional");
+                }
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

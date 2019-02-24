@@ -5,18 +5,18 @@
 <mat-card class="mat-h2">
   <h1>My Schedule</h1>
 </mat-card>
-<mat-card class="mat-h2" id="gridCard">
-  <mat-grid-list cols="8" rowHeight="25px">
+<mat-card class="mat-h2 gridCard" id="gridCard">
+  <mat-grid-list cols="8" rowHeight="6:1">
     <mat-grid-tile>Time</mat-grid-tile>
-    <mat-grid-tile>M</mat-grid-tile>
-    <mat-grid-tile>T</mat-grid-tile>
-    <mat-grid-tile>W</mat-grid-tile>
-    <mat-grid-tile>TR</mat-grid-tile>
-    <mat-grid-tile>F</mat-grid-tile>
-    <mat-grid-tile>SA</mat-grid-tile>
-    <mat-grid-tile>S</mat-grid-tile>
+    <mat-grid-tile>Mun</mat-grid-tile>
+    <mat-grid-tile>Tue</mat-grid-tile>
+    <mat-grid-tile>Wed</mat-grid-tile>
+    <mat-grid-tile>Thu</mat-grid-tile>
+    <mat-grid-tile>Fri</mat-grid-tile>
+    <mat-grid-tile>Sat</mat-grid-tile>
+    <mat-grid-tile>Sun</mat-grid-tile>
   </mat-grid-list>
-  <mat-grid-list cols="8" rowHeight="18px">
+  <mat-grid-list cols="8" rowHeight="6:1">
     <mat-grid-tile
       *ngFor="let tile of tiles"
       [colspan]="tile.cols"

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
-import { DataService } from "../data.service";
+import { Router } from '@angular/router';
+import { DataService } from '../data.service';
 
 
 @Component({
@@ -11,16 +11,15 @@ import { DataService } from "../data.service";
 
 export class LogInComponent implements OnInit {
 
-  login$: Object;
+  login$;
 
   constructor(private router: Router, private data: DataService) {}
 
-  onSubmit(){
+  onSubmit(username, password) {
+    this.data.getLogin(username, password).subscribe(data => this.login$ = data);
+    // if (this.login$.status === 200) {
     this.router.navigate(['/home']);
-    // this.data.getLogin(username, password).subscribe(
-    //   data => this.login$ = data
-    // );
-    // console.log(this.login$.toString());
+    // }
   }
 
   ngOnInit() {

@@ -5,9 +5,9 @@ import com.google.gson.Gson;
 public class User {
     long id;
     String username;
-    String password;
     String email;
     String displayName;
+    long discordSnowflake;
     int[][] schedule;
 
 
@@ -17,33 +17,31 @@ public class User {
         this("name");
     }
 
+
     public User(String username) {
-        this(username, "n/a");
+        this(0, username);
     }
 
-    public User(String username, String password) {
-        this(0, username, password);
+    public User(long id, String username) {
+        this(id, username, "none@example.com");
     }
 
-    public User(long id, String username, String password) {
-        this(id, username, password, "n/a");
+    public User(long id, String username, String email) {
+        this(id, username, email, username);
     }
 
-    public User(long id, String username, String password, String email) {
-        this(id, username, password, email, username);
+    public User(long id, String username, String email, String displayName) {
+        this(id, username, email, displayName, new int[7][96]);
     }
 
-    public User(long id, String username, String password, String email, String displayName) {
-        this(id, username, password, email, displayName, new int[7][96]);
-    }
-
-    public User(long id, String username, String password, String email, String displayName, int[][] schedule) {
+    public User(long id, String username, String email, String displayName, int[][] schedule) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.email = email;
         this.displayName = displayName;
         this.schedule = schedule;
+
+        this.discordSnowflake = 0;
     }
 
     static User userFromJson(String json) {

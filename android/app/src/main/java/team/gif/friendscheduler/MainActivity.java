@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,8 +16,10 @@ import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import okhttp3.*;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +32,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawer;
     TextView nameNavLabel;
     TextView usernamedNavLabel;
+    TextView usernameText;
+    TextView displayNameText;
+    TextView emailText;
+    TextView snowflakeText;
+    ImageView profileImage;
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
     CoordinatorLayout mainCoordinator;
@@ -37,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     View dailyInclude;
     View scheduleInclude;
     View friendsInclude;
-
+    View profileInclude;
     RecyclerView scheduleRecycler;
     RecyclerView.Adapter scheduleAdapter;
     RecyclerView.LayoutManager scheduleManager;
@@ -84,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             friendAdapter = new FriendAdapter();
                             friendRecycler.setAdapter(friendAdapter);
                         } catch (Exception e) {
+                            Toast.makeText(MainActivity.this, "Failed to load friends list from database",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -92,13 +102,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void updateSchedule(int day, int time, int val) {
+        Log.w("Ss", Globals.token+"");
         Request request = new Request.Builder()
                 .url(Globals.BASE_URL + "/schedule")
-                .addHeader("day", "" + day)
-                .addHeader("block", "" + time)
-                .addHeader("status", "" + val)
-                .addHeader("token", "" + Globals.token)
-                .put(RequestBody.create(null, ""))
+                .addHeader("token", Globals.token + "")
+                .put(RequestBody.create(Globals.JSON, "{\n" +
+                        "\"day\": " + day + ",\n" +
+                        "\"block\": " + time + ",\n" +
+                        "\"status\": " + val + "\n" +
+                        "}"))
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -120,6 +132,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    void updateProfile(String component){
+        Snackbar.make(mainCoordinator, "this is where we update "+ component, Snackbar.LENGTH_SHORT).show();
+    }
+
     void setUI() {
         fab = findViewById(R.id.fab);
         drawer = findViewById(R.id.drawer_layout);
@@ -128,10 +144,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         headerview = navigationView.getHeaderView(0);
         nameNavLabel = headerview.findViewById(R.id.nameNavLabel);
         usernamedNavLabel = headerview.findViewById(R.id.usernameNavLabel);
+        usernameText = findViewById(R.id.usernameText);
+        displayNameText = findViewById(R.id.displayNameText);
+        emailText = findViewById(R.id.emailText);
+        snowflakeText = findViewById(R.id.snowflakeText);
+        profileImage = findViewById(R.id.profileImage);
         currentInclude = findViewById(R.id.currentInclude);
         dailyInclude = findViewById(R.id.dailyInclude);
         scheduleInclude = findViewById(R.id.scheduleInclude);
         friendsInclude = findViewById(R.id.friendInclude);
+        profileInclude = findViewById(R.id.profileInclude);
         scheduleRecycler = findViewById(R.id.scheduleRecycler);
         friendRecycler = findViewById(R.id.friendRecycler);
     }
@@ -151,6 +173,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener((view) -> {
 
         });
+        usernameText.setOnClickListener((v -> {
+            updateProfile("username");
+        }));
+        emailText.setOnClickListener((v -> {
+            updateProfile("email");
+        }));
+        displayNameText.setOnClickListener((v -> {
+            updateProfile("displayName");
+        }));
+        snowflakeText.setOnClickListener((v -> {
+            updateProfile("discordSnowflake");
+        }));
 
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -162,9 +196,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         nameNavLabel.setText(Globals.user.displayName);
         usernamedNavLabel.setText(Globals.user.username);
 
+        usernameText.setText(Globals.user.username);
+        displayNameText.setText(Globals.user.displayName);
+        emailText.setText(Globals.user.email);
+
         currentInclude.setVisibility(View.GONE);
         dailyInclude.setVisibility(View.GONE);
         scheduleInclude.setVisibility(View.GONE);
+        profileInclude.setVisibility(View.GONE);
         friendsInclude.setVisibility(View.VISIBLE);
 
         scheduleRecycler.setHasFixedSize(true);
@@ -216,22 +255,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dailyInclude.setVisibility(View.GONE);
         scheduleInclude.setVisibility(View.GONE);
         friendsInclude.setVisibility(View.GONE);
+        profileInclude.setVisibility(View.GONE);
 
-        if (id == R.id.nav_current) {
-            getSupportActionBar().setTitle("Current Availability");
-            currentInclude.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_daily) {
-            getSupportActionBar().setTitle("Daily Schedule");
-            dailyInclude.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_my_schedule) {
-            getSupportActionBar().setTitle("My Schedule");
-            scheduleInclude.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_friends) {
-            getSupportActionBar().setTitle("Friends");
-            getFriends();
-            friendsInclude.setVisibility(View.VISIBLE);
+        switch(id) {
+            case R.id.nav_current:
+                getSupportActionBar().setTitle("Current Availability");
+                currentInclude.setVisibility(View.VISIBLE);
+                break;
+            case R.id.nav_daily:
+                getSupportActionBar().setTitle("Daily Schedule");
+                dailyInclude.setVisibility(View.VISIBLE);
+                break;
+            case R.id.nav_my_schedule:
+                getSupportActionBar().setTitle("My Schedule");
+                scheduleInclude.setVisibility(View.VISIBLE);
+                break;
+            case R.id.nav_friends:
+                getSupportActionBar().setTitle("Friends");
+                getFriends();
+                friendsInclude.setVisibility(View.VISIBLE);
+                break;
+            case R.id.nav_profile:
+                getSupportActionBar().setTitle("My Profile");
+                profileInclude.setVisibility(View.VISIBLE);
+                break;
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -249,8 +297,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Create new views (invoked by the layout manager)
         @Override
-        public ScheduleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                             int viewType) {
+        public ScheduleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             // create a new view
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.schedule_line, parent, false);

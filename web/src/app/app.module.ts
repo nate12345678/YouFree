@@ -8,14 +8,14 @@ import { LogInComponent } from './log-in/log-in.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { ScheduleComponent } from './schedule/schedule.component';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSortModule, MatCardModule} from '@angular/material';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FriendsComponent } from './friends/friends.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatGridListModule } from '@angular/material/grid-list';
-
-
+import { CalendarComponent } from './calendar/calendar.component';
+import { DataService } from './data.service';
 
 
 @NgModule({
@@ -26,6 +26,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     HomeComponent,
     ScheduleComponent,
     FriendsComponent,
+    CalendarComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +42,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatDatepickerModule,
     MatGridListModule,
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
