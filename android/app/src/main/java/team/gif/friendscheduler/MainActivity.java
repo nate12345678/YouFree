@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextView usernameText;
     TextView displayNameText;
     TextView emailText;
+    TextView snowflakeText;
     ImageView profileImage;
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
@@ -131,6 +132,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    void updateProfile(String component){
+        Snackbar.make(mainCoordinator, "this is where we update "+ component, Snackbar.LENGTH_SHORT).show();
+    }
+
     void setUI() {
         fab = findViewById(R.id.fab);
         drawer = findViewById(R.id.drawer_layout);
@@ -142,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         usernameText = findViewById(R.id.usernameText);
         displayNameText = findViewById(R.id.displayNameText);
         emailText = findViewById(R.id.emailText);
+        snowflakeText = findViewById(R.id.snowflakeText);
+        profileImage = findViewById(R.id.profileImage);
         currentInclude = findViewById(R.id.currentInclude);
         dailyInclude = findViewById(R.id.dailyInclude);
         scheduleInclude = findViewById(R.id.scheduleInclude);
@@ -166,6 +173,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener((view) -> {
 
         });
+        usernameText.setOnClickListener((v -> {
+            updateProfile("username");
+        }));
+        emailText.setOnClickListener((v -> {
+            updateProfile("email");
+        }));
+        displayNameText.setOnClickListener((v -> {
+            updateProfile("displayName");
+        }));
+        snowflakeText.setOnClickListener((v -> {
+            updateProfile("discordSnowflake");
+        }));
 
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
