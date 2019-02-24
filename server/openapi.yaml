@@ -158,6 +158,30 @@ paths:
         '404':
           description: User not found
 
+  /schedule/discord/{id}:
+    get:
+      summary: Get the schedule of the user with the associated Discord snowflake ID
+      operationId: getDiscordSchedule
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+        '404':
+          description: User not found
+
   /schedule:
     put:
       summary: Updates the schedule of the logged-in user

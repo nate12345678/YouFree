@@ -18,7 +18,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column
+	@Column(unique = true)
 	private Long discordSnowflake;
 	
 	@Column(nullable = false)

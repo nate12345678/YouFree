@@ -129,6 +129,18 @@ public class Controller {
 	}
 	
 	
+	@GetMapping("/schedule/discord/{id}")
+	public ResponseEntity<int[][]> getDiscordSchedule(
+			@PathVariable Long discordSnowflake) {
+		
+		User user = userRepository
+				.findUserByDiscordSnowflake(discordSnowflake)
+				.orElseThrow(() -> new UserNotFoundException(discordSnowflake));
+		
+		return ResponseEntity.ok(user.getSchedule());
+	}
+	
+	
 	@PutMapping("/schedule")
 	public ResponseEntity<Void> updateSchedule(
 			@RequestHeader("token") Long token,
