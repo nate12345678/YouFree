@@ -42,6 +42,10 @@ paths:
       responses:
         '200':
           description: successful operation
+          headers:
+            token:
+              schema:
+                type: string
           content:
             application/json:
               schema:

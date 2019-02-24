@@ -88,9 +88,9 @@ public class Controller {
 		if (user.getDisplayName() != null)
 			target.setDisplayName(user.getDisplayName());
 		
-		userRepository.save(user);
+		userRepository.save(target);
 		
-		return ResponseEntity.ok(user);
+		return ResponseEntity.ok(target);
 	}
 	
 	
