@@ -59,6 +59,7 @@ function listSchedule(msg){
 	}
 	//console.log(c);
 	var now = new Date()
+	var flag = 0;
 	for(var user of c){
 		var request = require('request');
         	request('http://216.171.4.52:8080/api/v1/schedule/discord/' + user, function(err, response, body) {
@@ -74,11 +75,13 @@ function listSchedule(msg){
 			console.log(body);
 			if(body[96* now.getDay() + (now.getHours() + Math.round(now.getMinutes() / 15))]==='0'){
 				for(let [snowflake,guildMember] of guildList){
-					if(snowflake === user)
+					if(snowflake === user){
 						msg.channel.send(guildMember.user.username + " is currently free!");
+						flag = 1;
+					}
 				}
 			}
-			var looped = 0
+			//var looped = 0
 			//else{
 			//	while(!looped){
 			//		for(i = now.getDay(); i < 7;i++){
@@ -94,6 +97,8 @@ function listSchedule(msg){
 
 		});
 	}
+	if(flag === 0)
+		msg.channel.send("No one is currently free!");
 	});
 }
 
