@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: YouFree?
-  description: An application that makes it easier to find spare time for studying and hanging out with friends
+  description: An application that makes it easier to find spare time for studying and hanging out with friends.
   version: v0.1
   license:
     name: Apache 2.0
@@ -103,6 +103,7 @@ paths:
   /friends:
     get:
       summary: List friends of logged-in user
+      description: Returns an array of User objects that are friends of the logged-in user.
       operationId: getFriends
       parameters:
         - $ref: '#/components/parameters/Token'
@@ -119,6 +120,7 @@ paths:
   /friends/discord:
     get:
       summary: List Discord snowflake IDs of logged-in user
+      description: Returns an array of Discord snowflakes that correspond to friends of the logged-in user. Any friends that do not have a Discord snowflake associated with their account are ignored.
       operationId: getDiscordFriends
       parameters:
         - name: snowflake
@@ -153,31 +155,29 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: array
-                  items:
-                    type: integer
-                    format: int32
+                $ref: '#/components/schemas/Schedule'
         '404':
           description: User not found.
 
-  /schedule/discord/{id}:
+  /schedule/discord/{snowflake}:
     get:
       summary: Get the schedule of the user with the associated Discord snowflake ID
       operationId: getDiscordSchedule
       parameters:
-        - $ref: '#/components/parameters/UserID'
+        - name: snowflake
+          description: The snowflake ID of the user in Discord.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: Successful operation.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: integer
-                  format: int32
+                $ref: '#/components/schemas/Schedule'
         '404':
           description: User not found.
 
@@ -190,6 +190,7 @@ paths:
         - $ref: '#/components/parameters/Token'
       requestBody:
         description: New user to add to the system.
+        required: true
         content:
           application/json:
             schema:
@@ -220,6 +221,14 @@ components:
         type: string
 
   schemas:
+    Schedule:
+      type: array
+      items:
+        type: array
+        items:
+          type: integer
+          format: int32
+
     NewUser:
       type: object
       properties:
@@ -262,12 +271,7 @@ components:
         displayName:
           type: string
         schedule:
-          type: array
-          items:
-            type: array
-            items:
-              type: integer
-              format: int32
+          type: Schedule
 
     TimeBlock:
       type: object
