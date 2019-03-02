@@ -117,7 +117,7 @@ paths:
       summary: Delete a user
       description: Deletes the given user from the server.
       parameters:
-        - $ref: '#/components/schemas/Token'
+        - $ref: '#/components/parameters/Token'
       responses:
         '204':
           description: No content.
@@ -295,7 +295,8 @@ components:
         displayName:
           type: string
         schedule:
-          type: Schedule
+          type: object
+          format: '#/components/schemas/Schedule'
 
     TimeBlock:
       type: object
