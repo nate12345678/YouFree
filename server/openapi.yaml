@@ -93,7 +93,8 @@ paths:
           description: User could not be found.
     put:
       summary: Update a user
-      description: Alters the user's attributes to match that supplied in the request body. Requires the target user to be logged-in (have a valid session token). Note that not all values can be changed (for example, User.id cannot be changed).
+      description: "Alters the user's attributes to match that supplied in the request body. Attributes that don't need to be updated can be excluded from the body.
+      Requires the target user to be logged-in (have a valid session token). Note that not all values can be changed (for example, User.id cannot be changed)."
       operationId: updateUser
       parameters:
         - $ref: '#/components/parameters/Token'
@@ -263,25 +264,17 @@ components:
           format: password
         email:
           type: string
-        displayName:
-          type: string
-
-    UserUpdate:
-      type: object
-      properties:
-        discordSnowflake:
-          type: integer
-          format: int64
-        email:
-          type: string
+          format: email
         displayName:
           type: string
 
     User:
       type: object
+      description: Represents a user account on the server.
       properties:
         id:
           type: string
+          readOnly: true
         discordSnowflake:
           type: integer
           format: int64
@@ -290,13 +283,16 @@ components:
         password:
           type: string
           format: password
+          writeOnly: true
         email:
           type: string
+          format: email
         displayName:
           type: string
         schedule:
           type: object
           format: '#/components/schemas/Schedule'
+          readOnly: true
 
     TimeBlock:
       type: object
