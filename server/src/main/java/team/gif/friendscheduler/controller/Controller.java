@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,6 +73,15 @@ public class Controller {
 	}
 	
 	
+	@GetMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> getUser(
+			@RequestHeader("token") Long token) {
+	
+		User result = userRepository.findById(token).orElseThrow(() -> new UserNotFoundException(token));
+		return ResponseEntity.ok(result);
+	}
+	
+	
 	@PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> updateUser(
 			@RequestHeader("token") Long token,
@@ -91,6 +101,17 @@ public class Controller {
 		userRepository.save(target);
 		
 		return ResponseEntity.ok(target);
+	}
+	
+	
+	@DeleteMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> deleteUser(
+			@RequestHeader("token") Long token) {
+		
+		if (!userRepository.existsById(token)) throw new UserNotFoundException(token);
+		userRepository.deleteById(token);
+		
+		return ResponseEntity.noContent().build();
 	}
 	
 	

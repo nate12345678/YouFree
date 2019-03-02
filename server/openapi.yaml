@@ -76,6 +76,21 @@ paths:
           description: Successful operation.
         '400':
           description: Fields cannot be null or empty
+    get:
+      summary: Retrieve a user
+      description: Gets all relevant information about a user.
+      operationId: getUser
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User could not be found.
     put:
       summary: Update a user
       description: Alters the user's attributes to match that supplied in the request body. Requires the target user to be logged-in (have a valid session token). Note that not all values can be changed (for example, User.id cannot be changed).
@@ -98,7 +113,16 @@ paths:
                 $ref: '#/components/schemas/User'
         '404':
           description: User could not be found.
-
+    delete:
+      summary: Delete a user
+      description: Deletes the given user from the server.
+      parameters:
+        - $ref: '#/components/schemas/Token'
+      responses:
+        '204':
+          description: No content.
+        '404':
+          description: User could not be found.
 
   /friends:
     get:
