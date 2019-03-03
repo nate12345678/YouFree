@@ -47,17 +47,15 @@ paths:
             format: password
       responses:
         '200':
-          description: Successful operation.
-          headers:
-            token:
+          $ref: '#/components/responses/UserLogin'
+        '401':
+          description: Incorrect password.
+          content:
+            text/plain:
               schema:
                 type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '401':
-          description: Incorrect username or password.
+        '404':
+          $ref: '#/components/responses/UserNotFound'
 
   /user:
     post:
@@ -73,24 +71,34 @@ paths:
               $ref: '#/components/schemas/NewUser'
       responses:
         '201':
-          description: Successful operation.
+          $ref: '#/components/responses/UserLogin'
         '400':
           description: Fields cannot be null or empty
     get:
       summary: Retrieve a user
-      description: Gets all relevant information about a user.
+      description: "Attempts to find a user with one of the given attributes. If multiple are specified,
+      the first attribute to match (as given in the ordering below) is the one which returns the match.
+      If no query parameters are given, this returns the info of the currently logged-in user."
       operationId: getUser
       parameters:
         - $ref: '#/components/parameters/Token'
+        - name: id
+          in: query
+          required: false
+        - name: snowflake
+          in: query
+          required: false
+        - name: username
+          in: query
+          required: false
+        - name: email
+          in: query
+          required: false
       responses:
         '200':
-          description: Successful operation.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+          $ref: '#/components/responses/User'
         '404':
-          description: User could not be found.
+          $ref: '#/components/responses/UserNotFound'
     put:
       summary: Update a user
       description: "Alters the user's attributes to match that supplied in the request body. Attributes that don't need to be updated can be excluded from the body.
@@ -107,13 +115,9 @@ paths:
               $ref: '#/components/schemas/User'
       responses:
         '200':
-          description: Successful operation.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+          $ref: '#/components/responses/User'
         '404':
-          description: User could not be found.
+          $ref: '#/components/responses/UserNotFound'
     delete:
       summary: Delete a user
       description: Deletes the given user from the server.
@@ -123,7 +127,7 @@ paths:
         '204':
           description: No content.
         '404':
-          description: User could not be found.
+          $ref: '#/components/responses/UserNotFound'
 
   /friends:
     get:
@@ -134,17 +138,11 @@ paths:
         - $ref: '#/components/parameters/Token'
       responses:
         '200':
-          description: Successful operation.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+          $ref: '#/components/responses/UserList'
 
   /friends/discord:
     get:
-      summary: List Discord snowflake IDs of logged-in user
+      summary: List Discord snowflake IDs of friends of logged-in user
       description: Returns an array of Discord snowflakes that correspond to friends of the logged-in user. Any friends that do not have a Discord snowflake associated with their account are ignored.
       operationId: getDiscordFriends
       parameters:
@@ -182,7 +180,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Schedule'
         '404':
-          description: User not found.
+          $ref: '#/components/responses/UserNotFound'
 
   /schedule/discord/{snowflake}:
     get:
@@ -224,7 +222,7 @@ paths:
         '200':
           description: Successful operation.
         '404':
-          description: User not found.
+          $ref: '#/components/responses/UserNotFound'
 
 components:
   parameters:
@@ -236,7 +234,6 @@ components:
       schema:
         type: integer
         format: int64
-
     Token:
       name: token
       in: header
@@ -253,7 +250,6 @@ components:
         items:
           type: integer
           format: int32
-
     NewUser:
       type: object
       properties:
@@ -265,9 +261,6 @@ components:
         email:
           type: string
           format: email
-        displayName:
-          type: string
-
     User:
       type: object
       description: Represents a user account on the server.
@@ -287,13 +280,10 @@ components:
         email:
           type: string
           format: email
-        displayName:
-          type: string
         schedule:
           type: object
           format: '#/components/schemas/Schedule'
           readOnly: true
-
     TimeBlock:
       type: object
       properties:
@@ -306,3 +296,32 @@ components:
         status:
           type: integer
           format: int32
+
+  responses:
+    User:
+      description: Successful operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+    UserLogin:
+      $ref: '#/components/responses/User'
+      headers:
+        token:
+          schema:
+            type: string
+    UserList:
+      description: Successful operation.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+    UserNotFound:
+      description: User not found.
+      content:
+        text/plain:
+          schema:
+            type: string
+

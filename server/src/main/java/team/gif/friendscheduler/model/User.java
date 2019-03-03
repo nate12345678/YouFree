@@ -21,17 +21,14 @@ public class User {
 	@Column(unique = true)
 	private Long discordSnowflake;
 	
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private String username;
 	
 	@Column(nullable = false)
 	private String password;
 	
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private String email;
-	
-	@Column(nullable = false)
-	private String displayName;
 	
 	@Column
 	private int[][] schedule;
@@ -52,7 +49,6 @@ public class User {
 		this.username = username;
 		this.password = password;
 		this.email = email;
-		this.displayName = displayName;
 		this.schedule = new int[Globals.NUM_DAYS_IN_WEEK][Globals.NUM_BLOCKS_IN_DAY];
 		
 		for (int i = 0; i < schedule.length; i++) {
@@ -88,11 +84,6 @@ public class User {
 	}
 	
 	
-	public String getDisplayName() {
-		return displayName;
-	}
-	
-	
 	public int[][] getSchedule() {
 		return schedule;
 	}
@@ -103,13 +94,13 @@ public class User {
 	}
 	
 	
-	public void setEmail(String email) {
-		this.email = email;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	
