@@ -85,15 +85,23 @@ paths:
         - name: id
           in: query
           required: false
+          schema:
+            type: integer
         - name: snowflake
           in: query
           required: false
+          schema:
+            type: integer
         - name: username
           in: query
           required: false
+          schema:
+            type: string
         - name: email
           in: query
           required: false
+          schema:
+            type: string
       responses:
         '200':
           $ref: '#/components/responses/User'
