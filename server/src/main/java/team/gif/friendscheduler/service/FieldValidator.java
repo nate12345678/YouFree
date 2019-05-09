@@ -10,7 +10,6 @@ public class FieldValidator {
 		validateNonSpacedString(user.getUsername(), "username");
 		validateNonSpacedString(user.getPassword(), "password");
 		validateNonSpacedString(user.getEmail(), "email");
-		validateNonSpacedString(user.getDisplayName(), "displayName");
 		
 		return true;
 	}

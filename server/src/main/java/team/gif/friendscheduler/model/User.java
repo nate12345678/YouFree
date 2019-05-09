@@ -44,7 +44,7 @@ public class User {
 		}
 	}
 	
-	public User(String username, String password, String email, String displayName) {
+	public User(String username, String password, String email) {
 		this.discordSnowflake = null;
 		this.username = username;
 		this.password = password;
