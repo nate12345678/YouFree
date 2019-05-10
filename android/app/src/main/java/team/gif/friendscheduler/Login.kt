@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.*
-import team.gif.friendscheduler.Globals.user
 import java.io.IOException
 
 
@@ -19,15 +17,47 @@ class Login : AppCompatActivity() {
 
     private lateinit var usernameText: EditText
     private lateinit var passwordText: EditText
+    private lateinit var createAcctText: TextView
+    private lateinit var confirmPassLabel: TextView
+    private lateinit var confirmPassText: EditText
+    private lateinit var emailLabel: TextView
+    private lateinit var emailText: EditText
 
     internal var client = OkHttpClient()
 
+    internal var confirm = false
+
+
+    fun createAcct() {
+        confirmPassLabel.visibility = View.VISIBLE
+        confirmPassText.visibility = View.VISIBLE
+        emailLabel.visibility = View.VISIBLE
+        emailText.visibility = View.VISIBLE
+        confirm = true
+    }
+
+    fun showLogin() {
+        confirmPassLabel.visibility = View.GONE
+        confirmPassText.visibility = View.GONE
+        emailLabel.visibility = View.GONE
+        emailText.visibility = View.GONE
+        confirm = false
+    }
 
     fun login(v: View) {
         var password = ""
-        if (usernameText.text.isNotEmpty()) {
-            if (passwordText.text.isNotEmpty()) {
-                password = passwordText.text.toString()
+        if (usernameText.text.isNotEmpty() && passwordText.text.isNotEmpty()) {
+            password = passwordText.text.toString()
+            Globals.enteredPass = password
+            if(confirm) {
+                if(confirmPassText.text.isNotEmpty() && passwordText.text.toString() == confirmPassText.text.toString()
+                    && emailText.text.isNotEmpty()) {
+                    Globals.user = User(usernameText.text.toString(), emailText.text.toString())
+                    addUser(password)
+                } else {
+                    Snackbar.make(findViewById(R.id.loginCoordinator),
+                        "Passwords are required to match", Snackbar.LENGTH_LONG).show()
+                }
             }
             Globals.user = User(usernameText.text.toString())
 
@@ -37,7 +67,6 @@ class Login : AppCompatActivity() {
                 .addHeader("password", password)
                 .get()
                 .build()
-
 
             Log.w("loginrequest", "making request")
 
@@ -55,8 +84,12 @@ class Login : AppCompatActivity() {
                     if (!response.isSuccessful) {
                         if (response.code() == 404) {
                             runOnUiThread {
-                                var snacc = Snackbar.make(findViewById(R.id.loginCoordinator), "User does not exist",Snackbar.LENGTH_LONG)
-                                snacc.setAction("New User") { addUser(password) }
+                                var snacc = Snackbar.make(
+                                    findViewById(R.id.loginCoordinator),
+                                    "User does not exist", Snackbar.LENGTH_LONG
+                                )
+                                showLogin()
+                                snacc.setAction("New User") { createAcct() }
                                 snacc.show()
                             }
                         }
@@ -78,15 +111,20 @@ class Login : AppCompatActivity() {
 
 
     fun addUser(password: String) {
-        Log.w("test", "{\"username\": \"" + Globals.user.username +
-                "\",\"password\": \"" + password + "\",\"email\": \"" +
-                Globals.user.email + "\",\"displayName\": \"" + Globals.user.displayName + "\"}")
+        Log.w(
+            "test", "{\"username\": \"" + Globals.user.username +
+                    "\",\"password\": \"" + password + "\",\"email\": \"" +
+                    Globals.user.email + "\"}"
+        )
         val request = Request.Builder()
             .url(Globals.BASE_URL + "/user")
-            .post(RequestBody.create(Globals.JSON, "{\"username\": \"" + Globals.user.username +
-                    "\",\"password\": \"" + password + "\",\"email\": \"" +
-                    Globals.user.email + "\",\"displayName\": \"" + Globals.user.displayName + "\"}"
-            ))
+            .post(
+                RequestBody.create(
+                    Globals.JSON, "{\"username\": \"" + Globals.user.username +
+                            "\",\"password\": \"" + password + "\",\"email\": \"" +
+                            Globals.user.email + "\"}"
+                )
+            )
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -110,10 +148,25 @@ class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        toolbar.title = "Login"
         setSupportActionBar(toolbar)
 
         usernameText = findViewById(R.id.usernameText)
         passwordText = findViewById(R.id.passwordText)
+        createAcctText = findViewById(R.id.createAcctText)
+        confirmPassLabel = findViewById(R.id.confirmPassLabel)
+        confirmPassText = findViewById(R.id.confirmPassText)
+        emailText = findViewById(R.id.emailText)
+        emailLabel = findViewById(R.id.emailLabel)
+
+        confirmPassLabel.visibility = View.GONE
+        confirmPassText.visibility = View.GONE
+        emailLabel.visibility = View.GONE
+        emailText.visibility = View.GONE
+
+        createAcctText.setOnClickListener{
+            createAcct()
+        }
 
         val request = Request.Builder()
             .url(Globals.BASE_URL + "/hello")
@@ -122,8 +175,7 @@ class Login : AppCompatActivity() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.w("test", "shit")
-
+                Log.w("test", "No connection to server")
 //                e.printStackTrace()
             }
 
@@ -131,14 +183,16 @@ class Login : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 if (response.code() == 200) {
                     val output = response.body()!!.string()
-                    Log.w("ApiTest", output);
+                    Log.w("ApiTest", output)
                 } else {
-                    Log.w("ApiTest", "Api not functional");
+                    Log.w("ApiTest", "Api not functional")
                 }
             }
         })
     }
 
+/*
+this section is only useful if there is a menu on the login screen (there isnt)
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_login, menu)
@@ -154,4 +208,5 @@ class Login : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+*/
 }

@@ -1,5 +1,7 @@
 package team.gif.friendscheduler;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,12 +16,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import okhttp3.*;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextView nameNavLabel;
     TextView usernamedNavLabel;
     TextView usernameText;
-    TextView displayNameText;
     TextView emailText;
     TextView snowflakeText;
     ImageView profileImage;
@@ -133,7 +134,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void updateProfile(String component){
-        Snackbar.make(mainCoordinator, "this is where we update "+ component, Snackbar.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Write a new value for " + component);
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setCancelable(true);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+            }
+        });
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+
+                if(!readInput(input).equals("")) {
+                    Log.w("test", User.userToJson(Globals.user));
+                    Request request = new Request.Builder().url(Globals.BASE_URL + "/user/")
+                            .addHeader("token", Globals.token + "")
+                            .put(RequestBody.create(Globals.JSON, User.userToJson(Globals.user))).build();
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.w("test", "shit");
+
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+                            if (!response.isSuccessful()) {
+                                Log.w("test", "Unexpected code " + response);
+                            } else {
+                                Globals.user = User.userFromJson(response.body().string());
+                                Log.w("ss", User.userToJson(Globals.))
+                            }
+                        }
+                    });
+                } else {
+                    Snackbar.make(mainCoordinator, "cancelled", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     void setUI() {
@@ -145,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         nameNavLabel = headerview.findViewById(R.id.nameNavLabel);
         usernamedNavLabel = headerview.findViewById(R.id.usernameNavLabel);
         usernameText = findViewById(R.id.usernameText);
-        displayNameText = findViewById(R.id.displayNameText);
         emailText = findViewById(R.id.emailText);
         snowflakeText = findViewById(R.id.snowflakeText);
         profileImage = findViewById(R.id.profileImage);
@@ -179,9 +227,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         emailText.setOnClickListener((v -> {
             updateProfile("email");
         }));
-        displayNameText.setOnClickListener((v -> {
-            updateProfile("displayName");
-        }));
+
         snowflakeText.setOnClickListener((v -> {
             updateProfile("discordSnowflake");
         }));
@@ -193,11 +239,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        nameNavLabel.setText(Globals.user.displayName);
+        nameNavLabel.setText(Globals.user.username);
         usernamedNavLabel.setText(Globals.user.username);
 
         usernameText.setText(Globals.user.username);
-        displayNameText.setText(Globals.user.displayName);
         emailText.setText(Globals.user.email);
 
         currentInclude.setVisibility(View.GONE);
@@ -435,7 +480,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             currentTime = Calendar.getInstance();
-            holder.friendNameText.setText(Globals.friendsList.get(position).displayName);
+            holder.friendNameText.setText(Globals.friendsList.get(position).username);
             int day = (currentTime.get(Calendar.DAY_OF_WEEK) == 1) ? 6 : currentTime.get(Calendar.DAY_OF_WEEK) - 2;
             int min = currentTime.get(Calendar.MINUTE) / 15;
             int hour = currentTime.get(Calendar.HOUR_OF_DAY);
@@ -476,4 +521,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public static String readInput(EditText editText) {
+        try {
+            return editText.getText().toString();
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }
