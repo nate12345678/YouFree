@@ -70,7 +70,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.w("test", "shit");
-
+                if (e.getMessage().contains("Failed to connect")) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator),
+                            "Lost connection to server", Snackbar.LENGTH_SHORT).show();
+                }
                 e.printStackTrace();
             }
 
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void updateSchedule(int day, int time, int val) {
-        Log.w("Ss", Globals.token+"");
+        Log.w("Ss", Globals.token + "");
         Request request = new Request.Builder()
                 .url(Globals.BASE_URL + "/schedule")
                 .addHeader("token", Globals.token + "")
@@ -117,7 +120,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.w("test", "shit");
-
+                if (e.getMessage().contains("Failed to connect")) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator),
+                            "Lost connection to server", Snackbar.LENGTH_SHORT).show();
+                }
                 e.printStackTrace();
             }
 
@@ -133,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    void updateProfile(String component){
+    void updateProfile(String component) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Write a new value for " + component);
         final EditText input = new EditText(this);
@@ -148,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
 
-                if(!readInput(input).equals("")) {
+                if (!readInput(input).equals("")) {
                     Log.w("test", User.userToJson(Globals.user));
                     Request request = new Request.Builder().url(Globals.BASE_URL + "/user/")
                             .addHeader("token", Globals.token + "")
@@ -157,7 +163,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onFailure(Call call, IOException e) {
                             Log.w("test", "shit");
-
+                            if (e.getMessage().contains("Failed to connect")) {
+                                Snackbar.make(findViewById(R.id.loginCoordinator),
+                                        "Lost connection to server", Snackbar.LENGTH_SHORT).show();
+                            }
                             e.printStackTrace();
                         }
 
@@ -167,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 Log.w("test", "Unexpected code " + response);
                             } else {
                                 Globals.user = User.userFromJson(response.body().string());
-                                Log.w("ss", User.userToJson(Globals.))
+//                                Log.w("ss", User.userToJson(Globals.))
                             }
                         }
                     });
@@ -302,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         friendsInclude.setVisibility(View.GONE);
         profileInclude.setVisibility(View.GONE);
 
-        switch(id) {
+        switch (id) {
             case R.id.nav_current:
                 getSupportActionBar().setTitle("Current Availability");
                 currentInclude.setVisibility(View.VISIBLE);

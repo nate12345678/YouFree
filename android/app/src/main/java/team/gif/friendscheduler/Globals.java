@@ -11,4 +11,5 @@ public final class Globals {
     static User user;
     static String enteredPass;
     static ArrayList<User> friendsList = new ArrayList<>();
+    static boolean stayLoggedOn = false;
 }

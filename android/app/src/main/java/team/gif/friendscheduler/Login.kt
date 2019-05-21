@@ -1,11 +1,14 @@
 package team.gif.friendscheduler
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_login.*
@@ -22,6 +25,7 @@ class Login : AppCompatActivity() {
     private lateinit var confirmPassText: EditText
     private lateinit var emailLabel: TextView
     private lateinit var emailText: EditText
+    private lateinit var stayInCheck: CheckBox
 
     internal var client = OkHttpClient()
 
@@ -29,6 +33,7 @@ class Login : AppCompatActivity() {
 
 
     fun createAcct() {
+        createAcctText.text = "Show Login"
         confirmPassLabel.visibility = View.VISIBLE
         confirmPassText.visibility = View.VISIBLE
         emailLabel.visibility = View.VISIBLE
@@ -37,11 +42,19 @@ class Login : AppCompatActivity() {
     }
 
     fun showLogin() {
+        createAcctText.text = "Create Account"
         confirmPassLabel.visibility = View.GONE
         confirmPassText.visibility = View.GONE
         emailLabel.visibility = View.GONE
         emailText.visibility = View.GONE
         confirm = false
+    }
+
+    fun stayLogged(v: View) {
+        Globals.stayLoggedOn = stayInCheck.isChecked
+        var editor = getSharedPreferences("prefs", Context.MODE_PRIVATE).edit()
+        editor.putBoolean("stayLoggedOn", Globals.stayLoggedOn)
+        editor.apply()
     }
 
     fun login(v: View) {
@@ -73,7 +86,10 @@ class Login : AppCompatActivity() {
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     Log.w("test", "shit")
-
+                    if(e.message!!.contains("Failed to connect")) {
+                        Snackbar.make(findViewById(R.id.loginCoordinator),
+                            "Could not find server", Snackbar.LENGTH_SHORT).show()
+                    }
                     e.printStackTrace()
                 }
 
@@ -158,14 +174,23 @@ class Login : AppCompatActivity() {
         confirmPassText = findViewById(R.id.confirmPassText)
         emailText = findViewById(R.id.emailText)
         emailLabel = findViewById(R.id.emailLabel)
+        stayInCheck = findViewById(R.id.stayInCheck)
 
         confirmPassLabel.visibility = View.GONE
         confirmPassText.visibility = View.GONE
         emailLabel.visibility = View.GONE
         emailText.visibility = View.GONE
 
+        var prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        Globals.stayLoggedOn = prefs.getBoolean("stayLoggedOn", false)
+        stayInCheck.isChecked = Globals.stayLoggedOn
+
         createAcctText.setOnClickListener{
-            createAcct()
+            if(confirm) {
+                showLogin()
+            } else {
+                createAcct()
+            }
         }
 
         val request = Request.Builder()
@@ -176,6 +201,8 @@ class Login : AppCompatActivity() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.w("test", "No connection to server")
+                Snackbar.make(findViewById(R.id.loginCoordinator),
+                    "No connection to server, login may fail", Snackbar.LENGTH_SHORT).show()
 //                e.printStackTrace()
             }
 
