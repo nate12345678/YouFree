@@ -16,10 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import okhttp3.*;
 import org.json.JSONArray;
 
@@ -32,8 +29,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FloatingActionButton fab;
     NavigationView navigationView;
     DrawerLayout drawer;
-    TextView nameNavLabel;
-    TextView usernamedNavLabel;
+    TextView usernameNavLabel;
+    TextView emailNavLabel;
     TextView usernameText;
     TextView emailText;
     TextView snowflakeText;
@@ -200,8 +197,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.nav_view);
         mainCoordinator = findViewById(R.id.mainCoordinator);
         headerview = navigationView.getHeaderView(0);
-        nameNavLabel = headerview.findViewById(R.id.nameNavLabel);
-        usernamedNavLabel = headerview.findViewById(R.id.usernameNavLabel);
+        usernameNavLabel = headerview.findViewById(R.id.usernameNavLabel);
+        emailNavLabel = headerview.findViewById(R.id.emailNavLabel);
         usernameText = findViewById(R.id.usernameText);
         emailText = findViewById(R.id.emailText);
         snowflakeText = findViewById(R.id.snowflakeText);
@@ -248,8 +245,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        nameNavLabel.setText(Globals.user.username);
-        usernamedNavLabel.setText(Globals.user.username);
+        usernameNavLabel.setText(Globals.user.username);
+        emailNavLabel.setText(Globals.user.email);
 
         usernameText.setText(Globals.user.username);
         emailText.setText(Globals.user.email);

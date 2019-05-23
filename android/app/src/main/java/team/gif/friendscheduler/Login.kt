@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
@@ -26,6 +27,7 @@ class Login : AppCompatActivity() {
     private lateinit var emailLabel: TextView
     private lateinit var emailText: EditText
     private lateinit var stayInCheck: CheckBox
+    private lateinit var loginButton: Button
 
     internal var client = OkHttpClient()
 
@@ -34,6 +36,7 @@ class Login : AppCompatActivity() {
 
     fun createAcct() {
         createAcctText.text = "Show Login"
+        loginButton.text = "Create"
         confirmPassLabel.visibility = View.VISIBLE
         confirmPassText.visibility = View.VISIBLE
         emailLabel.visibility = View.VISIBLE
@@ -43,6 +46,7 @@ class Login : AppCompatActivity() {
 
     fun showLogin() {
         createAcctText.text = "Create Account"
+        loginButton.text = "Login"
         confirmPassLabel.visibility = View.GONE
         confirmPassText.visibility = View.GONE
         emailLabel.visibility = View.GONE
@@ -175,6 +179,7 @@ class Login : AppCompatActivity() {
         emailText = findViewById(R.id.emailText)
         emailLabel = findViewById(R.id.emailLabel)
         stayInCheck = findViewById(R.id.stayInCheck)
+        loginButton = findViewById(R.id.loginButton)
 
         confirmPassLabel.visibility = View.GONE
         confirmPassText.visibility = View.GONE
