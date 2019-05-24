@@ -19,12 +19,13 @@ import android.view.*;
 import android.widget.*;
 import okhttp3.*;
 import org.json.JSONArray;
+import team.gif.greyshiftedapi.ExtendedActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends ExtendedActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     FloatingActionButton fab;
     NavigationView navigationView;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
     CoordinatorLayout mainCoordinator;
-    View headerview;
+    View headerView;
     View currentInclude;
     View dailyInclude;
     View scheduleInclude;
@@ -191,14 +192,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         alert.show();
     }
 
+    void newProfileImage() {
+        Toast.makeText(this, "O GOD O FUK", Toast.LENGTH_SHORT).show();
+    }
+
     void setUI() {
         fab = findViewById(R.id.fab);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         mainCoordinator = findViewById(R.id.mainCoordinator);
-        headerview = navigationView.getHeaderView(0);
-        usernameNavLabel = headerview.findViewById(R.id.usernameNavLabel);
-        emailNavLabel = headerview.findViewById(R.id.emailNavLabel);
+        headerView = navigationView.getHeaderView(0);
+        usernameNavLabel = headerView.findViewById(R.id.usernameNavLabel);
+        emailNavLabel = headerView.findViewById(R.id.emailNavLabel);
         usernameText = findViewById(R.id.usernameText);
         emailText = findViewById(R.id.emailText);
         snowflakeText = findViewById(R.id.snowflakeText);
@@ -236,6 +241,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         snowflakeText.setOnClickListener((v -> {
             updateProfile("discordSnowflake");
+        }));
+
+        profileImage.setOnClickListener((v -> {
+            newProfileImage();
         }));
 
         toggle = new ActionBarDrawerToggle(
