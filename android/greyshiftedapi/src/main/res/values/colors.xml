@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorText">@android:color/white</color>
+    <color name="colorTextDark">#a0a0a0</color>
+
+    <!--main colors-->
+    <color name="red">#c80000</color>
+    <color name="redDark">#b00808</color>
+    <color name="orange">#fa6e0a</color>
+    <color name="yellow">#e6d200</color>
+    <color name="green">#00c800</color>
+    <color name="blue">#0000c8</color>
+    <color name="purple">#6e00aa</color>
+    <!--secondary colors-->
+    <color name="lightTeal">#70eedd</color>
+    <color name="tangaroa">#02243e</color>
+    <color name="niceNavy">#123456</color>
+    <color name="transparent">#00000000</color>
+    <!--greys-->
+    <color name="ultralightGrey">#ccccd4</color>
+    <color name="lightGrey">#88888f</color>
+    <color name="darkGrey">#404048</color>
+
+</resources>
