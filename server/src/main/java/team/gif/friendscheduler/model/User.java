@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "USERS")
@@ -19,15 +21,19 @@ public class User {
 	private Long id;
 	
 	@Column(unique = true)
+	@PositiveOrZero
 	private Long discordSnowflake;
 	
 	@Column(unique = true, nullable = false)
+	@Size(min = 1, max = 64)
 	private String username;
 	
 	@Column(nullable = false)
+	@Size(min = 1, max = 64)
 	private String password;
 	
 	@Column(unique = true, nullable = false)
+	@Size(min = 5, max = 256) // Shortest email: a@b.c
 	private String email;
 	
 	@Column

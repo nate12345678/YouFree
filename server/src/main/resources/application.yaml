@@ -1,25 +1,33 @@
 
-server.port: 8080
+server:
+  port: 8080
+  ssl:
+    key-store: keystore.p12
+    key-store-password: password # NOTE: placeholder
+    keyStoreType: PKCS12
+    keyAlias: youfree
 
-spring:
-  h2.console:
-    enabled: true
-    path: /h2
-    settings:
-      web-allow-others: false
-
+security:
+  require-ssl: true
 
 #spring:
-#    database:
-#        driverClassName: org.postgresql.Driver
-#    jpa:
-#        database: POSTGRESQL
-#        show-sql: true
-#        hibernate:
-#            ddl-auto: create-drop
-#    datasource:
-#        platform: postgres
-#        url: jdbc:postgresql://localhost:5432/testdb
-#        username: patrick
-#        password: password
+#  h2.console:
+#    enabled: true
+#    path: /h2
+#    settings:
+#      web-allow-others: false
+
+spring:
+  database:
+    driverClassName: org.postgresql.Driver
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/testdb # NOTE: placeholder
+    username: patrick # NOTE: placeholder
+    password: password # NOTE: placeholder
 
