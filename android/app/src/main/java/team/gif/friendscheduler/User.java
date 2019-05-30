@@ -47,8 +47,6 @@ public class User {
     }
 
     static String userToJson(User user) {
-//        return gson.toJson(user);
-
         return "{" +
                 "\"discordSnowflake\": \"" + user.discordSnowflake + "\"," +
                 "\"username\": \"" + user.username +"\",\n" +
@@ -56,5 +54,9 @@ public class User {
                 "\"email\": \"" + user.email +"\"\n" +
                 "}";
     }
+    static String autoUserToJson(User user) {
+        return gson.toJson(user);
+    }
+
 
 }

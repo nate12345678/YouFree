@@ -35,7 +35,7 @@ class Login : AppCompatActivity() {
 
 
     fun createAcct() {
-        createAcctText.text = "Show Login"
+        createAcctText.text = "Login instead"
         loginButton.text = "Create"
         confirmPassLabel.visibility = View.VISIBLE
         confirmPassText.visibility = View.VISIBLE
@@ -45,7 +45,7 @@ class Login : AppCompatActivity() {
     }
 
     fun showLogin() {
-        createAcctText.text = "Create Account"
+        createAcctText.text = "Create a new account"
         loginButton.text = "Login"
         confirmPassLabel.visibility = View.GONE
         confirmPassText.visibility = View.GONE
