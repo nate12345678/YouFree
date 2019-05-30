@@ -28,14 +28,14 @@ client.on('message', msg => {
 		listSchedule(msg);
 	}
 })
-client.login('NTQ4NzEwMTM2MDM4OTQ4ODg0.D1JSJw.riQJrP5kEGVTScHuhlIlRTCAUK8')
+client.login('PLACE TOKEN HERE')
 
 function hello(msg){
 	console.log("hello");
 	var test = msg.guild.members;
 	var filtered = [];
 	for(let [snowflake] of test){
-		
+
 	}
 }
 
@@ -46,9 +46,9 @@ function listSchedule(msg){
         request(options, function(err, response, body) {
         if(err) { console.log(err); return; }
 	//console.log(body);
-	
+
 	var friendlist = body;
-	
+
 	var guildList = msg.guild.members;
         var c = [];
 	var i = 0;
@@ -64,9 +64,9 @@ function listSchedule(msg){
 		var request = require('request');
         	request('http://216.171.4.52:8080/api/v1/schedule/discord/' + user, function(err, response, body,flag) {
         		if(err) { console.log(err); return; }
-			
+
 			console.log(body);
-			
+
 			console.log(now.getDay());
 			console.log(now.getHours());
 			console.log(now.getMinutes());
@@ -116,5 +116,3 @@ function getSnowflake(msg,snowflake){
 function getGuild(msg,guild){
 	guild(msg.guild.id)
 }
-
-
