@@ -59,9 +59,10 @@ function listSchedule(msg){
 	}
 	//console.log(c);
 	var now = new Date()
+	var flag = 0;
 	for(var user of c){
 		var request = require('request');
-        	request('http://216.171.4.52:8080/api/v1/schedule/discord/' + user, function(err, response, body) {
+        	request('http://216.171.4.52:8080/api/v1/schedule/discord/' + user, function(err, response, body,flag) {
         		if(err) { console.log(err); return; }
 			
 			console.log(body);
@@ -69,16 +70,25 @@ function listSchedule(msg){
 			console.log(now.getDay());
 			console.log(now.getHours());
 			console.log(now.getMinutes());
-			
+			var day = now.getDay() -1;
+			if(day == -1)
+				day = 6;
 			body = body.replace(/[^0-9]/g, '');
 			console.log(body);
-			if(body[96* now.getDay() + (now.getHours() + Math.round(now.getMinutes() / 15))]==='0'){
+//			console.log(body[95* day + (now.getHours() + Math.round(now.getMinutes() / 15))]);
+//			console.log(95* day + (now.getHours() + Math.round(now.getMinutes() / 15)));
+//			console.log((now.getHours() + Math.round(now.getMinutes() / 15)));
+
+
+			if(body[95* day + (4*now.getHours() + Math.round(now.getMinutes() / 15))]==='0'){
 				for(let [snowflake,guildMember] of guildList){
-					if(snowflake === user)
+					if(snowflake === user){
 						msg.channel.send(guildMember.user.username + " is currently free!");
+						flag = 1;
+					}
 				}
 			}
-			var looped = 0
+			//var looped = 0
 			//else{
 			//	while(!looped){
 			//		for(i = now.getDay(); i < 7;i++){
@@ -94,6 +104,8 @@ function listSchedule(msg){
 
 		});
 	}
+	//if(flag == 0)
+	//	msg.channel.send("No one is currently free!");
 	});
 }
 

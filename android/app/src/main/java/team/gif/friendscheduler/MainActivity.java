@@ -1,5 +1,7 @@
 package team.gif.friendscheduler;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -8,39 +10,35 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import okhttp3.*;
 import org.json.JSONArray;
-import org.json.JSONObject;
+import team.gif.greyshiftedapi.ExtendedActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends ExtendedActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     FloatingActionButton fab;
     NavigationView navigationView;
     DrawerLayout drawer;
-    TextView nameNavLabel;
-    TextView usernamedNavLabel;
+    TextView usernameNavLabel;
+    TextView emailNavLabel;
     TextView usernameText;
-    TextView displayNameText;
     TextView emailText;
-    TextView snowflakeText;
+    EditText snowflakeText;
     ImageView profileImage;
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
     CoordinatorLayout mainCoordinator;
-    View headerview;
+    View headerView;
     View currentInclude;
     View dailyInclude;
     View scheduleInclude;
@@ -69,7 +67,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.w("test", "shit");
-
+                if (e.getMessage().contains("Failed to connect")) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator),
+                            "Lost connection to server", Snackbar.LENGTH_SHORT).show();
+                }
                 e.printStackTrace();
             }
 
@@ -101,8 +102,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    void updateUserRequest() {
+        Request request = new Request.Builder().url(Globals.BASE_URL + "/user/")
+                .addHeader("token", Globals.token + "")
+                .put(RequestBody.create(Globals.JSON, User.userToJson(Globals.user))).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.w("test", "shit");
+                if (e.getMessage().contains("Failed to connect")) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator),
+                            "Lost connection to server", Snackbar.LENGTH_SHORT).show();
+                }
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.w("test", "Unexpected code " + response);
+                } else {
+                    Globals.user = User.userFromJson(response.body().string());
+                    Log.w("success! code ", response.code()+"");
+                    Log.w("ss", User.userToJson(Globals.user));
+                }
+            }
+        });
+    }
+
     void updateSchedule(int day, int time, int val) {
-        Log.w("Ss", Globals.token+"");
+        Log.w("Ss", Globals.token + "");
         Request request = new Request.Builder()
                 .url(Globals.BASE_URL + "/schedule")
                 .addHeader("token", Globals.token + "")
@@ -116,7 +145,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.w("test", "shit");
-
+                if (e.getMessage().contains("Failed to connect")) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator),
+                            "Lost connection to server", Snackbar.LENGTH_SHORT).show();
+                }
                 e.printStackTrace();
             }
 
@@ -132,8 +164,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    void updateProfile(String component){
-        Snackbar.make(mainCoordinator, "this is where we update "+ component, Snackbar.LENGTH_SHORT).show();
+    void updateProfile(String component) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Write a new value for " + component);
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setCancelable(true);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+            }
+        });
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+
+                if (!readInput(input).equals("")) {
+                    Log.w("test", User.userToJson(Globals.user));
+                    switch(component) {
+                        case "email":
+                            Globals.user.email = readInput(input);
+                            emailText.setText(Globals.user.email);
+                            break;
+                    }
+                    updateUserRequest();
+                } else {
+                    Snackbar.make(mainCoordinator, "cancelled", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    void newProfileImage() {
+        Toast.makeText(this, "O GOD O FUK", Toast.LENGTH_SHORT).show();
     }
 
     void setUI() {
@@ -141,11 +211,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         mainCoordinator = findViewById(R.id.mainCoordinator);
-        headerview = navigationView.getHeaderView(0);
-        nameNavLabel = headerview.findViewById(R.id.nameNavLabel);
-        usernamedNavLabel = headerview.findViewById(R.id.usernameNavLabel);
+        headerView = navigationView.getHeaderView(0);
+        usernameNavLabel = headerView.findViewById(R.id.usernameNavLabel);
+        emailNavLabel = headerView.findViewById(R.id.emailNavLabel);
         usernameText = findViewById(R.id.usernameText);
-        displayNameText = findViewById(R.id.displayNameText);
         emailText = findViewById(R.id.emailText);
         snowflakeText = findViewById(R.id.snowflakeText);
         profileImage = findViewById(R.id.profileImage);
@@ -171,7 +240,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getFriends();
 
         fab.setOnClickListener((view) -> {
-
+            if(profileInclude.getVisibility() == View.VISIBLE) {
+                Globals.user.discordSnowflake = Long.parseLong(snowflakeText.getText().toString());
+                updateUserRequest();
+            }
         });
         usernameText.setOnClickListener((v -> {
             updateProfile("username");
@@ -179,11 +251,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         emailText.setOnClickListener((v -> {
             updateProfile("email");
         }));
-        displayNameText.setOnClickListener((v -> {
-            updateProfile("displayName");
-        }));
-        snowflakeText.setOnClickListener((v -> {
-            updateProfile("discordSnowflake");
+//        saveProfileButton.setOnClickListener((v -> {
+//            Globals.user.discordSnowflake = Long.parseLong(snowflakeText.getText().toString());
+//            Toast.makeText(this, "fuck me in the ass", Toast.LENGTH_SHORT).show();
+//            updateUserRequest();
+//        }));
+
+//        snowflakeText.setOnClickListener((v -> {
+//            updateProfile("discordSnowflake");
+//        }));
+
+//        snowflakeText.setOnFocusChangeListener(((v, focused)-> {
+//            if(focused) Toast.makeText(this, "went into focus", Toast.LENGTH_SHORT).show();
+//            else Toast.makeText(this, "lost focus", Toast.LENGTH_SHORT).show();
+//        }));
+
+        profileImage.setOnClickListener((v -> {
+            newProfileImage();
         }));
 
         toggle = new ActionBarDrawerToggle(
@@ -193,12 +277,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        nameNavLabel.setText(Globals.user.displayName);
-        usernamedNavLabel.setText(Globals.user.username);
+        usernameNavLabel.setText(Globals.user.username);
+        emailNavLabel.setText(Globals.user.email);
 
         usernameText.setText(Globals.user.username);
-        displayNameText.setText(Globals.user.displayName);
         emailText.setText(Globals.user.email);
+        snowflakeText.setText(Globals.user.discordSnowflake + "");
 
         currentInclude.setVisibility(View.GONE);
         dailyInclude.setVisibility(View.GONE);
@@ -257,7 +341,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         friendsInclude.setVisibility(View.GONE);
         profileInclude.setVisibility(View.GONE);
 
-        switch(id) {
+        fab.setForeground(getDrawable(R.drawable.ic_add_white_24dp));
+
+        switch (id) {
             case R.id.nav_current:
                 getSupportActionBar().setTitle("Current Availability");
                 currentInclude.setVisibility(View.VISIBLE);
@@ -277,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_profile:
                 getSupportActionBar().setTitle("My Profile");
+                fab.setForeground(getDrawable(R.drawable.baseline_save_white_24));
                 profileInclude.setVisibility(View.VISIBLE);
                 break;
         }
@@ -435,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             currentTime = Calendar.getInstance();
-            holder.friendNameText.setText(Globals.friendsList.get(position).displayName);
+            holder.friendNameText.setText(Globals.friendsList.get(position).username);
             int day = (currentTime.get(Calendar.DAY_OF_WEEK) == 1) ? 6 : currentTime.get(Calendar.DAY_OF_WEEK) - 2;
             int min = currentTime.get(Calendar.MINUTE) / 15;
             int hour = currentTime.get(Calendar.HOUR_OF_DAY);
