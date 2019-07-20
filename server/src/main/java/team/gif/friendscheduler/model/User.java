@@ -32,6 +32,8 @@ public class User {
 	@Size(min = 1, max = 64)
 	private String password;
 	
+	// TODO: validate using a pattern
+//	EXAMPLE: @Pattern(regexp = "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$")
 	@Column(unique = true, nullable = false)
 	@Size(min = 5, max = 256) // Shortest email: a@b.c
 	private String email;

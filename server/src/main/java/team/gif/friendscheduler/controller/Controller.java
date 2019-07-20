@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +28,11 @@ import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.service.FieldValidator;
 import team.gif.friendscheduler.service.UserService;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,7 +65,7 @@ public class Controller {
 	
 	@PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> createUser(
-			@RequestBody User user) {
+			@Valid @RequestBody User user) {
 		
 		fieldValidator.validateUser(user);
 		userRepository.save(user);
@@ -94,7 +99,7 @@ public class Controller {
 	@PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> updateUser(
 			@RequestHeader("token") Long token,
-			@RequestBody User user) {
+			@Valid @RequestBody User user) {
 		
 		Long id = userService.getIdFromToken(token);
 		User result = userService.updateUser(id, user);
@@ -182,13 +187,27 @@ public class Controller {
 	}
 	
 	
-	@ExceptionHandler
+	// TODO: Ensure this never gets thrown. Should be eliminated by handleValidationException()
+	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<String> handlePSQLException(ConstraintViolationException ex) {
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getConstraintName());
 	}
 	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+		Map<String, String> errors = new HashMap<>();
+		ex.getBindingResult().getAllErrors().forEach((error) -> {
+			String fieldName = ((FieldError) error).getField();
+			String errorMessage = error.getDefaultMessage();
+			errors.put(fieldName, errorMessage);
+		});
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+	}
 	
-	@ExceptionHandler
+	
+	// TODO: When does this get thrown?
+	@ExceptionHandler(InvalidFieldException.class)
 	public ResponseEntity<String> handleInvalidFieldException(InvalidFieldException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
