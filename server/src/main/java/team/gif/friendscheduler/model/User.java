@@ -24,10 +24,12 @@ public class User {
 	@PositiveOrZero
 	private Long discordSnowflake;
 	
+	// TODO: Pattern to disallow special characters
 	@Column(unique = true, nullable = false)
 	@Size(min = 1, max = 64)
 	private String username;
 	
+	// TODO: Pattern to disallow special characters
 	@Column(nullable = false)
 	@Size(min = 1, max = 64)
 	private String password;
