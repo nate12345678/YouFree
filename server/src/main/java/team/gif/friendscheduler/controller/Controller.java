@@ -33,13 +33,15 @@ import java.util.List;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Controller {
 	
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+	private final UserService userService;
+	private final FieldValidator fieldValidator = new FieldValidator(); // TODO: make this an actual service?
 	
 	@Autowired
-	private UserService userService;
-	
-	private FieldValidator fieldValidator = new FieldValidator(); // TODO: make this an actual service?
+	public Controller(UserRepository userRepository, UserService userService) {
+		this.userRepository = userRepository;
+		this.userService = userService;
+	}
 	
 	
 	@GetMapping(value = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)

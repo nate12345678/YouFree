@@ -10,8 +10,12 @@ import team.gif.friendscheduler.model.User;
 @Service
 public class UserService {
 	
+	private final UserRepository userRepository;
+	
 	@Autowired
-	private UserRepository userRepository;
+	UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 	
 	public Long getIdFromToken(Long token) {
