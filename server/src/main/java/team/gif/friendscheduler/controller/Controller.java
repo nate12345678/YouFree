@@ -44,12 +44,6 @@ public class Controller {
 	}
 	
 	
-	@GetMapping(value = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> hello() {
-		return ResponseEntity.ok("Hello world");
-	}
-	
-	
 	@GetMapping("/login")
 	public ResponseEntity<User> login(
 			@RequestHeader("username") String username,
