@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import team.gif.friendscheduler.UserRepository;
+import team.gif.friendscheduler.repository.UserRepository;
 import team.gif.friendscheduler.exception.AccessDeniedException;
 import team.gif.friendscheduler.exception.IncorrectCredentialsException;
 import team.gif.friendscheduler.exception.InvalidFieldException;

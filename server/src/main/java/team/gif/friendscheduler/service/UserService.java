@@ -2,7 +2,7 @@ package team.gif.friendscheduler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import team.gif.friendscheduler.UserRepository;
+import team.gif.friendscheduler.repository.UserRepository;
 import team.gif.friendscheduler.exception.IncorrectCredentialsException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
 import team.gif.friendscheduler.model.User;

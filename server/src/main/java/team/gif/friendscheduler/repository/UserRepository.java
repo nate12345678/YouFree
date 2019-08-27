@@ -1,4 +1,4 @@
-package team.gif.friendscheduler;
+package team.gif.friendscheduler.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
