@@ -26,6 +26,7 @@ import team.gif.friendscheduler.exception.UserNotFoundException;
 import team.gif.friendscheduler.model.TimeBlock;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.service.FieldValidator;
+import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.UserService;
 
 import javax.validation.Valid;
@@ -41,12 +42,14 @@ import java.util.Map;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Controller {
 	
+	private final FriendshipService friendshipService;
 	private final UserRepository userRepository;
 	private final UserService userService;
 	private final FieldValidator fieldValidator = new FieldValidator(); // TODO: make this an actual service?
 	
 	@Autowired
-	public Controller(UserRepository userRepository, UserService userService) {
+	public Controller(FriendshipService friendshipService, UserRepository userRepository, UserService userService) {
+		this.friendshipService = friendshipService;
 		this.userRepository = userRepository;
 		this.userService = userService;
 	}
@@ -122,18 +125,27 @@ public class Controller {
 	}
 	
 	
-	// TODO: Make 'get friends' service
 	@GetMapping("/friends")
 	public ResponseEntity<List<User>> getFriends(
 			@RequestHeader("token") Long token) {
 		
-		// Currently, the token is the ID of the user making the request
-		Iterable<User> users = userRepository.findAll();
-		
-		LinkedList<User> list = new LinkedList<>();
-		users.forEach(list::addLast);
+		User user = userService.getUser(userService.getIdFromToken(token));
+		List<User> list = friendshipService.getFriends(user);
 		
 		return ResponseEntity.ok(list);
+	}
+	
+	
+	@PutMapping("/friends/{id}")
+	public ResponseEntity<Void> addFriend(
+			@PathVariable Long id,
+			@RequestHeader("token") Long token) {
+		
+		User requester = userService.getUser(userService.getIdFromToken(token));
+		User target = userService.getUser(id);
+		friendshipService.addFriendship(requester, target);
+		
+		return ResponseEntity.ok().build();
 	}
 	
 	
