@@ -1,43 +1,58 @@
 package team.gif.friendscheduler.model;
 
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * This represents a relationship between two Users.
+ */
 @Entity
 @Table(name = "FRIENDSHIPS")
 public class Friendship {
 	
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(nullable = false)
-	private User smallerUserId;
+	@EmbeddedId
+	private FriendshipKey friendshipKey;
 	
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(nullable = false)
-	private User largerUserId;
+	@Column
+	private int status;
 	
 	
-	public Friendship(User smallerUserId, User largerUserId) {
-		this.smallerUserId = smallerUserId;
-		this.largerUserId = largerUserId;
+	public Friendship() {}
+	
+	
+	public Friendship(User smallerUserId, User largerUserId, int status) {
+		this(new FriendshipKey(smallerUserId, largerUserId), status);
 	}
 	
-	public User getSmallerUserId() {
-		return smallerUserId;
+	
+	public Friendship(FriendshipKey friendshipKey, int status) {
+		this.friendshipKey = friendshipKey;
+		this.status = status;
 	}
 	
-	public User getLargerUserId() {
-		return largerUserId;
+	
+	public FriendshipKey getFriendshipKey() {
+		return friendshipKey;
 	}
 	
-	public void setSmallerUserId(User userId) {
-		this.smallerUserId = userId;
+	
+	public int getStatus() {
+		return status;
 	}
 	
-	public void setLargerUserId(User userId) {
-		this.largerUserId = userId;
+	
+	public void setFriendshipKey(FriendshipKey friendshipKey) {
+		this.friendshipKey = friendshipKey;
+	}
+	
+	
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	
 }

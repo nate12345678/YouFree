@@ -20,20 +20,19 @@ public class FriendshipService {
 	}
 	
 	public List<User> getFriends(User user) {
-		List<Friendship> friendships = friendshipRepository.findFriendshipsByLargerUserIdOrSmallerUserId(user, user)
-				.orElseThrow(() -> new RuntimeException("Couldn't get friends list for " + user.getId()));
+		List<Friendship> friendships = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserId_IdOrFriendshipKey_SmallerUserId_Id(user.getId(), user.getId());
 		
 		return friendships.parallelStream()
-				.map(friendship -> friendship.getSmallerUserId().getId().equals(user.getId())
-						? friendship.getLargerUserId()
-						: friendship.getSmallerUserId())
+				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId().getId().equals(user.getId())
+						? friendship.getFriendshipKey().getLargerUserId()
+						: friendship.getFriendshipKey().getSmallerUserId())
 				.collect(Collectors.toList());
 	}
 	
 	public void addFriendship(User user1, User user2) {
 		Friendship friendship = (user1.getId() < user2.getId())
-				? new Friendship(user1, user2)
-				: new Friendship(user2, user1);
+				? new Friendship(user1, user2, 2)
+				: new Friendship(user2, user1, 2);
 		
 		friendshipRepository.save(friendship);
 	}

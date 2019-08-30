@@ -4,7 +4,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE'
+		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.7.RELEASE'
 	}
 }
 
@@ -15,8 +15,8 @@ apply plugin: 'io.spring.dependency-management'
 group = "team.gif"
 version = "1.0.0-SNAPSHOT"
 
-sourceCompatibility = 1.12
-targetCompatibility = 1.12
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 
 repositories {
 	mavenCentral()
