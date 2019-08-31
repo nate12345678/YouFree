@@ -1,11 +1,11 @@
 
 server:
-  port: 8080
+  port: 25567
   ssl:
+    key-alias: youfree
     key-store: keystore.p12
     key-store-password: password # NOTE: placeholder
-    keyStoreType: PKCS12
-    keyAlias: youfree
+    key-store-type: PKCS12
 
 security:
   require-ssl: true
@@ -25,6 +25,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
   datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/testdb # NOTE: placeholder
