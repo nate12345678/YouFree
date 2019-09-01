@@ -54,6 +54,17 @@ public class UserService {
 	
 	
 	/**
+	 * If the user already exists in the repository, this updates the saved object.
+	 * If the user doesn't exist in the repository, this saves a new User to the repository.
+	 *
+	 * @param user The user to be saved.
+	 */
+	public void saveUser(User user) {
+		userRepository.save(user);
+	}
+	
+	
+	/**
 	 * Gets the user with the specified ID
 	 *
 	 * @param id The ID of the user to retrieve.

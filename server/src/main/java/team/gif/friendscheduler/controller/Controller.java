@@ -69,62 +69,6 @@ public class Controller {
 	}
 	
 	
-	@PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<User> createUser(
-			@Valid @RequestBody User user) {
-		
-		fieldValidator.validateUser(user);
-		userRepository.save(user);
-		
-		Long token = userService.generateSessionToken(user.getId());
-		
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.header("token", "" + token)
-				.body(user);
-	}
-	
-	
-	@GetMapping(value = "/user")
-	public ResponseEntity<User> getUser(
-			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam(value = "snowflake", required = false) Long discordSnowflake,
-			@RequestParam(value = "username", required = false) String username,
-			@RequestParam(value = "email", required = false) String email,
-			@RequestHeader("token") Long token) {
-		
-		User result = userService.queryUsers(id, discordSnowflake, username, email);
-		
-		if (result == null) {
-			result = userService.getUser(userService.getIdFromToken(token));
-		}
-	
-		return ResponseEntity.ok(result);
-	}
-	
-	
-	@PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<User> updateUser(
-			@RequestHeader("token") Long token,
-			@Valid @RequestBody User user) {
-		
-		Long id = userService.getIdFromToken(token);
-		User result = userService.updateUser(id, user);
-		
-		return ResponseEntity.ok(result);
-	}
-	
-	
-	@DeleteMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> deleteUser(
-			@RequestHeader("token") Long token) {
-		
-		Long id = userService.getIdFromToken(token);
-		userService.deleteUser(id);
-		
-		return ResponseEntity.noContent().build();
-	}
-	
-	
 	@GetMapping("/friends")
 	public ResponseEntity<List<User>> getFriends(
 			@RequestHeader("token") Long token) {
@@ -168,9 +112,7 @@ public class Controller {
 			@RequestHeader String token) {
 		// TODO: see if target user is in friends list of requester. Throw exception if not
 		
-		User user = userRepository
-				.findById(id)
-				.orElseThrow(() -> new UserNotFoundException(id));
+		User user = userService.getUser(id);
 		
 		return ResponseEntity.ok(user.getSchedule());
 	}
@@ -193,10 +135,12 @@ public class Controller {
 			@RequestHeader("token") Long token,
 			@RequestBody TimeBlock interval) {
 		
-		User user = userRepository.findById(token).orElseThrow(() -> new UserNotFoundException(token));
+		Long id = userService.getIdFromToken(token);
+		User user = userService.getUser(id);
+		
 		user.updateSchedule(interval);
 		
-		userRepository.save(user);
+		userService.saveUser(user);
 		
 		return ResponseEntity.ok().build();
 	}
