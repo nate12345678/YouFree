@@ -15,7 +15,6 @@ import team.gif.friendscheduler.exception.UserNotFoundException;
 import team.gif.friendscheduler.model.TimeBlock;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.repository.UserRepository;
-import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.UserService;
 
 import java.util.LinkedList;
@@ -28,13 +27,11 @@ import java.util.List;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Controller {
 	
-	private final FriendshipService friendshipService;
 	private final UserRepository userRepository;
 	private final UserService userService;
 	
 	@Autowired
-	public Controller(FriendshipService friendshipService, UserRepository userRepository, UserService userService) {
-		this.friendshipService = friendshipService;
+	public Controller(UserRepository userRepository, UserService userService) {
 		this.userRepository = userRepository;
 		this.userService = userService;
 	}
@@ -51,30 +48,6 @@ public class Controller {
 		return ResponseEntity.status(HttpStatus.OK)
 				.header("token", "" + token)
 				.body(target);
-	}
-	
-	
-	@GetMapping("/friends")
-	public ResponseEntity<List<User>> getFriends(
-			@RequestHeader("token") Long token) {
-		
-		User user = userService.getUser(userService.getIdFromToken(token));
-		List<User> list = friendshipService.getFriends(user);
-		
-		return ResponseEntity.ok(list);
-	}
-	
-	
-	@PutMapping("/friends/{id}")
-	public ResponseEntity<Void> addFriend(
-			@PathVariable Long id,
-			@RequestHeader("token") Long token) {
-		
-		User requester = userService.getUser(userService.getIdFromToken(token));
-		User target = userService.getUser(id);
-		friendshipService.addFriendship(requester, target);
-		
-		return ResponseEntity.ok().build();
 	}
 	
 	
