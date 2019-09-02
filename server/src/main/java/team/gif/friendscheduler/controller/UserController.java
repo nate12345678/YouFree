@@ -19,6 +19,9 @@ import team.gif.friendscheduler.service.UserService;
 
 import javax.validation.Valid;
 
+/**
+ * TODO: Add validation to ALL input strings (like headers) to disallow special characters
+ */
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
