@@ -25,29 +25,15 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
-public class Controller {
+public class DiscordController {
 	
 	private final UserRepository userRepository;
 	private final UserService userService;
 	
 	@Autowired
-	public Controller(UserRepository userRepository, UserService userService) {
+	public DiscordController(UserRepository userRepository, UserService userService) {
 		this.userRepository = userRepository;
 		this.userService = userService;
-	}
-	
-	
-	@GetMapping("/login")
-	public ResponseEntity<User> login(
-			@RequestHeader("username") String username,
-			@RequestHeader("password") String password) {
-		
-		User target = userService.authenticate(username, password);
-		Long token = userService.generateSessionToken(target.getId());
-		
-		return ResponseEntity.status(HttpStatus.OK)
-				.header("token", "" + token)
-				.body(target);
 	}
 	
 	
@@ -64,18 +50,6 @@ public class Controller {
 	}
 	
 	
-	@GetMapping("/schedule/{id}")
-	public ResponseEntity<int[][]> getSchedule(
-			@PathVariable Long id,
-			@RequestHeader String token) {
-		// TODO: see if target user is in friends list of requester. Throw exception if not
-		
-		User user = userService.getUser(id);
-		
-		return ResponseEntity.ok(user.getSchedule());
-	}
-	
-	
 	@GetMapping("/schedule/discord/{snowflake}")
 	public ResponseEntity<int[][]> getDiscordSchedule(
 			@PathVariable Long snowflake) {
@@ -85,22 +59,6 @@ public class Controller {
 				.orElseThrow(() -> new UserNotFoundException(snowflake));
 		
 		return ResponseEntity.ok(user.getSchedule());
-	}
-	
-	
-	@PutMapping("/schedule")
-	public ResponseEntity<Void> updateSchedule(
-			@RequestHeader("token") Long token,
-			@RequestBody TimeBlock interval) {
-		
-		Long id = userService.getIdFromToken(token);
-		User user = userService.getUser(id);
-		
-		user.updateSchedule(interval);
-		
-		userService.saveUser(user);
-		
-		return ResponseEntity.ok().build();
 	}
 	
 }
