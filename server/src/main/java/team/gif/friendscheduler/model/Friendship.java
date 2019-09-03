@@ -3,9 +3,6 @@ package team.gif.friendscheduler.model;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -19,18 +16,18 @@ public class Friendship {
 	private FriendshipKey friendshipKey;
 	
 	@Column
-	private int status;
+	private FriendshipStatus status;
 	
 	
 	public Friendship() {}
 	
 	
-	public Friendship(User smallerUserId, User largerUserId, int status) {
+	public Friendship(User smallerUserId, User largerUserId, FriendshipStatus status) {
 		this(new FriendshipKey(smallerUserId, largerUserId), status);
 	}
 	
 	
-	public Friendship(FriendshipKey friendshipKey, int status) {
+	public Friendship(FriendshipKey friendshipKey, FriendshipStatus status) {
 		this.friendshipKey = friendshipKey;
 		this.status = status;
 	}
@@ -41,7 +38,7 @@ public class Friendship {
 	}
 	
 	
-	public int getStatus() {
+	public FriendshipStatus getStatus() {
 		return status;
 	}
 	
@@ -51,7 +48,7 @@ public class Friendship {
 	}
 	
 	
-	public void setStatus(int status) {
+	public void setStatus(FriendshipStatus status) {
 		this.status = status;
 	}
 	

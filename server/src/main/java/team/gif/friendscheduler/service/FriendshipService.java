@@ -3,6 +3,7 @@ package team.gif.friendscheduler.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.gif.friendscheduler.model.Friendship;
+import team.gif.friendscheduler.model.FriendshipStatus;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.repository.FriendshipRepository;
 
@@ -31,8 +32,8 @@ public class FriendshipService {
 	
 	public void addFriendship(User user1, User user2) {
 		Friendship friendship = (user1.getId() < user2.getId())
-				? new Friendship(user1, user2, 2)
-				: new Friendship(user2, user1, 2);
+				? new Friendship(user1, user2, FriendshipStatus.FRIENDS)
+				: new Friendship(user2, user1, FriendshipStatus.FRIENDS);
 		
 		friendshipRepository.save(friendship);
 	}
