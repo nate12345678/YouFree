@@ -23,6 +23,9 @@ public class FriendshipKey implements Serializable {
 	public FriendshipKey(User smallerUserId, User largerUserId) {
 		this.smallerUserId = smallerUserId;
 		this.largerUserId = largerUserId;
+		
+		if (smallerUserId.getId() > largerUserId.getId())
+			throw new IllegalArgumentException("First argument must have a smaller User ID than second argument!");
 	}
 	
 	public User getSmallerUserId() {
