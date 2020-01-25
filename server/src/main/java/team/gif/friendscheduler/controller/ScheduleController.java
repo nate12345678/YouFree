@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.model.Interval;
-import team.gif.friendscheduler.model.User;
+import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
 import java.util.List;
@@ -22,10 +22,12 @@ import java.util.List;
 public class ScheduleController {
 	
 	private final UserService userService;
+	private final IntervalService intervalService;
 	
 	@Autowired
-	public ScheduleController(UserService userService) {
+	public ScheduleController(UserService userService, IntervalService intervalService) {
 		this.userService = userService;
+		this.intervalService = intervalService;
 	}
 	
 	
@@ -35,9 +37,9 @@ public class ScheduleController {
 			@RequestHeader String token) {
 		// TODO: see if target user is in friends list of requester. Throw exception if not
 		
-		User user = userService.getUser(id);
+		List<Interval> result = intervalService.getIntervals(id);
 		
-		return ResponseEntity.ok(user.getSchedule());
+		return ResponseEntity.ok(result);
 	}
 	
 	
@@ -46,11 +48,8 @@ public class ScheduleController {
 			@RequestHeader("token") Long token,
 			@RequestBody Interval interval) {
 		
-		Long id = userService.getIdFromToken(token);
-		User user = userService.getUser(id);
-		
-		user.addInterval(interval);
-		userService.saveUser(user);
+		Long userId = userService.getIdFromToken(token);
+		intervalService.addInterval(userId, interval);
 		
 		return ResponseEntity.ok().build();
 	}
@@ -61,11 +60,10 @@ public class ScheduleController {
 			@RequestHeader("token") Long token,
 			@RequestBody Interval interval) {
 		
-		Long id = userService.getIdFromToken(token);
-		User user = userService.getUser(id);
+		Long userId = userService.getIdFromToken(token);
 		
-		user.removeInterval(interval); // TODO: Throw exception if this fails
-		userService.saveUser(user);
+		// TODO: Make sure user can only delete their own intervals
+		intervalService.removeInterval(interval);
 		
 		return ResponseEntity.ok().build();
 	}

@@ -1,44 +1,79 @@
 package team.gif.friendscheduler.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.PositiveOrZero;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "Intervals")
 public class Interval {
 	
 	public static final int MAX_TIME = 1440; // Number of minutes in a day
 	
 	@Id
-	@PositiveOrZero
-	private int start; // Minute of day
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private Long id;
 	
 	@Column
-	@Max(MAX_TIME)
-	private int end;   // Minute of day
+	private Long userId;
+	
+	@Column
+	private int startMin;
+	
+	@Column
+	private int endMin;
+	
 	
 	public Interval() {
-		this.start = 0;
-		this.end = MAX_TIME;
+		this.startMin = 0;
+		this.endMin = MAX_TIME;
+	}
+	
+	public Interval(Long userId, int start, int end) {
+		this.userId = userId;
+		this.startMin = start;
+		this.endMin = end;
 	}
 	
 	
-	public int getStart() {
-		return start;
+	public Long getId() {
+		return id;
 	}
 	
-	public int getEnd() {
-		return end;
+	
+	public Long getUser() {
+		return userId;
 	}
 	
-	public void setStart(int start) {
-		this.start = start;
+	
+	public int getStartMin() {
+		return startMin;
 	}
 	
-	public void setEnd(int end) {
-		this.end = end;
+	
+	public int getEndMin() {
+		return endMin;
+	}
+	
+	
+	public void setUser(Long userId) {
+		this.userId = userId;
+	}
+	
+	
+	public void setStartMin(int start) {
+		this.startMin = start;
+	}
+	
+	
+	public void setEndMin(int end) {
+		this.endMin = end;
 	}
 	
 }

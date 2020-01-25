@@ -1,5 +1,7 @@
 package team.gif.friendscheduler.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +30,7 @@ public class UserController {
 	
 	private final UserService userService;
 	private final FieldValidator fieldValidator = new FieldValidator(); // TODO: make this an actual service?
+	private static final Logger logger = LogManager.getLogger(UserController.class);
 	
 	@Autowired
 	public UserController(UserService userService) {
@@ -39,8 +42,10 @@ public class UserController {
 	public ResponseEntity<User> createUser(
 			@Valid @RequestBody User user) {
 		
+		logger.debug("Received createUser request");
 		fieldValidator.validateUser(user);
 		userService.saveUser(user);
+		logger.info("Created user " + user.getEmail());
 		
 		Long token = userService.generateSessionToken(user.getId());
 		
@@ -57,6 +62,7 @@ public class UserController {
 			@RequestParam(value = "email", required = false) String email,
 			@RequestHeader("token") Long token) {
 		
+		logger.debug("Received getUser request");
 		User result = userService.queryUsers(id, username, email);
 		
 		if (result == null) {
@@ -72,6 +78,7 @@ public class UserController {
 			@RequestHeader("token") Long token,
 			@Valid @RequestBody User user) {
 		
+		logger.debug("Received updateUser request");
 		Long id = userService.getIdFromToken(token);
 		User result = userService.updateUser(id, user);
 		
@@ -83,6 +90,8 @@ public class UserController {
 	public ResponseEntity<Void> deleteUser(
 			@RequestHeader("token") Long token) {
 		
+		// TODO: Delete their schedule too
+		logger.debug("Received deleteUser request");
 		Long id = userService.getIdFromToken(token);
 		userService.deleteUser(id);
 		

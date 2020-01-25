@@ -25,10 +25,10 @@ public class AuthController {
 	
 	@GetMapping("/login")
 	public ResponseEntity<User> login(
-			@RequestHeader("username") String username,
+			@RequestHeader("email") String email,
 			@RequestHeader("password") String password) {
 		
-		User target = userService.authenticate(username, password);
+		User target = userService.authenticate(email, password);
 		Long token = userService.generateSessionToken(target.getId());
 		
 		return ResponseEntity.status(HttpStatus.OK)

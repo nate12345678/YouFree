@@ -32,18 +32,18 @@ public class UserService {
 	 * Checks if there exists a username with the given password.
 	 * Returns the User associated with these credentials.
 	 *
-	 * @param username The username of the user to authenticate.
+	 * @param email The email of the user to authenticate.
 	 * @param password The password of the user to authenticate.
 	 * @return The User associated with the given credentials.
 	 * @throws UserNotFoundException If no user is found with the given username.
 	 * @throws IncorrectCredentialsException If the given password does not match the password associated with the user.
 	 */
-	public User authenticate(String username, String password)
+	public User authenticate(String email, String password)
 			throws UserNotFoundException, IncorrectCredentialsException {
 		
 		User target = userRepository
-				.findUserByUsername(username)
-				.orElseThrow(() -> new UserNotFoundException(username));
+				.findUserByEmail(email)
+				.orElseThrow(() -> new UserNotFoundException(email));
 		
 		if (!password.equals(target.getPassword())) {
 			throw new IncorrectCredentialsException("Authentication failed; incorrect password.");
