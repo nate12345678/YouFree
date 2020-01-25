@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team.gif.friendscheduler.exception.AccessDeniedException;
+import team.gif.friendscheduler.exception.FriendRequestException;
 import team.gif.friendscheduler.exception.IncorrectCredentialsException;
 import team.gif.friendscheduler.exception.InvalidFieldException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
@@ -61,6 +62,12 @@ public class MyExceptionHandler {
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	}
+	
+	
+	@ExceptionHandler(FriendRequestException.class)
+	public ResponseEntity<String> handleFriendshipRequestException(FriendRequestException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ex.getMessage());
 	}
 
 }

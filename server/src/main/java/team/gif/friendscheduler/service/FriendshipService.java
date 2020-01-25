@@ -90,4 +90,16 @@ public class FriendshipService {
 		
 	}
 	
+	
+	public void deleteFriendship(User user1, User user2) {
+		
+		// TODO: don't allow this if no friendship exists OR if one user has blocked the other
+		
+		FriendshipKey key = (user1.getId() < user2.getId())
+				? new FriendshipKey(user1, user2)
+				: new FriendshipKey(user2, user1);
+		
+		friendshipRepository.deleteById(key);
+	}
+	
 }
