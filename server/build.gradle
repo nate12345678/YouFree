@@ -4,7 +4,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.7.RELEASE'
+		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.2.4.RELEASE'
 	}
 }
 
@@ -28,10 +28,12 @@ dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
 	runtime group: 'org.postgresql', name: 'postgresql'
 
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
+
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 }
 
 wrapper {
-	gradleVersion '5.6.1'
+	gradleVersion '6.0.1'
 }

@@ -1,16 +1,14 @@
 package team.gif.friendscheduler.model;
 
-
-import team.gif.friendscheduler.Globals;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 @Entity
 @Table(name = "USERS")
@@ -19,10 +17,6 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
-	@Column(unique = true)
-	@PositiveOrZero
-	private Long discordSnowflake;
 	
 	// TODO: Pattern to disallow special characters
 	@Column(unique = true, nullable = false)
@@ -41,41 +35,23 @@ public class User {
 	private String email;
 	
 	@Column
-	private int[][] schedule;
+	private LinkedList<Interval> intervals; // Free times in their schedule
 	
 	
 	public User() {
-		this.schedule = new int[Globals.NUM_DAYS_IN_WEEK][Globals.NUM_BLOCKS_IN_DAY];
-		
-		for (int i = 0; i < schedule.length; i++) {
-			for (int j = 0; j < schedule[i].length; j++) {
-				schedule[i][j] = 0;
-			}
-		}
+		this.intervals = new LinkedList<>();
 	}
 	
 	public User(String username, String password, String email) {
-		this.discordSnowflake = null;
 		this.username = username;
 		this.password = password;
 		this.email = email;
-		this.schedule = new int[Globals.NUM_DAYS_IN_WEEK][Globals.NUM_BLOCKS_IN_DAY];
-		
-		for (int i = 0; i < schedule.length; i++) {
-			for (int j = 0; j < schedule[i].length; j++) {
-				schedule[i][j] = 0;
-			}
-		}
+		this.intervals = new LinkedList<>();
 	}
 	
 	
 	public Long getId() {
 		return id;
-	}
-	
-	
-	public Long getDiscordSnowflake() {
-		return discordSnowflake;
 	}
 	
 	
@@ -94,13 +70,8 @@ public class User {
 	}
 	
 	
-	public int[][] getSchedule() {
-		return schedule;
-	}
-	
-	
-	public void setDiscordSnowflake(Long snowflake) {
-		this.discordSnowflake = snowflake;
+	public LinkedList<Interval> getSchedule() {
+		return intervals;
 	}
 	
 	
@@ -114,8 +85,13 @@ public class User {
 	}
 	
 	
-	public void updateSchedule(TimeBlock interval) {
-		this.schedule[interval.getDay()][interval.getBlock()] = interval.getStatus();
+	public void addInterval(Interval interval) {
+	
+	}
+	
+	
+	public void removeInterval(Interval interval) {
+	
 	}
 	
 }
