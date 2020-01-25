@@ -90,8 +90,19 @@ public class User {
 	}
 	
 	
-	public void removeInterval(Interval interval) {
-	
+	public boolean removeInterval(Interval interval) {
+		ListIterator<Interval> iterator = intervals.listIterator();
+		
+		boolean removed = false;
+		while (iterator.hasNext()) {
+			Interval next = iterator.next();
+			if (next.getStart() == interval.getStart()) {
+				iterator.remove();
+				removed = true;
+			}
+		}
+		
+		return removed;
 	}
 	
 }
