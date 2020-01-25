@@ -85,20 +85,15 @@ public class UserService {
 	 * If all arguments are null, a null User is returned.
 	 *
 	 * @param id The ID of the user to retrieve. Processed first.
-	 * @param snowflake The Discord snowflake of the user to retrieve. Processed second.
 	 * @param username The username of the user to retrieve. Processed third.
 	 * @param email The email of the user to retrieve. Processed last.
 	 * @return A User corresponding to the first matched attribute, or null if all given attributes are null.
 	 * @throws UserNotFoundException If an attribute is non-null and no matching user is found.
 	 */
-	public User queryUsers(Long id, Long snowflake, String username, String email) throws UserNotFoundException {
+	public User queryUsers(Long id, String username, String email) throws UserNotFoundException {
 		
 		if (id != null) {
 			return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-		}
-		
-		if (snowflake != null) {
-			return userRepository.findUserByDiscordSnowflake(snowflake).orElseThrow(() -> new UserNotFoundException(snowflake));
 		}
 		
 		if (username != null) {
@@ -115,8 +110,8 @@ public class UserService {
 	
 	/**
 	 * Updates the user (of specified ID) with the information contained in newInfo.
-	 * Only password, discordSnowflake, and email are eligible to be updated. Any
-	 * field in newInfo that contains a null value remains unaffected.
+	 * Only password and email are eligible to be updated.
+	 * Any field in newInfo that contains a null value remains unaffected.
 	 *
 	 * @param id The ID of the user to update.
 	 * @param newInfo The new information to assign to the user.
@@ -125,9 +120,6 @@ public class UserService {
 	 */
 	public User updateUser(Long id, User newInfo) throws UserNotFoundException {
 		User target = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-		
-		if (newInfo.getDiscordSnowflake() != null)
-			target.setDiscordSnowflake(newInfo.getDiscordSnowflake());
 		
 		if (newInfo.getPassword() != null) {
 			target.setPassword(newInfo.getPassword());

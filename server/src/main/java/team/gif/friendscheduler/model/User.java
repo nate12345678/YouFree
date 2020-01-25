@@ -5,9 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 @Entity
@@ -34,8 +37,9 @@ public class User {
 	@Size(min = 5, max = 256) // Shortest email: a@b.c
 	private String email;
 	
-	@Column
-	private LinkedList<Interval> intervals; // Free times in their schedule
+	@OneToMany
+	@OrderBy("start ASC")
+	private List<Interval> intervals; // Free times in their schedule
 	
 	
 	public User() {
@@ -70,7 +74,7 @@ public class User {
 	}
 	
 	
-	public LinkedList<Interval> getSchedule() {
+	public List<Interval> getSchedule() {
 		return intervals;
 	}
 	
@@ -86,7 +90,51 @@ public class User {
 	
 	
 	public void addInterval(Interval interval) {
-	
+		if (intervals.size() == 0) {
+			intervals.add(interval);
+			return;
+		}
+		
+		ListIterator<Interval> iterator = intervals.listIterator();
+		
+		// Find position in list (based on start time)
+		while (iterator.hasNext()) {
+			Interval next = iterator.next();
+			if (interval.getStart() <= next.getStart()) {
+				// Insert before current
+				iterator.previous();
+				iterator.add(interval);
+				break;
+			}
+		}
+		
+		// In this case, we reached the end of the list without insert. Insert now.
+		if (!iterator.hasNext()) {
+			iterator.add(interval);
+		}
+		
+		// Check if previous should merge
+		iterator.previous(); // Now we're pointing to inserted element
+		Interval previous = iterator.previous();
+		if (previous.getEnd() > interval.getStart()) {
+			interval.setStart(previous.getStart());
+			interval.setEnd(Math.max(previous.getEnd(), interval.getEnd()));
+			iterator.remove();
+		}
+		
+		// While applicable, merge with next interval
+		iterator.next(); // Now calling next() again returns element after inserted
+		while (iterator.hasNext()) {
+			Interval next = iterator.next();
+			
+			if (next.getStart() > interval.getEnd()) {
+				// No overlap, so stop looking
+				break;
+			}
+			
+			interval.setEnd(Math.max(interval.getEnd(), next.getEnd()));
+			iterator.remove();
+		}
 	}
 	
 	

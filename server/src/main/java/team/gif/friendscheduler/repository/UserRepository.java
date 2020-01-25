@@ -9,7 +9,6 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	Optional<User> findUserByUsername(@Param("username") String username);
-	Optional<User> findUserByDiscordSnowflake(@Param("discordSnowflake") Long discordSnowflake);
 	Optional<User> findUserByEmail(@Param("email") String email);
 
 }

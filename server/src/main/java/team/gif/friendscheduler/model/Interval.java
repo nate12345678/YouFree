@@ -1,10 +1,22 @@
 package team.gif.friendscheduler.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.PositiveOrZero;
+
+@Entity
 public class Interval {
 	
 	public static final int MAX_TIME = 1440; // Number of minutes in a day
 	
+	@Id
+	@PositiveOrZero
 	private int start; // Minute of day
+	
+	@Column
+	@Max(MAX_TIME)
 	private int end;   // Minute of day
 	
 	public Interval() {

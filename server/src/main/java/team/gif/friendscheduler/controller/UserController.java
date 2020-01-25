@@ -53,12 +53,11 @@ public class UserController {
 	@GetMapping(value = "/user")
 	public ResponseEntity<User> getUser(
 			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam(value = "snowflake", required = false) Long discordSnowflake,
 			@RequestParam(value = "username", required = false) String username,
 			@RequestParam(value = "email", required = false) String email,
 			@RequestHeader("token") Long token) {
 		
-		User result = userService.queryUsers(id, discordSnowflake, username, email);
+		User result = userService.queryUsers(id, username, email);
 		
 		if (result == null) {
 			result = userService.getUser(userService.getIdFromToken(token));
