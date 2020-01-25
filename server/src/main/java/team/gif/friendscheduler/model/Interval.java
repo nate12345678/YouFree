@@ -17,7 +17,6 @@ public class Interval {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Long id;
 	
 	@Column
@@ -61,6 +60,10 @@ public class Interval {
 		return endMin;
 	}
 	
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public void setUserId(Long userId) {
 		this.userId = userId;

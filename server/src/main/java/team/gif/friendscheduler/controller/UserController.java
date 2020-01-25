@@ -42,7 +42,7 @@ public class UserController {
 	public ResponseEntity<User> createUser(
 			@Valid @RequestBody User user) {
 		
-		logger.debug("Received createUser request");
+		logger.info("Received createUser request");
 		fieldValidator.validateUser(user);
 		userService.saveUser(user);
 		logger.info("Created user " + user.getEmail());
@@ -62,7 +62,7 @@ public class UserController {
 			@RequestParam(value = "email", required = false) String email,
 			@RequestHeader("token") Long token) {
 		
-		logger.debug("Received getUser request");
+		logger.info("Received getUser request");
 		User result = userService.queryUsers(id, username, email);
 		
 		if (result == null) {
@@ -78,7 +78,7 @@ public class UserController {
 			@RequestHeader("token") Long token,
 			@Valid @RequestBody User user) {
 		
-		logger.debug("Received updateUser request");
+		logger.info("Received updateUser request");
 		Long id = userService.getIdFromToken(token);
 		User result = userService.updateUser(id, user);
 		
@@ -91,7 +91,7 @@ public class UserController {
 			@RequestHeader("token") Long token) {
 		
 		// TODO: Delete their schedule too
-		logger.debug("Received deleteUser request");
+		logger.info("Received deleteUser request");
 		Long id = userService.getIdFromToken(token);
 		userService.deleteUser(id);
 		

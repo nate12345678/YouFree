@@ -1,5 +1,7 @@
 package team.gif.friendscheduler.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ public class ScheduleController {
 	
 	private final UserService userService;
 	private final IntervalService intervalService;
+	private static final Logger logger = LogManager.getLogger(ScheduleController.class);
 	
 	@Autowired
 	public ScheduleController(UserService userService, IntervalService intervalService) {
@@ -37,6 +40,7 @@ public class ScheduleController {
 			@RequestHeader String token) {
 		// TODO: see if target user is in friends list of requester. Throw exception if not
 		
+		logger.info("Received getSchedule request");
 		List<Interval> result = intervalService.getIntervals(id);
 		
 		return ResponseEntity.ok(result);
@@ -48,6 +52,7 @@ public class ScheduleController {
 			@RequestHeader("token") Long token,
 			@RequestBody Interval interval) {
 		
+		logger.info("Received addInterval request");
 		Long userId = userService.getIdFromToken(token);
 		interval.setUserId(userId);
 		intervalService.addInterval(userId, interval);
@@ -61,6 +66,7 @@ public class ScheduleController {
 			@RequestHeader("token") Long token,
 			@RequestBody Interval interval) {
 		
+		logger.info("Received removeInterval request: " + interval.getId());
 		Long userId = userService.getIdFromToken(token);
 		
 		// TODO: Make sure user can only delete their own intervals
