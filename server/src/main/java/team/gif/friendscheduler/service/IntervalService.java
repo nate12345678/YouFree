@@ -29,7 +29,7 @@ public class IntervalService {
 		intervalRepository.deleteAllByUserId(userId);
 		
 		if (intervals.size() == 0) {
-			intervals.add(interval);
+			intervalRepository.save(interval);
 			return;
 		}
 		

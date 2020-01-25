@@ -49,6 +49,7 @@ public class ScheduleController {
 			@RequestBody Interval interval) {
 		
 		Long userId = userService.getIdFromToken(token);
+		interval.setUserId(userId);
 		intervalService.addInterval(userId, interval);
 		
 		return ResponseEntity.ok().build();

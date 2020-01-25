@@ -47,7 +47,7 @@ public class Interval {
 	}
 	
 	
-	public Long getUser() {
+	public Long getUserId() {
 		return userId;
 	}
 	
@@ -62,7 +62,7 @@ public class Interval {
 	}
 	
 	
-	public void setUser(Long userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 	
