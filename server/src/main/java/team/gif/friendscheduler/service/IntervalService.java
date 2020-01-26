@@ -91,8 +91,8 @@ public class IntervalService {
 	}
 	
 	
-	public void removeInterval(Long intervalId) {
-		intervalRepository.deleteById(intervalId);
+	public void removeInterval(Long userId, Long intervalId) {
+		intervalRepository.deleteByUserIdAndId(userId, intervalId);
 	}
 	
 }

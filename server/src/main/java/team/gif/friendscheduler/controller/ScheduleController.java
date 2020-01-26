@@ -35,15 +35,15 @@ public class ScheduleController {
 	}
 	
 	
-	@GetMapping("/schedule/{id}")
+	@GetMapping("/schedule/{userId}")
 	public ResponseEntity<ArrayList<LinkedList<Interval>>> getSchedule(
-			@PathVariable Long id,
+			@PathVariable Long userId,
 			@RequestHeader String token) {
 		// TODO: see if target user is in friends list of requester. Throw exception if not
 		
 		logger.info("Received getSchedule request");
 		
-		return ResponseEntity.ok(intervalService.getIntervals(id));
+		return ResponseEntity.ok(intervalService.getIntervals(userId));
 	}
 	
 	
@@ -68,9 +68,7 @@ public class ScheduleController {
 		
 		logger.info("Received removeInterval request: " + intervalId);
 		Long userId = userService.getIdFromToken(token);
-		
-		// TODO: Make sure user can only delete their own intervals
-		intervalService.removeInterval(intervalId);
+		intervalService.removeInterval(userId, intervalId);
 		
 		return ResponseEntity.ok().build();
 	}
