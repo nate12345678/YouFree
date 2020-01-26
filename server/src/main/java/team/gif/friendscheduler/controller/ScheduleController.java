@@ -61,16 +61,16 @@ public class ScheduleController {
 	}
 	
 	
-	@DeleteMapping("/schedule")
+	@DeleteMapping("/schedule/{intervalId}")
 	public ResponseEntity<Void> removeInterval(
-			@RequestHeader("token") Long token,
-			@RequestBody Interval interval) {
+			@PathVariable Long intervalId,
+			@RequestHeader("token") Long token) {
 		
-		logger.info("Received removeInterval request: " + interval.getId());
+		logger.info("Received removeInterval request: " + intervalId);
 		Long userId = userService.getIdFromToken(token);
 		
 		// TODO: Make sure user can only delete their own intervals
-		intervalService.removeInterval(interval);
+		intervalService.removeInterval(intervalId);
 		
 		return ResponseEntity.ok().build();
 	}
