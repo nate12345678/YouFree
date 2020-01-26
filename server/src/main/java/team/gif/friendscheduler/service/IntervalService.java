@@ -25,10 +25,13 @@ public class IntervalService {
 		List<Interval> allIntervals = intervalRepository.findAllByUserIdOrderByDayOfWeekAscStartMinAsc(userId);
 		
 		ArrayList<LinkedList<Interval>> arrangedIntervals = new ArrayList<>();
+		
+		// Add empty list for each day of the week
 		for (int i = 0; i < 7; i++) {
 			arrangedIntervals.add(i, new LinkedList<>());
 		}
 		
+		// Sort each of the intervals into their respective days
 		for (Interval next : allIntervals) {
 			arrangedIntervals.get(next.getDayOfWeek()).addLast(next);
 		}
@@ -93,6 +96,11 @@ public class IntervalService {
 	
 	public void removeInterval(Long userId, Long intervalId) {
 		intervalRepository.deleteByUserIdAndId(userId, intervalId);
+	}
+	
+	
+	public void removeAllIntervals(Long userId) {
+		intervalRepository.deleteAllByUserId(userId);
 	}
 	
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.service.FieldValidator;
+import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
 import javax.validation.Valid;
@@ -28,12 +29,14 @@ import javax.validation.Valid;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 	
+	private final IntervalService intervalService;
 	private final UserService userService;
 	private final FieldValidator fieldValidator = new FieldValidator(); // TODO: make this an actual service?
 	private static final Logger logger = LogManager.getLogger(UserController.class);
 	
 	@Autowired
-	public UserController(UserService userService) {
+	public UserController(IntervalService intervalService, UserService userService) {
+		this.intervalService = intervalService;
 		this.userService = userService;
 	}
 	
@@ -90,9 +93,9 @@ public class UserController {
 	public ResponseEntity<Void> deleteUser(
 			@RequestHeader("token") Long token) {
 		
-		// TODO: Delete their schedule too
 		logger.info("Received deleteUser request");
 		Long id = userService.getIdFromToken(token);
+		intervalService.removeAllIntervals(id);
 		userService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();
