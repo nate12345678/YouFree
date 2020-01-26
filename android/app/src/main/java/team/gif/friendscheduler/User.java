@@ -6,7 +6,6 @@ public class User {
     long id;
     String username;
     String email;
-    String displayName;
     long discordSnowflake;
     int[][] schedule;
 
@@ -22,23 +21,22 @@ public class User {
         this(0, username);
     }
 
+    public User(String username, String email) {
+	    this(0, username, email);
+    }
+
     public User(long id, String username) {
         this(id, username, "none@example.com");
     }
 
     public User(long id, String username, String email) {
-        this(id, username, email, username);
+        this(id, username, email, new int[7][96]);
     }
 
-    public User(long id, String username, String email, String displayName) {
-        this(id, username, email, displayName, new int[7][96]);
-    }
-
-    public User(long id, String username, String email, String displayName, int[][] schedule) {
+    public User(long id, String username, String email, int[][] schedule) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.displayName = displayName;
         this.schedule = schedule;
 
         this.discordSnowflake = 0;
@@ -49,7 +47,16 @@ public class User {
     }
 
     static String userToJson(User user) {
+        return "{" +
+                "\"discordSnowflake\": \"" + user.discordSnowflake + "\"," +
+                "\"username\": \"" + user.username +"\",\n" +
+                "\"password\": \"" + Globals.enteredPass + "\",\n" +
+                "\"email\": \"" + user.email +"\"\n" +
+                "}";
+    }
+    static String autoUserToJson(User user) {
         return gson.toJson(user);
     }
+
 
 }

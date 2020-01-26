@@ -10,14 +10,13 @@ public class FieldValidator {
 		validateNonSpacedString(user.getUsername(), "username");
 		validateNonSpacedString(user.getPassword(), "password");
 		validateNonSpacedString(user.getEmail(), "email");
-		validateNonSpacedString(user.getDisplayName(), "displayName");
 		
 		return true;
 	}
 	
 	
 	private void validateNonSpacedString(String field, String fieldName) throws InvalidFieldException {
-		if (field == null || field.length() == 0)
+		if (field == null)
 			throw new InvalidFieldException("Field <" + fieldName + "> cannot be null/empty.");
 		
 		if (field.contains(" "))

@@ -1,0 +1,39 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.2.4.RELEASE'
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = "team.gif"
+version = "1.0.0-SNAPSHOT"
+
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+	runtimeOnly group: 'org.postgresql', name: 'postgresql'
+
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
+
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+}
+
+wrapper {
+	gradleVersion '6.1.1'
+}
