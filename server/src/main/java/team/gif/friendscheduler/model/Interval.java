@@ -21,6 +21,9 @@ public class Interval {
 	private Long userId;
 	
 	@Column
+	private int dayOfWeek; // Monday = 0, Sunday = 6
+	
+	@Column
 	private int startMin;
 	
 	@Column
@@ -28,12 +31,14 @@ public class Interval {
 	
 	
 	public Interval() {
+		this.dayOfWeek = 0;
 		this.startMin = 0;
 		this.endMin = MAX_TIME;
 	}
 	
-	public Interval(Long userId, int start, int end) {
+	public Interval(Long userId, int dayOfWeek, int start, int end) {
 		this.userId = userId;
+		this.dayOfWeek = dayOfWeek;
 		this.startMin = start;
 		this.endMin = end;
 	}
@@ -46,6 +51,11 @@ public class Interval {
 	
 	public Long getUserId() {
 		return userId;
+	}
+	
+	
+	public int getDayOfWeek() {
+		return dayOfWeek;
 	}
 	
 	
@@ -63,8 +73,14 @@ public class Interval {
 		this.id = id;
 	}
 	
+	
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+	
+	
+	public void setDayOfWeek(int dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
 	}
 	
 	

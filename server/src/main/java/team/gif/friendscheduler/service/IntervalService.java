@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import team.gif.friendscheduler.model.Interval;
 import team.gif.friendscheduler.repository.IntervalRepository;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -19,14 +21,25 @@ public class IntervalService {
 	}
 	
 	
-	public List<Interval> getIntervals(Long userId) {
-		return intervalRepository.findAllByUserIdOrderByStartMinAsc(userId);
+	public ArrayList<LinkedList<Interval>> getIntervals(Long userId) {
+		List<Interval> allIntervals = intervalRepository.findAllByUserIdOrderByDayOfWeekAscStartMinAsc(userId);
+		
+		ArrayList<LinkedList<Interval>> arrangedIntervals = new ArrayList<>();
+		for (int i = 0; i < 7; i++) {
+			arrangedIntervals.add(i, new LinkedList<>());
+		}
+		
+		for (Interval next : allIntervals) {
+			arrangedIntervals.get(next.getDayOfWeek()).addLast(next);
+		}
+		
+		return arrangedIntervals;
 	}
 	
 	
 	public void addInterval(Long userId, Interval interval) {
-		List<Interval> intervals = intervalRepository.findAllByUserIdOrderByStartMinAsc(userId);
-		intervalRepository.deleteAllByUserId(userId);
+		List<Interval> intervals = intervalRepository.findAllByUserIdAndDayOfWeekOrderByStartMinAsc(userId, interval.getDayOfWeek());
+		intervalRepository.deleteAllByUserIdAndDayOfWeek(userId, interval.getDayOfWeek());
 		
 		if (intervals.size() == 0) {
 			intervalRepository.save(interval);

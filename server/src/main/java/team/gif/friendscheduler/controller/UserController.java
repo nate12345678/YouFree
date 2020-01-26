@@ -44,7 +44,7 @@ public class UserController {
 		
 		logger.info("Received createUser request");
 		fieldValidator.validateUser(user);
-		userService.saveUser(user);
+		userService.createUser(user);
 		logger.info("Created user " + user.getEmail());
 		
 		Long token = userService.generateSessionToken(user.getId());

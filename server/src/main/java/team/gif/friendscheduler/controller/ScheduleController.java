@@ -17,7 +17,8 @@ import team.gif.friendscheduler.model.Interval;
 import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,15 +36,14 @@ public class ScheduleController {
 	
 	
 	@GetMapping("/schedule/{id}")
-	public ResponseEntity<List<Interval>> getSchedule(
+	public ResponseEntity<ArrayList<LinkedList<Interval>>> getSchedule(
 			@PathVariable Long id,
 			@RequestHeader String token) {
 		// TODO: see if target user is in friends list of requester. Throw exception if not
 		
 		logger.info("Received getSchedule request");
-		List<Interval> result = intervalService.getIntervals(id);
 		
-		return ResponseEntity.ok(result);
+		return ResponseEntity.ok(intervalService.getIntervals(id));
 	}
 	
 	

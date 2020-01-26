@@ -1,6 +1,7 @@
 package team.gif.friendscheduler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import team.gif.friendscheduler.repository.UserRepository;
 import team.gif.friendscheduler.exception.IncorrectCredentialsException;
@@ -10,10 +11,12 @@ import team.gif.friendscheduler.model.User;
 @Service
 public class UserService {
 	
+	private final PasswordEncoder passwordEncoder;
 	private final UserRepository userRepository;
 	
 	@Autowired
-	UserService(UserRepository userRepository) {
+	UserService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+		this.passwordEncoder = passwordEncoder;
 		this.userRepository = userRepository;
 	}
 
@@ -45,7 +48,7 @@ public class UserService {
 				.findUserByEmail(email)
 				.orElseThrow(() -> new UserNotFoundException(email));
 		
-		if (!password.equals(target.getPassword())) {
+		if (!passwordEncoder.matches(password, target.getPassword())) {
 			throw new IncorrectCredentialsException("Authentication failed; incorrect password.");
 		}
 		
@@ -59,7 +62,8 @@ public class UserService {
 	 *
 	 * @param user The user to be saved.
 	 */
-	public void saveUser(User user) {
+	public void createUser(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 	}
 	
@@ -122,7 +126,7 @@ public class UserService {
 		User target = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 		
 		if (newInfo.getPassword() != null) {
-			target.setPassword(newInfo.getPassword());
+			target.setPassword(passwordEncoder.encode(newInfo.getPassword()));
 		}
 		
 		if (newInfo.getEmail() != null)
