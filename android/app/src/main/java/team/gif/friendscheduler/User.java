@@ -3,60 +3,48 @@ package team.gif.friendscheduler;
 import com.google.gson.Gson;
 
 public class User {
-    long id;
-    String username;
-    String email;
-    long discordSnowflake;
-    int[][] schedule;
+	long id;
+	String username;
+	String email;
+	String schedule[][];
 
 
-    static Gson gson = new Gson();
+	static Gson gson = new Gson();
 
-    public User() {
-        this("name");
-    }
+	public User() {
+		this("name", "email@example.com");
+	}
 
 
-    public User(String username) {
-        this(0, username);
-    }
+	public User(String name, String email) {
+		this.username = name;
+		this.email = email;
+	}
 
-    public User(String username, String email) {
-	    this(0, username, email);
-    }
 
-    public User(long id, String username) {
-        this(id, username, "none@example.com");
-    }
+	public User(long id, String username, String email, String schedule[][]) {
+		this.id = id;
+		this.username = username;
+		this.email = email;
+		this.schedule = schedule;
 
-    public User(long id, String username, String email) {
-        this(id, username, email, new int[7][96]);
-    }
+	}
 
-    public User(long id, String username, String email, int[][] schedule) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.schedule = schedule;
+	static User userFromJson(String json) {
+		return gson.fromJson(json, User.class);
+	}
 
-        this.discordSnowflake = 0;
-    }
+	static String userToJson(User user) {
+		return "{" +
+				"\"username\": \"" + user.username + "\",\n" +
+				"\"password\": \"" + Globals.enteredPass + "\",\n" +
+				"\"email\": \"" + user.email + "\"\n" +
+				"}";
+	}
 
-    static User userFromJson(String json) {
-        return gson.fromJson(json, User.class);
-    }
-
-    static String userToJson(User user) {
-        return "{" +
-                "\"discordSnowflake\": \"" + user.discordSnowflake + "\"," +
-                "\"username\": \"" + user.username +"\",\n" +
-                "\"password\": \"" + Globals.enteredPass + "\",\n" +
-                "\"email\": \"" + user.email +"\"\n" +
-                "}";
-    }
-    static String autoUserToJson(User user) {
-        return gson.toJson(user);
-    }
+	static String autoUserToJson(User user) {
+		return gson.toJson(user);
+	}
 
 
 }

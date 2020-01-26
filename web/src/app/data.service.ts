@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 
@@ -20,9 +20,11 @@ export class DataService {
     return this.http.get('v1/hello', {responseType: 'text', headers});
   }
 
-  getLogin (username, password): Observable<any> {
-    return this.http.get('v1/login', {headers: new HttpHeaders({'username': username, 'password': password})})
+  getLogin (username, password): Observable<HttpResponse<any>> {
+    return this.http.get('v1/login', {headers: new HttpHeaders({'username': username, 'password': password}), observe: 'response'})
       .pipe(catchError(this.handleError));
   }
+
+
 
 }

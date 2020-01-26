@@ -16,9 +16,11 @@ export class LogInComponent implements OnInit {
   constructor(private router: Router, private data: DataService) {}
 
   onSubmit(username, password) {
-    this.data.getLogin(username, password).subscribe(data => this.login$ = data);
-    // if (this.login$.status === 200) {
+    this.data.getLogin(username, password).subscribe(data => console.log(data.headers.get('Token')));
+    // if (token > 0) {
     this.router.navigate(['/home']);
+    // } else {
+    //   console.log('You fucked up');
     // }
   }
 

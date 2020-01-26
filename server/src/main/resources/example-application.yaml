@@ -1,0 +1,35 @@
+
+server:
+  port: 25567
+  ssl:
+    key-alias: youfree
+    key-store: keystore.p12
+    key-store-password: password # NOTE: placeholder
+    key-store-type: PKCS12
+
+security:
+  require-ssl: true
+
+#spring:
+#  h2.console:
+#    enabled: true
+#    path: /h2
+#    settings:
+#      web-allow-others: false
+
+spring:
+  database:
+    driverClassName: org.postgresql.Driver
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/testdb # NOTE: placeholder
+    username: patrick # NOTE: placeholder
+    password: password # NOTE: placeholder
+

@@ -12,10 +12,11 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import javax.security.auth.x500.X500Principal;
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+
+import javax.security.auth.x500.X500Principal;
 
 /**
  * Copyright 2017 Nathan Post
@@ -50,7 +51,6 @@ public abstract class ExtendedActivity extends AppCompatActivity {
      * As per Android guidelines, a public static variable is used instead of a private variable with a getter.
      */
     public static boolean debuggable = false;
-
 
     /**
      * Default constructor
