@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 import team.gif.friendscheduler.model.Interval;
 import team.gif.friendscheduler.repository.IntervalRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
 @Service
+@Transactional
 public class IntervalService {
 	
 	private final IntervalRepository intervalRepository;
