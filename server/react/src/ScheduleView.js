@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import '../index.css'
+import React from 'react';
+import './index.css';
 import DayView from "./DayView";
 
 function ScheduleView(props) {
