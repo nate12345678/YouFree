@@ -6,12 +6,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "Intervals")
 public class Interval {
 	
-	public static final int MAX_TIME = 1440; // Number of minutes in a day
+	public static final Integer MAX_TIME = 1440; // Number of minutes in a day
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,13 +23,19 @@ public class Interval {
 	private Long userId;
 	
 	@Column
-	private int dayOfWeek; // Monday = 0, Sunday = 6
+	@Min(0) // Monday
+	@Max(6) // Sunday
+	private Integer dayOfWeek;
 	
 	@Column
-	private int startMin;
+	@Min(0)
+	@Max(MAX_TIME)
+	private Integer startMin;
 	
 	@Column
-	private int endMin;
+	@Min(0)
+	@Max(MAX_TIME)
+	private Integer endMin;
 	
 	
 	public Interval() {
@@ -36,7 +44,7 @@ public class Interval {
 		this.endMin = MAX_TIME;
 	}
 	
-	public Interval(Long userId, int dayOfWeek, int start, int end) {
+	public Interval(Long userId, Integer dayOfWeek, Integer start, Integer end) {
 		this.userId = userId;
 		this.dayOfWeek = dayOfWeek;
 		this.startMin = start;
@@ -54,17 +62,17 @@ public class Interval {
 	}
 	
 	
-	public int getDayOfWeek() {
+	public Integer getDayOfWeek() {
 		return dayOfWeek;
 	}
 	
 	
-	public int getStartMin() {
+	public Integer getStartMin() {
 		return startMin;
 	}
 	
 	
-	public int getEndMin() {
+	public Integer getEndMin() {
 		return endMin;
 	}
 	
@@ -79,17 +87,17 @@ public class Interval {
 	}
 	
 	
-	public void setDayOfWeek(int dayOfWeek) {
+	public void setDayOfWeek(Integer dayOfWeek) {
 		this.dayOfWeek = dayOfWeek;
 	}
 	
 	
-	public void setStartMin(int start) {
+	public void setStartMin(Integer start) {
 		this.startMin = start;
 	}
 	
 	
-	public void setEndMin(int end) {
+	public void setEndMin(Integer end) {
 		this.endMin = end;
 	}
 	
