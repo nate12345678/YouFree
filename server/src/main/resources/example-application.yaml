@@ -10,12 +10,13 @@ server:
 security:
   require-ssl: true
 
-#spring:
-#  h2.console:
-#    enabled: true
-#    path: /h2
-#    settings:
-#      web-allow-others: false
+springdoc:
+  api-docs:
+    enabled: true
+    path: /swagger-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
 
 spring:
   database:
