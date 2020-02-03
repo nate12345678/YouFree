@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import team.gif.friendscheduler.exception.InvalidFieldException;
 import team.gif.friendscheduler.model.User;
+import team.gif.friendscheduler.model.request.NewUser;
 import team.gif.friendscheduler.service.FieldValidator;
 import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
@@ -29,13 +31,14 @@ import javax.validation.Valid;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 	
+	private final FieldValidator fieldValidator;
 	private final IntervalService intervalService;
 	private final UserService userService;
-	private final FieldValidator fieldValidator = new FieldValidator(); // TODO: make this an actual service?
 	private static final Logger logger = LogManager.getLogger(UserController.class);
 	
 	@Autowired
-	public UserController(IntervalService intervalService, UserService userService) {
+	public UserController(FieldValidator fieldValidator, IntervalService intervalService, UserService userService) {
+		this.fieldValidator = fieldValidator;
 		this.intervalService = intervalService;
 		this.userService = userService;
 	}
@@ -43,11 +46,11 @@ public class UserController {
 	
 	@PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> createUser(
-			@Valid @RequestBody User user) {
+			@Valid @RequestBody NewUser newUser) {
 		
 		logger.info("Received createUser request");
-		fieldValidator.validateUser(user);
-		userService.createUser(user);
+		fieldValidator.validateUser(newUser);
+		User user = userService.createUser(newUser);
 		logger.info("Created user " + user.getEmail());
 		
 		Long token = userService.generateSessionToken(user.getId());
@@ -79,9 +82,14 @@ public class UserController {
 	@PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> updateUser(
 			@RequestHeader("token") Long token,
-			@Valid @RequestBody User user) {
+			@Valid @RequestBody NewUser user) {
 		
 		logger.info("Received updateUser request");
+		
+		if (!fieldValidator.validateOneNonNull(user)) {
+			throw new InvalidFieldException("One or more fields must be non-empty");
+		}
+		
 		Long id = userService.getIdFromToken(token);
 		User result = userService.updateUser(id, user);
 		

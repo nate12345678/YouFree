@@ -1,52 +1,25 @@
-package team.gif.friendscheduler.model;
+package team.gif.friendscheduler.model.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "USERS")
-public class User {
+public class NewUser {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	private Long id;
-	
-	@Column(unique = true, nullable = false)
 	@Size(min = 1, max = 64)
 	private String username;
 	
-	@Column(nullable = false)
 	@Size(min = 1, max = 64)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 	
-	@Column(unique = true, nullable = false)
 	@Size(min = 5, max = 256) // Shortest email: a@b.c
 	@Email
 	private String email;
 	
 	
-	public User() {}
-	
-	public User(String username, String password, String email) {
-		this.username = username;
-		this.password = password;
-		this.email = email;
-	}
-	
-	
-	public Long getId() {
-		return id;
-	}
+	public NewUser() {}
 	
 	
 	public String getUsername() {

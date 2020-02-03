@@ -3,6 +3,7 @@ package team.gif.friendscheduler.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import team.gif.friendscheduler.model.request.NewUser;
 import team.gif.friendscheduler.repository.UserRepository;
 import team.gif.friendscheduler.exception.IncorrectCredentialsException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
@@ -57,14 +58,14 @@ public class UserService {
 	
 	
 	/**
-	 * If the user already exists in the repository, this updates the saved object.
-	 * If the user doesn't exist in the repository, this saves a new User to the repository.
+	 * Saves a new User to the repository.
 	 *
-	 * @param user The user to be saved.
+	 * @param newUser The user to be saved.
 	 */
-	public void createUser(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+	public User createUser(NewUser newUser) {
+		User user = new User(newUser.getUsername(), passwordEncoder.encode(newUser.getPassword()), newUser.getEmail());
 		userRepository.save(user);
+		return user;
 	}
 	
 	
@@ -122,15 +123,20 @@ public class UserService {
 	 * @return The User after updated information is applied.
 	 * @throws UserNotFoundException If no user is associated with the given ID.
 	 */
-	public User updateUser(Long id, User newInfo) throws UserNotFoundException {
+	public User updateUser(Long id, NewUser newInfo) throws UserNotFoundException {
 		User target = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 		
-		if (newInfo.getPassword() != null) {
+		if (newInfo.getUsername() != null && !newInfo.getUsername().isBlank()) {
+			target.setUsername(newInfo.getUsername());
+		}
+		
+		if (newInfo.getPassword() != null && !newInfo.getPassword().isBlank()) {
 			target.setPassword(passwordEncoder.encode(newInfo.getPassword()));
 		}
 		
-		if (newInfo.getEmail() != null)
+		if (newInfo.getEmail() != null && !newInfo.getPassword().isBlank()) {
 			target.setEmail(newInfo.getEmail());
+		}
 		
 		userRepository.save(target);
 		

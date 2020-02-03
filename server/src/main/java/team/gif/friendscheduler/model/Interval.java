@@ -13,7 +13,7 @@ import javax.validation.constraints.Min;
 @Table(name = "Intervals")
 public class Interval {
 	
-	public static final Integer MAX_TIME = 1440; // Number of minutes in a day
+	public static final int MAX_TIME = 1440; // Number of minutes in a day
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
