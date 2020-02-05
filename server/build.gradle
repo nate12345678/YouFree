@@ -8,7 +8,7 @@ buildscript {
 
 	dependencies {
 		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.2.4.RELEASE'
-		classpath 'com.github.node-gradle:gradle-node-plugin:2.2.0'
+		classpath 'com.github.node-gradle:gradle-node-plugin:2.2.1'
 	}
 }
 
@@ -35,7 +35,7 @@ dependencies {
 
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-core',   version: '2.13.0'
 
-	implementation group: 'org.springdoc',  name: 'springdoc-openapi-ui',   version: '1.2.29'
+	implementation group: 'org.springdoc',  name: 'springdoc-openapi-ui',   version: '1.2.30'
 }
 
 wrapper {
@@ -62,8 +62,8 @@ copyReact.dependsOn appNpmBuild
 compileJava.dependsOn copyReact
 
 node {
-	version = '12.14.0'
-	npmVersion = '6.13.4'
+	version = '13.7.0'
+	npmVersion = '6.13.7'
 	download = false
 	nodeModulesDir = file("${project.projectDir}/react")
 }
