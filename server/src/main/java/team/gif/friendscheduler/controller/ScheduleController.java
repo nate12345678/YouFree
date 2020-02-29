@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.model.Interval;
+import team.gif.friendscheduler.model.request.NewInterval;
 import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
@@ -50,11 +51,10 @@ public class ScheduleController {
 	@PutMapping("/schedule")
 	public ResponseEntity<Void> addInterval(
 			@RequestHeader("token") Long token,
-			@RequestBody Interval interval) {
+			@RequestBody NewInterval interval) {
 		
 		logger.info("Received addInterval request");
 		Long userId = userService.getIdFromToken(token);
-		interval.setUserId(userId);
 		intervalService.addInterval(userId, interval);
 		
 		return ResponseEntity.ok().build();

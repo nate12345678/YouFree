@@ -1,6 +1,7 @@
 package team.gif.friendscheduler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import team.gif.friendscheduler.model.request.NewInterval;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,11 +49,17 @@ public class Interval {
 		this.endMin = MAX_TIME;
 	}
 	
+	
 	public Interval(Long userId, Integer dayOfWeek, Integer start, Integer end) {
 		this.userId = userId;
 		this.dayOfWeek = dayOfWeek;
 		this.startMin = start;
 		this.endMin = end;
+	}
+	
+	
+	public Interval(Long userId, NewInterval newInterval) {
+		this(userId, newInterval.getDayOfWeek(), newInterval.getStartMin(), newInterval.getEndMin());
 	}
 	
 	

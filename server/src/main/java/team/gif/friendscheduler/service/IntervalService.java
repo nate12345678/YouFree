@@ -3,6 +3,7 @@ package team.gif.friendscheduler.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.gif.friendscheduler.model.Interval;
+import team.gif.friendscheduler.model.request.NewInterval;
 import team.gif.friendscheduler.repository.IntervalRepository;
 
 import javax.transaction.Transactional;
@@ -42,9 +43,11 @@ public class IntervalService {
 	}
 	
 	
-	public void addInterval(Long userId, Interval interval) {
-		List<Interval> intervals = intervalRepository.findAllByUserIdAndDayOfWeekOrderByStartMinAsc(userId, interval.getDayOfWeek());
-		intervalRepository.deleteAllByUserIdAndDayOfWeek(userId, interval.getDayOfWeek());
+	public void addInterval(Long userId, NewInterval intervalRequest) {
+		List<Interval> intervals = intervalRepository.findAllByUserIdAndDayOfWeekOrderByStartMinAsc(userId, intervalRequest.getDayOfWeek());
+//		intervalRepository.deleteAllByUserIdAndDayOfWeek(userId, intervalRequest.getDayOfWeek());
+		
+		Interval interval = new Interval(userId, intervalRequest);
 		
 		if (intervals.size() == 0) {
 			intervalRepository.save(interval);
@@ -69,17 +72,21 @@ public class IntervalService {
 			iterator.add(interval);
 		}
 		
-		// Check if previous should merge
-		iterator.previous(); // Now we're pointing to inserted element
-		Interval previous = iterator.previous();
-		if (previous.getEndMin() > interval.getStartMin()) {
-			interval.setStartMin(previous.getStartMin());
-			interval.setEndMin(Math.max(previous.getEndMin(), interval.getEndMin()));
-			iterator.remove();
+		iterator.previous(); // Now we're pointing just before the inserted element
+		if (iterator.hasPrevious()) { // Check if previous should merge (if previous exists)
+			Interval previous = iterator.previous();
+			if (previous.getEndMin() >= interval.getStartMin()) {
+				interval.setStartMin(previous.getStartMin());
+				interval.setEndMin(Math.max(previous.getEndMin(), interval.getEndMin()));
+				intervalRepository.deleteById(previous.getId());
+				iterator.remove(); // We're now pointing just before the inserted element again
+			} else {
+				iterator.next(); // We're now pointing just before the inserted element again
+			}
 		}
 		
 		// While applicable, merge with next interval
-		iterator.next(); // Now calling next() again returns element after inserted
+		iterator.next(); // Now we're pointing just after the inserted element
 		while (iterator.hasNext()) {
 			Interval next = iterator.next();
 			
@@ -89,10 +96,11 @@ public class IntervalService {
 			}
 			
 			interval.setEndMin(Math.max(interval.getEndMin(), next.getEndMin()));
+			intervalRepository.deleteById(next.getId());
 			iterator.remove();
 		}
 		
-		intervalRepository.saveAll(intervals);
+		intervalRepository.save(interval);
 	}
 	
 	
