@@ -23,6 +23,8 @@ import team.gif.friendscheduler.service.UserService;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,6 +52,24 @@ public class ScheduleController {
 		User target = userService.getUser(userId);
 		
 		return ResponseEntity.ok(intervalService.getIntervals(userId));
+	}
+	
+	
+	public ResponseEntity<List<ArrayList<LinkedList<Interval>>>> getSchedules(
+			@RequestHeader String token,
+			@RequestBody LinkedList<Long> userIds) {
+	
+		logger.info("Received getSchedules request");
+		
+		// TODO: see if target users exists. Throw exception if not.
+		// TODO: see if target users are each in friends list of requester. Throw exception if not.
+		// Should we fail all if one is not a friend, or return valid friends' schedules and ignore failures?
+		
+		List<ArrayList<LinkedList<Interval>>> schedules = userIds.stream()
+				.map(intervalService::getIntervals)
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(schedules);
 	}
 	
 	
