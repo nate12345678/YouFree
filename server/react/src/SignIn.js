@@ -8,6 +8,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import history from "./history";
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import Checkbox from '@material-ui/core/Checkbox';
 
@@ -49,17 +50,21 @@ let inEmail;
 let inPass;
 
 function handleSubmit(event) {
-	event.preventDefault();
-	inEmail = event.target.email.value;
-	inPass = event.target.password.value;
-	var xhr = new XMLHttpRequest();
-	xhr.addEventListener('load', () => {
-		console.log(xhr.responseText)
-	});
-	xhr.open('GET', url + '/login');
-	xhr.setRequestHeader('email', inEmail);
-	xhr.setRequestHeader('password', inPass.toString());
-	xhr.send();
+    event.preventDefault();
+    inEmail = event.target.email.value;
+    inPass = event.target.password.value;
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', () => {
+        if(xhr.status === 200) {
+            history.push('/Home');
+        } else {
+            alert(xhr.response);
+        }
+    });
+    xhr.open('GET', url + '/login');
+    xhr.setRequestHeader('email', inEmail);
+    xhr.setRequestHeader('password', inPass.toString());
+    xhr.send();
 }
 
 function SignIn() {

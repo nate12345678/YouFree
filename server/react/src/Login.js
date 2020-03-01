@@ -22,30 +22,6 @@ class Login extends React.Component {
 		this.clickSignUp = this.clickSignUp.bind(this);
 	}
 
-	runLogin(inEmail, inPass) {
-		var xhr = new XMLHttpRequest();
-		xhr.addEventListener('load', () => {
-			console.log(xhr.responseText)
-		});
-		xhr.open('GET', url + '/login');
-		xhr.setRequestHeader('email', inEmail);
-		xhr.setRequestHeader('password', inPass.toString());
-		xhr.send();
-	}
-
-	runCreateUser(inName, inEmail, inPass, inPassConfirm) {
-		if(inPass === inPassConfirm) {
-			var xhr = new XMLHttpRequest();
-			xhr.addEventListener('load', () => {
-				console.log(xhr.responseText)
-			});
-			xhr.open('POST', url + '/user');
-			xhr.send(JSON.stringify({'email': inEmail, 'username': inName, 'password': inPass}));
-		} else {
-			alert("Passwords are not the same!");
-		}
-	}
-
 	// runHello() {
 	//     var xhr = new XMLHttpRequest();
 	//     xhr.addEventListener('load', () => {

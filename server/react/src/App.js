@@ -1,9 +1,12 @@
 import React from 'react';
 import './App.css';
 import WeekView from './components/WeekView';
+import { Router, Switch, Route } from "react-router-dom";
+import history from './history';
 import IntervalForm from './components/IntervalForm';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp'
+import Login from "./Login";
 
 const url = "https://patrickubelhor.com/api/v1";
 
@@ -127,13 +130,14 @@ class App extends React.Component {
     
 
     return (
-    <div className="App">
-      <h2>Logged In: {username}</h2>
-      {content}
-      <IntervalForm submitAction={this.addInterval} />
-      <SignIn submitAction={this.login} />
-      <SignUp submitAction={this.signUp} />
-    </div>
+        <div>
+            <Router history={history}>
+                <Switch>
+                    <Route path="/" exact component={Login} />
+                    <Route path="/Home" component={WeekView} />
+                </Switch>
+            </Router>
+        </div>
     );
   }
 }
