@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,12 +34,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONArray;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -83,7 +82,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 
 	Calendar currentTime;
 
-	HashMap<Integer, Long> intervalIds = new HashMap<>();
+	HashMap<String, Long> intervalIds = new HashMap<>();
 
 	int day;
 	int startTime;
@@ -92,15 +91,19 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 	int startMin;
 	double scale;
 
+	AtomicInteger friendScheduleLoadedCount = new AtomicInteger(0);
+
 	final int[] idxToRes = {R.id.mondayLayout, R.id.tuesdayLayout, R.id.wednesdayLayout, R.id.thursdayLayout,
 			R.id.fridayLayout, R.id.saturdayLayout, R.id.sundayLayout};
 
+	// FRIEND PAGE
 	void getFriends() {
 		Request request = new Request.Builder()
 				.url(Globals.BASE_URL + "/friends")
 				.addHeader("token", Globals.token + "")
 				.get()
 				.build();
+		Log.w("token", Globals.token + "");
 
 		client.newCall(request).enqueue(new Callback() {
 			@Override
@@ -119,14 +122,11 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 					Log.w("test", "Unexpected code " + response);
 
 				} else {
-					final String friends = response.body().string(); // TODO: convert from JSON to Java object
+					final String body = response.body().string(); // TODO: convert from JSON to Java object
+					Globals.friendsList = FriendsList.friendsListFromJson("{\"friends\":" + body + "}");
+					getFriendSchedule();
 					runOnUiThread(() -> {
 						try {
-							JSONArray ja = new JSONArray(friends);
-							Globals.friendsList = new ArrayList<>();
-							for (int i = 0; i < ja.length(); i++) {
-								Globals.friendsList.add(User.userFromJson(ja.getJSONObject(i).toString()));
-							}
 							friendManager = new LinearLayoutManager(MainActivity.this);
 							friendRecycler.setLayoutManager(friendManager);
 							friendAdapter = new FriendAdapter();
@@ -141,6 +141,102 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		});
 	}
 
+	void getFriendSchedule() {
+		for (int i = 0; i < Globals.friendsList.friends.length; i++) {
+			final int I_FINAL = i;
+			Request request = new Request.Builder()
+					.url(Globals.BASE_URL + "/schedule/" + Globals.friendsList.friends[i].id)
+					.addHeader("token", Globals.token + "")
+					.get()
+					.build();
+			client.newCall(request).enqueue(new Callback() {
+				@Override
+				public void onFailure(Call call, IOException e) {
+					Log.w("test", "shit");
+					if (e.getMessage().contains("Failed to connect")) {
+						Snackbar.make(findViewById(R.id.loginCoordinator),
+								"Lost connection to server", Snackbar.LENGTH_SHORT).show();
+					}
+					e.printStackTrace();
+				}
+
+				@Override
+				public void onResponse(Call call, final Response response) throws IOException {
+					if (!response.isSuccessful()) {
+						Log.w("test", "Unexpected code " + response);
+
+					} else {
+						String body = "{\"schedule\":" + response.body().string() + "}";
+						Globals.friendsList.friends[I_FINAL].schedule = Schedule.scheduleFromJson(body);
+						if (friendScheduleLoadedCount.incrementAndGet() == Globals.friendsList.friends.length) {
+							runOnUiThread(() -> {
+								Log.w("friends", "All friends loaded");
+							});
+						}
+					}
+				}
+			});
+		}
+	}
+
+	void friendRequest() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Enter a new friend's ID:");
+		final EditText input = new EditText(this);
+		input.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
+		builder.setView(input);
+		builder.setCancelable(true);
+		builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialogInterface) {
+			}
+		});
+		builder.setPositiveButton("Invite", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+
+				if (!readInput(input).equals("")) {
+					Request request = new Request.Builder()
+							.url(Globals.BASE_URL + "/friends/" + readInput(input))
+							.addHeader("token", Globals.token + "")
+							.put(RequestBody.create(Globals.JSON, ""))
+							.build();
+					client.newCall(request).enqueue(new Callback() {
+						@Override
+						public void onFailure(Call call, IOException e) {
+							Log.w("test", "shit");
+							if (e.getMessage().contains("Failed to connect")) {
+								Snackbar.make(findViewById(R.id.loginCoordinator),
+										"Lost connection to server", Snackbar.LENGTH_SHORT).show();
+							}
+							e.printStackTrace();
+						}
+
+						@Override
+						public void onResponse(Call call, final Response response) throws IOException {
+							if (!response.isSuccessful()) {
+								Log.w("test", "Unexpected code " + response);
+
+							} else {
+								Log.w("test", "friend request made");
+							}
+						}
+					});
+				} else {
+					Snackbar.make(mainCoordinator, "cancelled", Snackbar.LENGTH_LONG).show();
+				}
+			}
+		});
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	// SCHEDULE PAGE
 	void updateUserRequest() {
 		Request request = new Request.Builder().url(Globals.BASE_URL + "/user/")
 				.addHeader("token", Globals.token + "")
@@ -283,6 +379,80 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		timePicker.show();
 	}
 
+	TextView createTimeBox(int day, int start, int end, long id) {
+		TextView box = new TextView(getApplicationContext());
+
+		ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, 0);
+
+		params.height = (int) (((float) (end - start)) * scale);
+
+		params.leftToLeft = idxToRes[day];
+		params.rightToRight = idxToRes[day];
+		params.topToTop = idxToRes[day];
+		params.topMargin = (int) (((float) (start + 8)) * scale);
+		Log.w("start", params.topMargin + "");
+		box.setBackgroundColor(getColor(R.color.blue));
+		box.setText("" + id);
+		box.setTextColor(getColor(R.color.blue));
+		box.setOnLongClickListener(new removeClickLister());
+		box.setLayoutParams(params);
+
+		return box;
+	}
+
+	// TODO we dont actually need to make a second request on reload
+	void fillSchedule() {
+		runOnUiThread(() -> {
+			for (int i = 0; i < 7; i++) {
+				((ConstraintLayout) findViewById(idxToRes[i])).removeAllViews();
+			}
+			intervalIds.clear();
+		});
+		Log.w("help", "" + Globals.user.id);
+		Request request = new Request.Builder()
+				.url(Globals.BASE_URL + "/schedule/" + Globals.user.id)
+				.addHeader("token", Globals.token + "")
+				.get()
+				.build();
+		client.newCall(request).enqueue(new Callback() {
+			@Override
+			public void onFailure(Call call, IOException e) {
+				Log.w("test", "shit");
+				if (e.getMessage().contains("Failed to connect")) {
+					Snackbar.make(findViewById(R.id.loginCoordinator),
+							"Lost connection to server", Snackbar.LENGTH_SHORT).show();
+				}
+				e.printStackTrace();
+			}
+
+			@Override
+			public void onResponse(Call call, final Response response) throws IOException {
+				if (!response.isSuccessful()) {
+					Log.w("test", "Unexpected code " + response);
+
+				} else {
+					String body = "{\"schedule\":" + response.body().string() + "}";
+					Globals.user.schedule = Schedule.scheduleFromJson(body);
+					runOnUiThread(() -> {
+						for (int i = 0; i < Globals.user.schedule.schedule.length; i++) {
+							ConstraintLayout currRow = findViewById(idxToRes[i]);
+							for (int j = 0; j < Globals.user.schedule.schedule[i].length; j++) {
+								Schedule.Interval curr = Globals.user.schedule.schedule[i][j];
+								TextView box = createTimeBox(curr.dayOfWeek, curr.startMin, curr.endMin, curr.id);
+								currRow.addView(box);
+								Log.w("day" + curr.dayOfWeek, "s:" + curr.startMin + " e:" + curr.endMin + " id:" + curr.id + " resId:" + box.getId());
+								intervalIds.put(box.getText().toString(), curr.id);
+
+							}
+						}
+					});
+				}
+			}
+		});
+	}
+
+
+	// USER PAGE
 	void updateProfile(String component) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Write a new value for " + component);
@@ -323,74 +493,16 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		Toast.makeText(this, "O GOD O FUK", Toast.LENGTH_SHORT).show();
 	}
 
-	TextView createTimeBox(int day, int start, int end) {
-		TextView box = new TextView(getApplicationContext());
 
-		ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, 0);
-
-		params.height = (int) ((float) (end - start) * scale);
-
-		params.leftToLeft = idxToRes[day];
-		params.rightToRight = idxToRes[day];
-		params.topToTop = idxToRes[day];
-		params.topMargin = (int) ((float) (start + 8) * scale);
-		box.setBackgroundColor(getResources().getColor(R.color.blue));
-		box.setOnLongClickListener(new removeClickLister());
-		box.setLayoutParams(params);
-
-		return box;
-	}
-
-	void fillSchedule() {
-		runOnUiThread(() -> {
-			for (int i = 0; i < 7; i++) {
-				((ConstraintLayout) findViewById(idxToRes[i])).removeAllViews();
-			}
-			intervalIds.clear();
-		});
-		Log.w("hlep", "" + Globals.user.id);
-		Request request = new Request.Builder()
-				.url(Globals.BASE_URL + "/schedule/" + Globals.user.id)
-				.addHeader("token", Globals.token + "")
-				.get()
-				.build();
-		client.newCall(request).enqueue(new Callback() {
-			@Override
-			public void onFailure(Call call, IOException e) {
-				Log.w("test", "shit");
-				if (e.getMessage().contains("Failed to connect")) {
-					Snackbar.make(findViewById(R.id.loginCoordinator),
-							"Lost connection to server", Snackbar.LENGTH_SHORT).show();
-				}
-				e.printStackTrace();
-			}
-
-			@Override
-			public void onResponse(Call call, final Response response) throws IOException {
-				if (!response.isSuccessful()) {
-					Log.w("test", "Unexpected code " + response);
-
-				} else {
-					String body = "{\"schedule\":" + response.body().string() + "}";
-					Globals.user.schedule = Schedule.scheduleFromJson(body);
-					runOnUiThread(() -> {
-						Log.w("fdh", body);
-
-						for (int i = 0; i < Globals.user.schedule.schedule.length; i++) {
-							ConstraintLayout currRow = findViewById(idxToRes[i]);
-							for (int j = 0; j < Globals.user.schedule.schedule[i].length; j++) {
-								Schedule.Interval curr = Globals.user.schedule.schedule[i][j];
-								Log.w("day" + curr.dayOfWeek, "s:" + curr.startMin + " e:" + curr.endMin);
-								TextView box = createTimeBox(curr.dayOfWeek, curr.startMin, curr.endMin);
-								currRow.addView(box);
-								intervalIds.put(box.getId(), curr.id);
-
-							}
-						}
-					});
-				}
-			}
-		});
+	// META FUNCTIONS
+	void fabClick() {
+		if (profileInclude.getVisibility() == View.VISIBLE) {
+			updateUserRequest();
+		} else if (scheduleInclude.getVisibility() == View.VISIBLE) {
+			addFreeTime();
+		} else if (friendsInclude.getVisibility() == View.VISIBLE) {
+			friendRequest();
+		}
 	}
 
 	void setUI() {
@@ -431,14 +543,11 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 
 		getFriends();
 
-		scale = getResources().getDisplayMetrics().ydpi / 160;
+//		scale = getResources().getDisplayMetrics().density;
+		scale = 3;
 
 		fab.setOnClickListener((view) -> {
-			if (profileInclude.getVisibility() == View.VISIBLE) {
-				updateUserRequest();
-			} else if (scheduleInclude.getVisibility() == View.VISIBLE) {
-				addFreeTime();
-			}
+			fabClick();
 		});
 		usernameText.setOnClickListener((v -> {
 			updateProfile("username");
@@ -561,6 +670,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 	}
 
 
+	// INTERNAL CLASSES
 	public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
 
 		// Provide a reference to the views for each data item
@@ -589,7 +699,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 			// - get element from your dataset at this position
 			// - replace the contents of the view with that element
 			currentTime = Calendar.getInstance();
-			holder.friendNameText.setText(Globals.friendsList.get(position).username);
+			holder.friendNameText.setText(Globals.friendsList.friends[position].username);
 			int day = (currentTime.get(Calendar.DAY_OF_WEEK) == 1) ? 6 : currentTime.get(Calendar.DAY_OF_WEEK) - 2;
 			int min = currentTime.get(Calendar.MINUTE) / 15;
 			int hour = currentTime.get(Calendar.HOUR_OF_DAY);
@@ -600,7 +710,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		// Return the size of your dataset (invoked by the layout manager)
 		@Override
 		public int getItemCount() {
-			return Globals.friendsList.size();
+			return Globals.friendsList.friends.length;
 		}
 
 		public class ViewHolder extends RecyclerView.ViewHolder {
@@ -631,7 +741,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 			builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
-					Long intervalId = intervalIds.get(v.getId());
+					Long intervalId = intervalIds.get(((TextView)v).getText());
 					removeScheduleItem(intervalId);
 				}
 			});
