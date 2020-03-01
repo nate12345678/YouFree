@@ -140,8 +140,12 @@ class App extends React.Component {
                 <Switch>
                     <Route exact path="/">
                         <SignIn submitAction={this.login}/>
+                        <SignUp submitAction={this.signUp}/>
                     </Route>
-                    <Route path="/Home" render={() => content}/>
+                    <Route path="/Home">
+                        {content}
+                        <IntervalForm submitAction={this.addInterval}/>
+                    </Route>
                 </Switch>
             </Router>
         </div>
