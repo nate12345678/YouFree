@@ -47,12 +47,14 @@ public class ScheduleController {
 		
 		logger.info("Received getSchedule request");
 		
+		User target = userService.getUser(userId);
+		
 		return ResponseEntity.ok(intervalService.getIntervals(userId));
 	}
 	
 	
 	@PutMapping("/schedule")
-	public ResponseEntity<Void> addInterval(
+	public ResponseEntity<ArrayList<LinkedList<Interval>>> addInterval(
 			@RequestHeader("token") Long token,
 			@RequestBody NewInterval interval) {
 		
@@ -61,12 +63,12 @@ public class ScheduleController {
 		User user = userService.getUser(userId);
 		intervalService.addInterval(user, interval);
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(intervalService.getIntervals(userId));
 	}
 	
 	
 	@DeleteMapping("/schedule/{intervalId}")
-	public ResponseEntity<Void> removeInterval(
+	public ResponseEntity<ArrayList<LinkedList<Interval>>> removeInterval(
 			@PathVariable Long intervalId,
 			@RequestHeader("token") Long token) {
 		
@@ -80,7 +82,7 @@ public class ScheduleController {
 		
 		intervalService.removeInterval(userId, intervalId);
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(intervalService.getIntervals(userId));
 	}
 	
 }

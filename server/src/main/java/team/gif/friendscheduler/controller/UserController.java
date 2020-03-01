@@ -32,14 +32,12 @@ import javax.validation.Valid;
 public class UserController {
 	
 	private final FieldValidator fieldValidator;
-	private final IntervalService intervalService;
 	private final UserService userService;
 	private static final Logger logger = LogManager.getLogger(UserController.class);
 	
 	@Autowired
-	public UserController(FieldValidator fieldValidator, IntervalService intervalService, UserService userService) {
+	public UserController(FieldValidator fieldValidator, UserService userService) {
 		this.fieldValidator = fieldValidator;
-		this.intervalService = intervalService;
 		this.userService = userService;
 	}
 	
