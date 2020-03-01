@@ -9,11 +9,13 @@ import team.gif.friendscheduler.model.FriendshipStatus;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.repository.FriendshipRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class FriendshipService {
 	
 	private final FriendshipRepository friendshipRepository;
