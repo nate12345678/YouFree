@@ -18,6 +18,7 @@ import team.gif.friendscheduler.exception.IntervalNotFoundException;
 import team.gif.friendscheduler.model.Interval;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.model.request.NewInterval;
+import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
@@ -30,14 +31,16 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ScheduleController {
 	
-	private final UserService userService;
+	private final AuthService authService;
 	private final IntervalService intervalService;
+	private final UserService userService;
 	private static final Logger logger = LogManager.getLogger(ScheduleController.class);
 	
 	@Autowired
-	public ScheduleController(UserService userService, IntervalService intervalService) {
-		this.userService = userService;
+	public ScheduleController(AuthService authService, IntervalService intervalService, UserService userService) {
+		this.authService = authService;
 		this.intervalService = intervalService;
+		this.userService = userService;
 	}
 	
 	
@@ -75,11 +78,11 @@ public class ScheduleController {
 	
 	@PutMapping("/schedule")
 	public ResponseEntity<ArrayList<LinkedList<Interval>>> addInterval(
-			@RequestHeader("token") Long token,
+			@RequestHeader("token") String token,
 			@RequestBody NewInterval interval) {
 		
 		logger.info("Received addInterval request");
-		Long userId = userService.getIdFromToken(token);
+		Long userId = authService.getUserIdFromToken(token);
 		User user = userService.getUser(userId);
 		intervalService.addInterval(userId, interval);
 		
@@ -90,10 +93,10 @@ public class ScheduleController {
 	@DeleteMapping("/schedule/{intervalId}")
 	public ResponseEntity<ArrayList<LinkedList<Interval>>> removeInterval(
 			@PathVariable Long intervalId,
-			@RequestHeader("token") Long token) {
+			@RequestHeader("token") String token) {
 		
 		logger.info("Received removeInterval request: " + intervalId);
-		Long userId = userService.getIdFromToken(token);
+		Long userId = authService.getUserIdFromToken(token);
 		
 		Interval target = intervalService.getInterval(intervalId).orElseThrow(() -> new IntervalNotFoundException(intervalId));
 		if (!userId.equals(target.getUserId())) {

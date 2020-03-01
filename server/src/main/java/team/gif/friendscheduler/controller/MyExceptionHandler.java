@@ -13,6 +13,7 @@ import team.gif.friendscheduler.exception.FriendshipNotFoundException;
 import team.gif.friendscheduler.exception.IncorrectCredentialsException;
 import team.gif.friendscheduler.exception.IntervalNotFoundException;
 import team.gif.friendscheduler.exception.InvalidFieldException;
+import team.gif.friendscheduler.exception.UnauthorizedException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
 
 import java.util.HashMap;
@@ -30,6 +31,12 @@ public class MyExceptionHandler {
 	
 	@ExceptionHandler(IncorrectCredentialsException.class)
 	public ResponseEntity<String> handleIncorrectCredentialsException(IncorrectCredentialsException ex) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+	}
+	
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException ex) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
 	}
 	

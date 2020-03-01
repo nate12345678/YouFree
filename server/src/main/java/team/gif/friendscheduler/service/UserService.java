@@ -22,16 +22,6 @@ public class UserService {
 	}
 
 	
-	public Long getIdFromToken(Long token) {
-		return token;
-	}
-	
-	
-	public Long generateSessionToken(Long id) {
-		return id;
-	}
-	
-	
 	/**
 	 * Checks if there exists a username with the given password.
 	 * Returns the User associated with these credentials.

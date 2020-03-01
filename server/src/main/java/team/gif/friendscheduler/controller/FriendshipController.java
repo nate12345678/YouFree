@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.model.User;
+import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.UserService;
 
@@ -21,25 +22,27 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FriendshipController {
 	
-	private UserService userService;
-	private FriendshipService friendshipService;
+	private final AuthService authService;
+	private final FriendshipService friendshipService;
+	private final UserService userService;
 	
 	@Autowired
-	public FriendshipController(UserService userService, FriendshipService friendshipService) {
-		this.userService = userService;
+	public FriendshipController(AuthService authService, UserService userService, FriendshipService friendshipService) {
+		this.authService = authService;
 		this.friendshipService = friendshipService;
+		this.userService = userService;
 	}
 	
 	
 	@GetMapping("/friends")
 	public ResponseEntity<List<User>> getFriends(
-			@RequestHeader("token") Long token) {
+			@RequestHeader("token") String token) {
 		
-		User user = userService.getUser(userService.getIdFromToken(token));
+		User user = userService.getUser(authService.getUserIdFromToken(token));
 		List<Long> friendIds = friendshipService.getFriends(user);
 		
 		List<User> friends = friendIds.stream()
-				.map(friendId -> userService.getUser(friendId))
+				.map(userService::getUser)
 				.collect(Collectors.toList());
 		
 		return ResponseEntity.ok(friends);
@@ -49,9 +52,9 @@ public class FriendshipController {
 	@PutMapping("/friends/{id}")
 	public ResponseEntity<Void> addFriend(
 			@PathVariable Long id,
-			@RequestHeader("token") Long token) {
+			@RequestHeader("token") String token) {
 		
-		Long requesterId = userService.getIdFromToken(token);
+		Long requesterId = authService.getUserIdFromToken(token);
 		friendshipService.addFriendship(requesterId, id);
 		
 		return ResponseEntity.ok().build();
@@ -61,9 +64,9 @@ public class FriendshipController {
 	@DeleteMapping("/friends/{id}")
 	public ResponseEntity<Void> removeFriend(
 			@PathVariable Long id,
-			@RequestHeader("token") Long token) {
+			@RequestHeader("token") String token) {
 		
-		Long requesterId = userService.getIdFromToken(token);
+		Long requesterId = authService.getUserIdFromToken(token);
 		friendshipService.deleteFriendship(requesterId, id);
 		
 		return ResponseEntity.noContent().build();
