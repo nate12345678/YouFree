@@ -61,7 +61,7 @@ public class ScheduleController {
 		logger.info("Received addInterval request");
 		Long userId = userService.getIdFromToken(token);
 		User user = userService.getUser(userId);
-		intervalService.addInterval(user, interval);
+		intervalService.addInterval(userId, interval);
 		
 		return ResponseEntity.ok(intervalService.getIntervals(userId));
 	}
@@ -76,8 +76,8 @@ public class ScheduleController {
 		Long userId = userService.getIdFromToken(token);
 		
 		Interval target = intervalService.getInterval(intervalId).orElseThrow(() -> new IntervalNotFoundException(intervalId));
-		if (!userId.equals(target.getUser().getId())) {
-			throw new AccessDeniedException(userId, target.getUser().getId());
+		if (!userId.equals(target.getUserId())) {
+			throw new AccessDeniedException(userId, target.getUserId());
 		}
 		
 		intervalService.removeInterval(userId, intervalId);

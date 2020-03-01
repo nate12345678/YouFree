@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.exception.InvalidFieldException;
-import team.gif.friendscheduler.model.Friendship;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.model.request.NewUser;
 import team.gif.friendscheduler.service.FieldValidator;
