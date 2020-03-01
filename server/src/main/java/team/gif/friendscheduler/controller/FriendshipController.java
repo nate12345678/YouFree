@@ -14,6 +14,7 @@ import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -34,9 +35,13 @@ public class FriendshipController {
 			@RequestHeader("token") Long token) {
 		
 		User user = userService.getUser(userService.getIdFromToken(token));
-		List<User> list = friendshipService.getFriends(user);
+		List<Long> friendIds = friendshipService.getFriends(user);
 		
-		return ResponseEntity.ok(list);
+		List<User> friends = friendIds.stream()
+				.map(friendId -> userService.getUser(friendId))
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(friends);
 	}
 	
 	
@@ -45,9 +50,8 @@ public class FriendshipController {
 			@PathVariable Long id,
 			@RequestHeader("token") Long token) {
 		
-		User requester = userService.getUser(userService.getIdFromToken(token));
-		User target = userService.getUser(id);
-		friendshipService.addFriendship(requester, target);
+		Long requesterId = userService.getIdFromToken(token);
+		friendshipService.addFriendship(requesterId, id);
 		
 		return ResponseEntity.ok().build();
 	}

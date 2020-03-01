@@ -23,27 +23,27 @@ public class FriendshipService {
 		this.friendshipRepository = friendshipRepository;
 	}
 	
-	public List<User> getFriends(User user) {
-		List<Friendship> friendships = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserId_IdOrFriendshipKey_SmallerUserId_Id(user.getId(), user.getId());
+	public List<Long> getFriends(User user) {
+		List<Friendship> friendships = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserIdOrFriendshipKey_SmallerUserId(user.getId(), user.getId());
 		
 		return friendships.parallelStream()
 				.filter(friendship -> friendship.getStatus() == FriendshipStatus.FRIENDS)
-				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId().getId().equals(user.getId())
+				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId().equals(user.getId())
 						? friendship.getFriendshipKey().getLargerUserId()
 						: friendship.getFriendshipKey().getSmallerUserId())
 				.collect(Collectors.toList());
 	}
 	
-	public void addFriendship(User requester, User target) {
+	public void addFriendship(Long requesterId, Long targetId) {
 		
-		User smaller = (requester.getId() < target.getId()) ? requester : target;
-		User larger = (requester.getId() < target.getId()) ? target : requester;
+		long smaller = Math.min(requesterId, targetId);
+		long larger = Math.max(requesterId, targetId);
 		
 		Optional<Friendship> current = friendshipRepository.getFriendshipByFriendshipKey(new FriendshipKey(smaller, larger));
 		
 		// No relationship exists between the users
 		if (current.isEmpty()) {
-			FriendshipStatus status = (smaller == requester) ? FriendshipStatus.AWAITING_LARGER_ID_APPROVAL : FriendshipStatus.AWAITING_SMALLER_ID_APPROVAL;
+			FriendshipStatus status = (smaller == requesterId) ? FriendshipStatus.AWAITING_LARGER_ID_APPROVAL : FriendshipStatus.AWAITING_SMALLER_ID_APPROVAL;
 			Friendship friendship = new Friendship(smaller, larger, status);
 			friendshipRepository.save(friendship);
 			return;
@@ -52,7 +52,7 @@ public class FriendshipService {
 		Friendship friendship = current.get();
 		
 		// Smaller ID is sending request
-		if (smaller == requester) {
+		if (smaller == requesterId) {
 			switch (friendship.getStatus()) {
 				case AWAITING_SMALLER_ID_APPROVAL:
 					// Accepting request
@@ -92,15 +92,20 @@ public class FriendshipService {
 	}
 	
 	
-	public void deleteFriendship(User user1, User user2) {
+	public void deleteFriendship(Long user1, Long user2) {
 		
 		// TODO: don't allow this if no friendship exists OR if one user has blocked the other
 		
-		FriendshipKey key = (user1.getId() < user2.getId())
+		FriendshipKey key = (user1 < user2)
 				? new FriendshipKey(user1, user2)
 				: new FriendshipKey(user2, user1);
 		
 		friendshipRepository.deleteById(key);
+	}
+	
+	
+	public void removeUser(Long userId) {
+		friendshipRepository.deleteAllByFriendshipKey_LargerUserIdOrFriendshipKey_SmallerUserId(userId, userId);
 	}
 	
 }

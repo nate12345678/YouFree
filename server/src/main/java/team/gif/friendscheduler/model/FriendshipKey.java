@@ -1,46 +1,42 @@
 package team.gif.friendscheduler.model;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable
 public class FriendshipKey implements Serializable {
 	
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(nullable = false)
-	private User smallerUserId;
+	@Column
+	private Long smallerUserId;
 	
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(nullable = false)
-	private User largerUserId;
+	@Column
+	private Long largerUserId;
 	
 	
 	public FriendshipKey() {}
 	
-	public FriendshipKey(User smallerUserId, User largerUserId) {
+	public FriendshipKey(Long smallerUserId, Long largerUserId) {
 		this.smallerUserId = smallerUserId;
 		this.largerUserId = largerUserId;
 		
-		if (smallerUserId.getId() > largerUserId.getId())
+		if (smallerUserId > largerUserId)
 			throw new IllegalArgumentException("First argument must have a smaller User ID than second argument!");
 	}
 	
-	public User getSmallerUserId() {
+	public Long getSmallerUserId() {
 		return smallerUserId;
 	}
 	
-	public User getLargerUserId() {
+	public Long getLargerUserId() {
 		return largerUserId;
 	}
 	
-	public void setSmallerUserId(User userId) {
+	public void setSmallerUserId(Long userId) {
 		this.smallerUserId = userId;
 	}
 	
-	public void setLargerUserId(User userId) {
+	public void setLargerUserId(Long userId) {
 		this.largerUserId = userId;
 	}
 

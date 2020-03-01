@@ -11,7 +11,8 @@ import java.util.Optional;
 @Repository
 public interface FriendshipRepository extends CrudRepository<Friendship, FriendshipKey> {
 	
-	List<Friendship> getFriendshipsByFriendshipKey_LargerUserId_IdOrFriendshipKey_SmallerUserId_Id(Long userId1, Long userId2);
+	List<Friendship> getFriendshipsByFriendshipKey_LargerUserIdOrFriendshipKey_SmallerUserId(Long userId1, Long userId2);
 	Optional<Friendship> getFriendshipByFriendshipKey(FriendshipKey key);
+	void deleteAllByFriendshipKey_LargerUserIdOrFriendshipKey_SmallerUserId(Long userId1, Long userId2);
 	
 }

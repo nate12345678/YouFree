@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.exception.InvalidFieldException;
+import team.gif.friendscheduler.model.Friendship;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.model.request.NewUser;
 import team.gif.friendscheduler.service.FieldValidator;
+import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
@@ -32,12 +34,16 @@ import javax.validation.Valid;
 public class UserController {
 	
 	private final FieldValidator fieldValidator;
+	private final FriendshipService friendshipService;
+	private final IntervalService intervalService;
 	private final UserService userService;
 	private static final Logger logger = LogManager.getLogger(UserController.class);
 	
 	@Autowired
-	public UserController(FieldValidator fieldValidator, UserService userService) {
+	public UserController(FieldValidator fieldValidator, FriendshipService friendshipService, IntervalService intervalService, UserService userService) {
 		this.fieldValidator = fieldValidator;
+		this.friendshipService = friendshipService;
+		this.intervalService = intervalService;
 		this.userService = userService;
 	}
 	
@@ -101,6 +107,8 @@ public class UserController {
 		
 		logger.info("Received deleteUser request");
 		Long id = userService.getIdFromToken(token);
+		friendshipService.removeUser(id);
+		intervalService.removeAllIntervals(id);
 		userService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();
