@@ -27,6 +27,7 @@ public class FriendshipService {
 		List<Friendship> friendships = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserId_IdOrFriendshipKey_SmallerUserId_Id(user.getId(), user.getId());
 		
 		return friendships.parallelStream()
+				.filter(friendship -> friendship.getStatus() == FriendshipStatus.FRIENDS)
 				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId().getId().equals(user.getId())
 						? friendship.getFriendshipKey().getLargerUserId()
 						: friendship.getFriendshipKey().getSmallerUserId())
@@ -68,7 +69,7 @@ public class FriendshipService {
 					throw new FriendRequestException("Target user has blocked all requests from sender");
 			}
 			
-		} else {
+		} else { // Larger ID is sending request
 			switch (friendship.getStatus()) {
 				case AWAITING_LARGER_ID_APPROVAL:
 					// Accepting request
