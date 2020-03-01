@@ -6,17 +6,6 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,11 +20,25 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
 import org.json.JSONArray;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -80,6 +83,8 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 
 	Calendar currentTime;
 
+	HashMap<Integer, Long> intervalIds = new HashMap<>();
+
 	int day;
 	int startTime;
 	int endTime;
@@ -87,7 +92,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 	int startMin;
 	double scale;
 
-	final int idxToRes[] = {R.id.mondayLayout, R.id.tuesdayLayout, R.id.wednesdayLayout, R.id.thursdayLayout,
+	final int[] idxToRes = {R.id.mondayLayout, R.id.tuesdayLayout, R.id.wednesdayLayout, R.id.thursdayLayout,
 			R.id.fridayLayout, R.id.saturdayLayout, R.id.sundayLayout};
 
 	void getFriends() {
@@ -170,7 +175,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 				.url(Globals.BASE_URL + "/schedule")
 				.addHeader("token", Globals.token + "")
 				.put(RequestBody.create(Globals.JSON, "{\n" +
-						"\"day\": " + day + ",\n" +
+						"\"dayOfWeek\": " + day + ",\n" +
 						"\"startMin\": " + startTime + ",\n" +
 						"\"endMin\": " + endTime + "\n" +
 						"}"))
@@ -192,7 +197,36 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 					Log.w("test", "Unexpected code " + response);
 
 				} else {
+					fillSchedule();
+				}
+			}
+		});
+	}
 
+	void removeScheduleItem(long intervalId) {
+		Request request = new Request.Builder()
+				.url(Globals.BASE_URL + "/schedule/" + intervalId)
+				.addHeader("token", Globals.token + "")
+				.delete()
+				.build();
+		client.newCall(request).enqueue(new Callback() {
+			@Override
+			public void onFailure(Call call, IOException e) {
+				Log.w("test", "shit");
+				if (e.getMessage().contains("Failed to connect")) {
+					Snackbar.make(findViewById(R.id.loginCoordinator),
+							"Lost connection to server", Snackbar.LENGTH_SHORT).show();
+				}
+				e.printStackTrace();
+			}
+
+			@Override
+			public void onResponse(Call call, final Response response) throws IOException {
+				if (!response.isSuccessful()) {
+					Log.w("test", "Unexpected code " + response);
+
+				} else {
+					fillSchedule();
 				}
 			}
 		});
@@ -203,7 +237,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 
 		LayoutInflater inflater = getLayoutInflater();
 		final Spinner daySpinner = new Spinner(this);
-		daySpinner.setPadding(32,4,32,4);
+		daySpinner.setPadding(32, 4, 32, 4);
 
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Globals.days);
 		spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -225,26 +259,27 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		dayDialog.show();
 
 	}
+
 	void getStartTime() {
-		Dialog timePicker = new TimePickerDialog(this, (TimePicker view, int hourOfDay, int minute) ->{
-				startHour = hourOfDay;
-				startMin = minute;
-				startTime = startHour * 60 + startMin;
-				getEndTime();
-			} , 0, 0, false);
+		Dialog timePicker = new TimePickerDialog(this, (TimePicker view, int hourOfDay, int minute) -> {
+			startHour = hourOfDay;
+			startMin = minute;
+			startTime = startHour * 60 + startMin;
+			getEndTime();
+		}, 0, 0, false);
 		timePicker.show();
 
 	}
 
 	void getEndTime() {
-		Dialog timePicker = new TimePickerDialog(this, (TimePicker view, int hourOfDay, int minute) ->{
+		Dialog timePicker = new TimePickerDialog(this, (TimePicker view, int hourOfDay, int minute) -> {
 			endTime = hourOfDay * 60 + minute;
 			if (endTime <= startTime) {
 				Snackbar.make(mainCoordinator, "End time cannot be before start", Snackbar.LENGTH_SHORT).show();
 			} else {
 				updateSchedule();
 			}
-		} , startHour, startMin, false);
+		}, startHour, startMin, false);
 		timePicker.show();
 	}
 
@@ -265,11 +300,9 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 
 				if (!readInput(input).equals("")) {
 					Log.w("test", User.userToJson(Globals.user));
-					switch (component) {
-						case "email":
-							Globals.user.email = readInput(input);
-							emailText.setText(Globals.user.email);
-							break;
+					if ("email".equals(component)) {
+						Globals.user.email = readInput(input);
+						emailText.setText(Globals.user.email);
 					}
 					updateUserRequest();
 				} else {
@@ -293,18 +326,71 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 	TextView createTimeBox(int day, int start, int end) {
 		TextView box = new TextView(getApplicationContext());
 
-		ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0,0);
+		ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, 0);
 
-
-		params.height = (int)((float)(end - start) * scale);
+		params.height = (int) ((float) (end - start) * scale);
 
 		params.leftToLeft = idxToRes[day];
 		params.rightToRight = idxToRes[day];
 		params.topToTop = idxToRes[day];
-		params.topMargin = (int)((float)(start + 8) * scale);
+		params.topMargin = (int) ((float) (start + 8) * scale);
 		box.setBackgroundColor(getResources().getColor(R.color.blue));
+		box.setOnLongClickListener(new removeClickLister());
 		box.setLayoutParams(params);
+
 		return box;
+	}
+
+	void fillSchedule() {
+		runOnUiThread(() -> {
+			for (int i = 0; i < 7; i++) {
+				((ConstraintLayout) findViewById(idxToRes[i])).removeAllViews();
+			}
+			intervalIds.clear();
+		});
+		Log.w("hlep", "" + Globals.user.id);
+		Request request = new Request.Builder()
+				.url(Globals.BASE_URL + "/schedule/" + Globals.user.id)
+				.addHeader("token", Globals.token + "")
+				.get()
+				.build();
+		client.newCall(request).enqueue(new Callback() {
+			@Override
+			public void onFailure(Call call, IOException e) {
+				Log.w("test", "shit");
+				if (e.getMessage().contains("Failed to connect")) {
+					Snackbar.make(findViewById(R.id.loginCoordinator),
+							"Lost connection to server", Snackbar.LENGTH_SHORT).show();
+				}
+				e.printStackTrace();
+			}
+
+			@Override
+			public void onResponse(Call call, final Response response) throws IOException {
+				if (!response.isSuccessful()) {
+					Log.w("test", "Unexpected code " + response);
+
+				} else {
+					String body = "{\"schedule\":" + response.body().string() + "}";
+					Globals.user.schedule = Schedule.scheduleFromJson(body);
+					runOnUiThread(() -> {
+						Log.w("fdh", body);
+
+						for (int i = 0; i < Globals.user.schedule.schedule.length; i++) {
+							ConstraintLayout currRow = findViewById(idxToRes[i]);
+							for (int j = 0; j < Globals.user.schedule.schedule[i].length; j++) {
+								Schedule.Interval curr = Globals.user.schedule.schedule[i][j];
+								Log.w("day" + curr.dayOfWeek, "s:" + curr.startMin + " e:" + curr.endMin);
+								TextView box = createTimeBox(curr.dayOfWeek, curr.startMin, curr.endMin);
+								currRow.addView(box);
+								intervalIds.put(box.getId(), curr.id);
+
+							}
+						}
+					});
+				}
+			}
+		});
 	}
 
 	void setUI() {
@@ -457,8 +543,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 			case R.id.nav_my_schedule:
 				getSupportActionBar().setTitle("My Schedule");
 				scheduleInclude.setVisibility(View.VISIBLE);
-				TextView box = createTimeBox(0, 240, 360);
-				mondayLayout.addView(box);
+				fillSchedule();
 				break;
 			case R.id.nav_friends:
 				getSupportActionBar().setTitle("Friends");
@@ -492,7 +577,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		public FriendAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 			// create a new view
 			View v = LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.friend_line, parent, false);
+					.inflate(R.layout.friend_avail_line, parent, false);
 
 			ViewHolder vh = new ViewHolder(v);
 			return vh;
@@ -521,15 +606,43 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		public class ViewHolder extends RecyclerView.ViewHolder {
 			// each data item is just a string in this case
 			final TextView friendNameText;
-			final TextView friendAvailableText;
-			final TextView friendNextAvailText;
+
 
 			public ViewHolder(View v) {
 				super(v);
 				friendNameText = v.findViewById(R.id.friendNameText);
-				friendAvailableText = v.findViewById(R.id.friendAvailableText);
-				friendNextAvailText = v.findViewById(R.id.friendNextAvailText);
 			}
+		}
+	}
+
+	private class removeClickLister implements View.OnLongClickListener {
+
+		@Override
+		public boolean onLongClick(View v) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(scheduleInclude.getContext());
+			builder.setMessage("Do you want to delete this free interval?");
+
+			builder.setCancelable(true);
+			builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialogInterface) {
+				}
+			});
+			builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					Long intervalId = intervalIds.get(v.getId());
+					removeScheduleItem(intervalId);
+				}
+			});
+			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			AlertDialog alert = builder.create();
+			alert.show();
+			return true;
 		}
 	}
 

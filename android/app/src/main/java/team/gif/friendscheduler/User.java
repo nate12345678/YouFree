@@ -6,7 +6,7 @@ public class User {
 	long id;
 	String username;
 	String email;
-	String schedule[][];
+	Schedule schedule;
 
 
 	static Gson gson = new Gson();
@@ -22,7 +22,7 @@ public class User {
 	}
 
 
-	public User(long id, String username, String email, String schedule[][]) {
+	public User(long id, String username, String email, Schedule schedule) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
