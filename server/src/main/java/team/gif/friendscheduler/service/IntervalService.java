@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,6 +23,11 @@ public class IntervalService {
 	@Autowired
 	public IntervalService(IntervalRepository intervalRepository) {
 		this.intervalRepository = intervalRepository;
+	}
+	
+	
+	public Optional<Interval> getInterval(Long intervalId) {
+		return intervalRepository.findById(intervalId);
 	}
 	
 	

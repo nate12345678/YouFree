@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import team.gif.friendscheduler.exception.AccessDeniedException;
+import team.gif.friendscheduler.exception.IntervalNotFoundException;
 import team.gif.friendscheduler.model.Interval;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.model.request.NewInterval;
@@ -70,6 +72,12 @@ public class ScheduleController {
 		
 		logger.info("Received removeInterval request: " + intervalId);
 		Long userId = userService.getIdFromToken(token);
+		
+		Interval target = intervalService.getInterval(intervalId).orElseThrow(() -> new IntervalNotFoundException(intervalId));
+		if (!userId.equals(target.getUser().getId())) {
+			throw new AccessDeniedException(userId, target.getUser().getId());
+		}
+		
 		intervalService.removeInterval(userId, intervalId);
 		
 		return ResponseEntity.ok().build();
