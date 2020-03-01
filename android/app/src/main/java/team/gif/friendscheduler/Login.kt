@@ -1,17 +1,16 @@
-
 package team.gif.friendscheduler
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.*
 import java.io.IOException
@@ -62,7 +61,7 @@ class Login : AppCompatActivity() {
 		editor.apply()
 	}
 
-	fun login(v: View) {
+	fun loginFromView(v: View) {
 		var password = ""
 		if (emailText.text.isNotEmpty() && passwordText.text.isNotEmpty()) {
 			password = passwordText.text.toString()
@@ -82,10 +81,17 @@ class Login : AppCompatActivity() {
 			} else {
 				login(password)
 			}
+			if (Globals.stayLoggedOn) {
+				var editor = getSharedPreferences("prefs", Context.MODE_PRIVATE).edit()
+				editor.putString("email", Globals.user.email)
+				editor.putString("password", Globals.enteredPass)
+				editor.apply()
+			}
 		}
 	}
 
 	fun login(password: String) {
+
 		val request = Request.Builder()
 			.url(Globals.BASE_URL + "/login")
 			.addHeader("email", Globals.user.email)
@@ -206,6 +212,13 @@ class Login : AppCompatActivity() {
 		var prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE)
 		Globals.stayLoggedOn = prefs.getBoolean("stayLoggedOn", false)
 		stayInCheck.isChecked = Globals.stayLoggedOn
+
+
+		if (Globals.stayLoggedOn) {
+			Globals.enteredPass = prefs.getString("password", "FAIL")
+			Globals.user = User("DefaultUser", prefs.getString("email", "FAIL"))
+			login(Globals.enteredPass)
+		}
 
 		createAcctText.setOnClickListener {
 			if (confirm) {
