@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
@@ -106,7 +106,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1440dp"
                 android:background="@color/darkGrey"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
             <LinearLayout
                     android:layout_width="0dp"
@@ -118,16 +119,16 @@
                 <TextView
                         android:id="@+id/marignCalTop"
                         android:layout_width="match_parent"
-                        android:layout_height="8dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="24px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white" />
 
                 <TextView
                         android:id="@+id/timeText0"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="12 AM" />
@@ -135,9 +136,9 @@
                 <TextView
                         android:id="@+id/timeText1"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="1 AM" />
@@ -145,9 +146,9 @@
                 <TextView
                         android:id="@+id/timeText2"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="2 AM" />
@@ -155,9 +156,9 @@
                 <TextView
                         android:id="@+id/timeText3"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="3 AM" />
@@ -165,9 +166,9 @@
                 <TextView
                         android:id="@+id/timeText4"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="4 AM" />
@@ -175,9 +176,9 @@
                 <TextView
                         android:id="@+id/timeText5"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="5 AM" />
@@ -185,9 +186,9 @@
                 <TextView
                         android:id="@+id/timeText6"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="6 AM" />
@@ -195,9 +196,9 @@
                 <TextView
                         android:id="@+id/timeText7"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="7 AM" />
@@ -205,9 +206,9 @@
                 <TextView
                         android:id="@+id/timeText8"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="8 AM" />
@@ -215,9 +216,9 @@
                 <TextView
                         android:id="@+id/timeText9"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="9 AM" />
@@ -225,9 +226,9 @@
                 <TextView
                         android:id="@+id/timeText10"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="10 AM" />
@@ -235,9 +236,9 @@
                 <TextView
                         android:id="@+id/timeText11"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="11 AM" />
@@ -245,9 +246,9 @@
                 <TextView
                         android:id="@+id/timeText12"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="12 pm" />
@@ -255,9 +256,9 @@
                 <TextView
                         android:id="@+id/timeText13"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="1 PM" />
@@ -265,9 +266,9 @@
                 <TextView
                         android:id="@+id/timeText14"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="2 PM" />
@@ -275,9 +276,9 @@
                 <TextView
                         android:id="@+id/timeText15"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="3 PM" />
@@ -285,9 +286,9 @@
                 <TextView
                         android:id="@+id/timeText16"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="4 PM" />
@@ -295,9 +296,9 @@
                 <TextView
                         android:id="@+id/timeText17"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="5 PM" />
@@ -305,9 +306,9 @@
                 <TextView
                         android:id="@+id/timeText18"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="6 PM" />
@@ -315,9 +316,9 @@
                 <TextView
                         android:id="@+id/timeText19"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="7 PM" />
@@ -325,9 +326,9 @@
                 <TextView
                         android:id="@+id/timeText20"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="8 PM" />
@@ -335,9 +336,9 @@
                 <TextView
                         android:id="@+id/timeText21"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="9 PM" />
@@ -345,9 +346,9 @@
                 <TextView
                         android:id="@+id/timeText22"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="10 PM" />
@@ -355,9 +356,9 @@
                 <TextView
                         android:id="@+id/timeText23"
                         android:layout_width="match_parent"
-                        android:layout_height="58dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
+                        android:layout_height="174px"
+                        android:layout_marginTop="3px"
+                        android:layout_marginBottom="3px"
                         android:background="@android:color/white"
                         android:gravity="center_horizontal"
                         android:text="11 PM" />
@@ -365,13 +366,13 @@
                 <TextView
                         android:id="@+id/marignCalBot"
                         android:layout_width="match_parent"
-                        android:layout_height="8dp"
-                        android:layout_marginTop="1dp"
+                        android:layout_height="24px"
+                        android:layout_marginTop="3px"
                         android:background="@android:color/white" />
 
             </LinearLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/mondayLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -381,9 +382,9 @@
                     android:background="@color/white"
                     android:foregroundGravity="fill_vertical">
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/tuesdayLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -393,9 +394,9 @@
                     android:background="@color/white"
                     android:foregroundGravity="center">
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/wednesdayLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -404,9 +405,9 @@
                     android:layout_weight="1"
                     android:background="@android:color/white">
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/thursdayLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -415,9 +416,9 @@
                     android:layout_weight="1"
                     android:background="@android:color/white">
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/fridayLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -426,9 +427,9 @@
                     android:layout_weight="1"
                     android:background="@android:color/white">
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/saturdayLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -437,9 +438,9 @@
                     android:layout_weight="1"
                     android:background="@android:color/white">
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/sundayLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -448,8 +449,8 @@
                     android:layout_weight="1"
                     android:background="@android:color/white">
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
     </ScrollView>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

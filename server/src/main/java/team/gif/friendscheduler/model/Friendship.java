@@ -22,7 +22,7 @@ public class Friendship {
 	public Friendship() {}
 	
 	
-	public Friendship(User smallerUserId, User largerUserId, FriendshipStatus status) {
+	public Friendship(Long smallerUserId, Long largerUserId, FriendshipStatus status) {
 		this(new FriendshipKey(smallerUserId, largerUserId), status);
 	}
 	

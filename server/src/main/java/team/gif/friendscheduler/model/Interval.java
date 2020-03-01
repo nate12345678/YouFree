@@ -1,11 +1,16 @@
 package team.gif.friendscheduler.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import team.gif.friendscheduler.model.request.NewInterval;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "Intervals")
@@ -15,19 +20,26 @@ public class Interval {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Long id;
 	
 	@Column
 	private Long userId;
 	
 	@Column
-	private int dayOfWeek; // Monday = 0, Sunday = 6
+	@Min(0) // Monday
+	@Max(6) // Sunday
+	private Integer dayOfWeek;
 	
 	@Column
-	private int startMin;
+	@Min(0)
+	@Max(MAX_TIME)
+	private Integer startMin;
 	
 	@Column
-	private int endMin;
+	@Min(0)
+	@Max(MAX_TIME)
+	private Integer endMin;
 	
 	
 	public Interval() {
@@ -36,11 +48,17 @@ public class Interval {
 		this.endMin = MAX_TIME;
 	}
 	
-	public Interval(Long userId, int dayOfWeek, int start, int end) {
+	
+	public Interval(Long userId, Integer dayOfWeek, Integer start, Integer end) {
 		this.userId = userId;
 		this.dayOfWeek = dayOfWeek;
 		this.startMin = start;
 		this.endMin = end;
+	}
+	
+	
+	public Interval(Long userId, NewInterval newInterval) {
+		this(userId, newInterval.getDayOfWeek(), newInterval.getStartMin(), newInterval.getEndMin());
 	}
 	
 	
@@ -54,17 +72,17 @@ public class Interval {
 	}
 	
 	
-	public int getDayOfWeek() {
+	public Integer getDayOfWeek() {
 		return dayOfWeek;
 	}
 	
 	
-	public int getStartMin() {
+	public Integer getStartMin() {
 		return startMin;
 	}
 	
 	
-	public int getEndMin() {
+	public Integer getEndMin() {
 		return endMin;
 	}
 	
@@ -79,17 +97,17 @@ public class Interval {
 	}
 	
 	
-	public void setDayOfWeek(int dayOfWeek) {
+	public void setDayOfWeek(Integer dayOfWeek) {
 		this.dayOfWeek = dayOfWeek;
 	}
 	
 	
-	public void setStartMin(int start) {
+	public void setStartMin(Integer start) {
 		this.startMin = start;
 	}
 	
 	
-	public void setEndMin(int end) {
+	public void setEndMin(Integer end) {
 		this.endMin = end;
 	}
 	

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -19,21 +20,18 @@ public class User {
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Long id;
 	
-	// TODO: Pattern to disallow special characters
 	@Column(unique = true, nullable = false)
 	@Size(min = 1, max = 64)
 	private String username;
 	
-	// TODO: Pattern to disallow special characters
 	@Column(nullable = false)
 	@Size(min = 1, max = 64)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 	
-	// TODO: validate using a pattern
-//	EXAMPLE: @Pattern(regexp = "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$")
 	@Column(unique = true, nullable = false)
 	@Size(min = 5, max = 256) // Shortest email: a@b.c
+	@Email
 	private String email;
 	
 	
@@ -63,6 +61,11 @@ public class User {
 	
 	public String getEmail() {
 		return email;
+	}
+	
+	
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	

@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team.gif.friendscheduler.exception.AccessDeniedException;
 import team.gif.friendscheduler.exception.FriendRequestException;
+import team.gif.friendscheduler.exception.FriendshipNotFoundException;
 import team.gif.friendscheduler.exception.IncorrectCredentialsException;
+import team.gif.friendscheduler.exception.IntervalNotFoundException;
 import team.gif.friendscheduler.exception.InvalidFieldException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
 
@@ -61,6 +63,18 @@ public class MyExceptionHandler {
 	
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	}
+	
+	
+	@ExceptionHandler(IntervalNotFoundException.class)
+	public ResponseEntity<String> handleIntervalNotFoundException(IntervalNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	}
+	
+	
+	@ExceptionHandler(FriendshipNotFoundException.class)
+	public ResponseEntity<String> handleFriendshipNotFoundException(FriendshipNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}
 	
