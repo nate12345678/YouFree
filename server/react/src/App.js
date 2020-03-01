@@ -25,8 +25,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.login('n@p.com','q');
-    // this.fetchSchedule();
+    // this.login('n@p.com','q');
+    this.fetchSchedule();
   }
 
   fetchSchedule = () => {
@@ -96,14 +96,19 @@ class App extends React.Component {
         'password': password
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        this.setState({
-          user: data,
-          token: data.id});
-        this.fetchSchedule();
-      });
+        .then(response => {
+            if(response.ok) {
+                return response.json()
+            }
+        })
+        .then(data => {
+            console.log(data);
+            this.setState({
+                user: data,
+                token: data.id});
+            this.fetchSchedule();
+            history.push('/Home')
+        });
   }
 
   signUp = (user) => {
@@ -133,8 +138,10 @@ class App extends React.Component {
         <div>
             <Router history={history}>
                 <Switch>
-                    <Route path="/" exact component={Login} />
-                    <Route path="/Home" component={WeekView} />
+                    <Route exact path="/">
+                        <SignIn submitAction={this.login}/>
+                    </Route>
+                    <Route path="/Home" render={() => content}/>
                 </Switch>
             </Router>
         </div>
