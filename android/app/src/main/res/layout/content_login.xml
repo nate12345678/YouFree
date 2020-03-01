@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:text="User name"
             app:layout_constraintStart_toStartOf="@+id/usernameText"
             app:layout_constraintTop_toBottomOf="@+id/emailText" />
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:text="Password"
             app:layout_constraintStart_toStartOf="@+id/passwordText"
             app:layout_constraintTop_toBottomOf="@+id/usernameText" />
@@ -90,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:text="Confirm Password"
             app:layout_constraintStart_toStartOf="@+id/confirmPassText"
             app:layout_constraintTop_toBottomOf="@+id/passwordText" />
@@ -115,7 +115,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:onClick="loginFromView"
             android:text="Login"
