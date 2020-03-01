@@ -3,6 +3,7 @@ package team.gif.friendscheduler.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.gif.friendscheduler.model.Interval;
+import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.model.request.NewInterval;
 import team.gif.friendscheduler.repository.IntervalRepository;
 
@@ -25,7 +26,7 @@ public class IntervalService {
 	
 	
 	public ArrayList<LinkedList<Interval>> getIntervals(Long userId) {
-		List<Interval> allIntervals = intervalRepository.findAllByUserIdOrderByDayOfWeekAscStartMinAsc(userId);
+		List<Interval> allIntervals = intervalRepository.findAllByUser_IdOrderByDayOfWeekAscStartMinAsc(userId);
 		
 		ArrayList<LinkedList<Interval>> arrangedIntervals = new ArrayList<>();
 		
@@ -43,11 +44,9 @@ public class IntervalService {
 	}
 	
 	
-	public void addInterval(Long userId, NewInterval intervalRequest) {
-		List<Interval> intervals = intervalRepository.findAllByUserIdAndDayOfWeekOrderByStartMinAsc(userId, intervalRequest.getDayOfWeek());
-//		intervalRepository.deleteAllByUserIdAndDayOfWeek(userId, intervalRequest.getDayOfWeek());
-		
-		Interval interval = new Interval(userId, intervalRequest);
+	public void addInterval(User user, NewInterval intervalRequest) {
+		List<Interval> intervals = intervalRepository.findAllByUser_IdAndDayOfWeekOrderByStartMinAsc(user.getId(), intervalRequest.getDayOfWeek());
+		Interval interval = new Interval(user, intervalRequest);
 		
 		if (intervals.size() == 0) {
 			intervalRepository.save(interval);
@@ -105,12 +104,12 @@ public class IntervalService {
 	
 	
 	public void removeInterval(Long userId, Long intervalId) {
-		intervalRepository.deleteByUserIdAndId(userId, intervalId);
+		intervalRepository.deleteByUser_IdAndId(userId, intervalId);
 	}
 	
 	
 	public void removeAllIntervals(Long userId) {
-		intervalRepository.deleteAllByUserId(userId);
+		intervalRepository.deleteAllByUser_Id(userId);
 	}
 	
 }

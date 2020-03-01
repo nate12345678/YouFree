@@ -1,28 +1,28 @@
 package team.gif.friendscheduler.model.request;
 
+import team.gif.friendscheduler.model.Interval;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 public class NewInterval {
-	
-	private static final int MAX_TIME = 1440;
 	
 	@Min(0) // Monday
 	@Max(6) // Sunday
 	private Integer dayOfWeek;
 	
 	@Min(0)
-	@Max(MAX_TIME)
+	@Max(Interval.MAX_TIME)
 	private Integer startMin;
 	
 	@Min(0)
-	@Max(MAX_TIME)
+	@Max(Interval.MAX_TIME)
 	private Integer endMin;
 	
 	public NewInterval() {
 		this.dayOfWeek = 0;
 		this.startMin = 0;
-		this.endMin = MAX_TIME;
+		this.endMin = Interval.MAX_TIME;
 	}
 	
 	

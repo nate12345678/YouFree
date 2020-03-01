@@ -103,7 +103,6 @@ public class UserController {
 		
 		logger.info("Received deleteUser request");
 		Long id = userService.getIdFromToken(token);
-		intervalService.removeAllIntervals(id);
 		userService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();

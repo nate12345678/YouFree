@@ -9,10 +9,10 @@ import java.util.List;
 @Repository
 public interface IntervalRepository extends CrudRepository<Interval, Long> {
 	
-	List<Interval> findAllByUserIdAndDayOfWeekOrderByStartMinAsc(Long userId, int dayOfWeek);
-	List<Interval> findAllByUserIdOrderByDayOfWeekAscStartMinAsc(Long userId);
-	void deleteAllByUserIdAndDayOfWeek(Long userId, int dayOfWeek);
-	void deleteByUserIdAndId(Long userId, Long intervalId);
-	void deleteAllByUserId(Long userId);
+	List<Interval> findAllByUser_IdAndDayOfWeekOrderByStartMinAsc(Long userId, Integer dayOfWeek);
+	List<Interval> findAllByUser_IdOrderByDayOfWeekAscStartMinAsc(Long userId);
+	void deleteAllByUser_IdAndDayOfWeek(Long userId, int dayOfWeek);
+	void deleteByUser_IdAndId(Long userId, Long intervalId);
+	void deleteAllByUser_Id(Long userId);
 
 }

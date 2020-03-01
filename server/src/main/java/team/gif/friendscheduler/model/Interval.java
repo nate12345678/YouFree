@@ -5,9 +5,12 @@ import team.gif.friendscheduler.model.request.NewInterval;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -23,9 +26,9 @@ public class Interval {
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Long id;
 	
-	@Column
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY) // TODO: Exclude this from JSON completely?
-	private Long userId;
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(nullable = false)
+	private User user;
 	
 	@Column
 	@Min(0) // Monday
@@ -50,16 +53,16 @@ public class Interval {
 	}
 	
 	
-	public Interval(Long userId, Integer dayOfWeek, Integer start, Integer end) {
-		this.userId = userId;
+	public Interval(User user, Integer dayOfWeek, Integer start, Integer end) {
+		this.user = user;
 		this.dayOfWeek = dayOfWeek;
 		this.startMin = start;
 		this.endMin = end;
 	}
 	
 	
-	public Interval(Long userId, NewInterval newInterval) {
-		this(userId, newInterval.getDayOfWeek(), newInterval.getStartMin(), newInterval.getEndMin());
+	public Interval(User user, NewInterval newInterval) {
+		this(user, newInterval.getDayOfWeek(), newInterval.getStartMin(), newInterval.getEndMin());
 	}
 	
 	
@@ -68,8 +71,8 @@ public class Interval {
 	}
 	
 	
-	public Long getUserId() {
-		return userId;
+	public User getUser() {
+		return user;
 	}
 	
 	
@@ -93,8 +96,8 @@ public class Interval {
 	}
 	
 	
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	
