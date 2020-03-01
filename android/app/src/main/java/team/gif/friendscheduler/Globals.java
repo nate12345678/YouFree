@@ -1,7 +1,4 @@
-
 package team.gif.friendscheduler;
-
-import java.util.ArrayList;
 
 import okhttp3.MediaType;
 
@@ -11,7 +8,7 @@ public final class Globals {
 	static long token;
 	static User user;
 	static String enteredPass;
-	static ArrayList<User> friendsList = new ArrayList<>();
+	static FriendsList friendsList;
 	static boolean stayLoggedOn = false;
 	public static final String days[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 }
