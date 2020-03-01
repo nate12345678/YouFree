@@ -54,7 +54,7 @@
 .WeekView {
   height: 300px;
   width: 97%;
-  border: 2px coral solid;
+  border: 2px hotpink solid;
 }
 
 .Cell {
@@ -67,7 +67,7 @@
   border-radius: 0;
   color: black;
   text-decoration: none;
-  background-color: coral;
+  background-color: hotpink;
 }
 
 input[type=text] {

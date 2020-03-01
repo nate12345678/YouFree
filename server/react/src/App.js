@@ -139,12 +139,16 @@ class App extends React.Component {
             <Router history={history}>
                 <Switch>
                     <Route exact path="/">
+                        <h2>Sign In</h2>
                         <SignIn submitAction={this.login}/>
+                        <h2>Sign Up</h2>
                         <SignUp submitAction={this.signUp}/>
                     </Route>
                     <Route path="/Home">
-                        {content}
-                        <IntervalForm submitAction={this.addInterval}/>
+                      <h2>Logged In: {username}</h2>
+                      {content}
+                      <h2>Add Interval</h2>
+                      <IntervalForm submitAction={this.addInterval}/>
                     </Route>
                 </Switch>
             </Router>
