@@ -1,49 +1,60 @@
 package team.gif.friendscheduler.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import team.gif.friendscheduler.exception.TokenCreationException;
 
-@Entity
-@Table(name = "Tokens")
 public class Token {
 	
-	@Id
-	private Long userId; // This should be unique, as a user can only have one token?
+	private Header header;
+	private Payload payload;
 	
-	@Column(unique = true)
-	@Size(min = 1)
-	private String token;
-	
-	
-	public Token() {}
-	
-	
-	public Token(Long userId, String token) {
-		this.userId = userId;
-		this.token = token;
+	public Token(Long userId) {
+		header = new Header();
+		payload = new Payload(userId);
 	}
 	
 	
-	public String getToken() {
-		return token;
+	public String getHeader() {
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try {
+			return mapper.writeValueAsString(header);
+		} catch (JsonProcessingException e) {
+			throw new TokenCreationException(e);
+		}
 	}
 	
 	
-	public Long getUserId() {
-		return userId;
+	public String getPayload() {
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try {
+			return mapper.writeValueAsString(payload);
+		} catch (JsonProcessingException e) {
+			throw new TokenCreationException(e);
+		}
 	}
 	
 	
-	public void setToken(String token) {
-		this.token = token;
+	private static class Header {
+		private final String typ; // Type of the token
+		private final String alg; // Hash algorithm used for signature
+		
+		private Header() {
+			typ = "JWT";
+			alg = "HS512";
+		}
 	}
 	
-	
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	private static class Payload {
+		private final String iss; // Application issuing the token
+		private final String sub; // User ID
+		
+		private Payload(Long userId) {
+			iss = "YouFree";
+			sub = userId + "";
+		}
 	}
 	
 }

@@ -34,3 +34,5 @@ spring:
     username: patrick # NOTE: placeholder
     password: password # NOTE: placeholder
 
+jwt:
+  secret: MakeThisARandomString

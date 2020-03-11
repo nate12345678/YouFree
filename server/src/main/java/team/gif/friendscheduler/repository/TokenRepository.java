@@ -2,15 +2,15 @@ package team.gif.friendscheduler.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import team.gif.friendscheduler.model.Token;
+import team.gif.friendscheduler.model.TokenListing;
 
 import java.util.Optional;
 
 @Repository
-public interface TokenRepository extends CrudRepository<Token, Long> {
+public interface TokenRepository extends CrudRepository<TokenListing, Long> {
 
-	Optional<Token> getTokenByUserId(Long userId);
-	Optional<Token> getTokenByToken(String token);
+	Optional<TokenListing> getTokenByUserId(Long userId);
+	Optional<TokenListing> getTokenByToken(String token);
 	void deleteTokenByToken(String token);
 
 }
