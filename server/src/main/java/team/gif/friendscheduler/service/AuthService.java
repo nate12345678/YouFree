@@ -44,11 +44,11 @@ public class AuthService {
 	public String generateSessionToken2(Long userId) {
 		Token token = new Token(userId);
 		
-		String unsigned = Base64.getEncoder().encodeToString(token.getHeader().getBytes())
+		String unsigned = Base64.getUrlEncoder().encodeToString(token.getHeader().getBytes())
 				+ "."
-				+ Base64.getEncoder().encodeToString(token.getPayload().getBytes());
+				+ Base64.getUrlEncoder().encodeToString(token.getPayload().getBytes());
 		
-		String signature = Base64.getEncoder().encodeToString(tokenEncoder.encode(unsigned).getBytes());
+		String signature = Base64.getUrlEncoder().encodeToString(tokenEncoder.encode(unsigned).getBytes());
 		String signedToken = unsigned + "." + signature;
 		
 		TokenListing tokenListing = new TokenListing(userId, signedToken);
