@@ -13,6 +13,7 @@ import team.gif.friendscheduler.exception.FriendshipNotFoundException;
 import team.gif.friendscheduler.exception.IncorrectCredentialsException;
 import team.gif.friendscheduler.exception.IntervalNotFoundException;
 import team.gif.friendscheduler.exception.InvalidFieldException;
+import team.gif.friendscheduler.exception.ServerConfigurationException;
 import team.gif.friendscheduler.exception.UnauthorizedException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
 
@@ -89,6 +90,11 @@ public class MyExceptionHandler {
 	@ExceptionHandler(FriendRequestException.class)
 	public ResponseEntity<String> handleFriendshipRequestException(FriendRequestException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ex.getMessage());
+	}
+	
+	
+	public ResponseEntity<String> handleServerConfigurationException(ServerConfigurationException ex) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server configuration error. Please contact administrator.");
 	}
 
 }

@@ -1,28 +1,34 @@
 package team.gif.friendscheduler.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import team.gif.friendscheduler.exception.ServerConfigurationException;
 import team.gif.friendscheduler.exception.UnauthorizedException;
 import team.gif.friendscheduler.model.Token;
 import team.gif.friendscheduler.model.TokenListing;
 import team.gif.friendscheduler.repository.TokenRepository;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 @Service
 public class AuthService {
 	
+	private static final Logger logger = LogManager.getLogger(AuthService.class);
+	
 	@Value("${jwt.secret}")
 	private String secret;
 	
-	private final PasswordEncoder tokenEncoder;
 	private final TokenRepository tokenRepository;
 	
 	@Autowired
-	public AuthService(PasswordEncoder tokenEncoder, TokenRepository tokenRepository) {
-		this.tokenEncoder = tokenEncoder;
+	public AuthService(TokenRepository tokenRepository) {
 		this.tokenRepository = tokenRepository;
 	}
 	
@@ -42,19 +48,47 @@ public class AuthService {
 	
 	
 	public String generateSessionToken2(Long userId) {
+		// TODO: come up with better names because I don't know what the hell is going on without digging around
 		Token token = new Token(userId);
 		
 		String unsigned = Base64.getUrlEncoder().encodeToString(token.getHeader().getBytes())
 				+ "."
 				+ Base64.getUrlEncoder().encodeToString(token.getPayload().getBytes());
 		
-		String signature = Base64.getUrlEncoder().encodeToString(tokenEncoder.encode(unsigned).getBytes());
-		String signedToken = unsigned + "." + signature;
+		String signedToken = unsigned + "." + generateSignature(unsigned);
 		
 		TokenListing tokenListing = new TokenListing(userId, signedToken);
 		tokenRepository.save(tokenListing);
 		
 		return signedToken;
+	}
+	
+	
+	/**
+	 * Generates a Base64 URL-encoded signature with HMAC-SHA256
+	 *
+	 * @return An HMAC-SHA256 signature
+	 */
+	private String generateSignature(String message) {
+		String signature = "";
+		
+		try {
+			Mac hmac = Mac.getInstance("HmacSHA256");
+			SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+//			SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), hmac.getAlgorithm());
+			hmac.init(secretKey);
+			
+			signature = Base64.getUrlEncoder().encodeToString(hmac.doFinal(message.getBytes()));
+			
+		} catch (NoSuchAlgorithmException e) {
+			logger.error("Invalid HMAC algorithm for token signing", e);
+			throw new ServerConfigurationException(e);
+		} catch (InvalidKeyException e) {
+			logger.error("Invalid secret key for token signing", e);
+			throw new ServerConfigurationException(e);
+		}
+		
+		return signature;
 	}
 	
 	
