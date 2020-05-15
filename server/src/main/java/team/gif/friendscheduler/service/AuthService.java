@@ -17,6 +17,10 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+// TODO: Can greatly improve efficiency by storing just the signature, and not the whole token string
+// The token itself contains all the information you need (basically just the UserID)
+// This would reduce the amount of memory in the database and would improve string comparison times
+// IF THIS IS DONE, WOULD HAVE TO HASH RETURNED TOKEN TO VERIFY THE USERID MATCHES THE SIGNATURE
 @Service
 public class AuthService {
 	
@@ -33,22 +37,45 @@ public class AuthService {
 	}
 	
 	
-	public Long getUserIdFromToken(String token) {
-		TokenListing sessionToken = tokenRepository.getTokenByToken(token).orElseThrow(UnauthorizedException::new);
-		return sessionToken.getUserId();
-	}
-	
-	
-	public String generateSessionToken(Long userId) {
-		TokenListing sessionToken = new TokenListing(userId, userId + "");
-		tokenRepository.save(sessionToken);
+	public void validateTokenString(String token) {
+		// Ensure token string follows proper format
+		String[] tokenParts = token.split("\\.");
+		if (tokenParts.length != 3) {
+			throw new UnauthorizedException("Malformed token");
+		}
 		
-		return sessionToken.getToken();
+		// Ensure signature matches content
+		String header = tokenParts[0];
+		String payload = tokenParts[1];
+		String givenSignature = tokenParts[2];
+		String actualSignature = generateSignature(header + "." + payload);
+		if (!givenSignature.equals(actualSignature)) {
+			throw new UnauthorizedException(); // We give generic message so nobody can brute force secret
+		}
+		
+		// Ensure TokenListing exists in table
+		tokenRepository.getTokenByToken(token).orElseThrow(UnauthorizedException::new);
 	}
 	
 	
+	public Long getUserIdFromToken(String token) {
+		TokenListing tokenListing = tokenRepository.getTokenByToken(token).orElseThrow(UnauthorizedException::new);
+		return tokenListing.getUserId();
+	}
+	
+	
+	// TODO: Fail if a token already exists? -> should be able to log in from multiple devices
+	public String generateSessionToken(Long userId) {
+		TokenListing tokenListing = new TokenListing(userId, userId + "");
+		tokenRepository.save(tokenListing);
+		
+		return tokenListing.getToken();
+	}
+	
+	
+	// TODO: Fail if a token already exists? -> should be able to log in from multiple devices
 	public String generateSessionToken2(Long userId) {
-		// TODO: come up with better names because I don't know what the hell is going on without digging around
+		// Generate token with default fields
 		Token token = new Token(userId);
 		
 		String unsigned = Base64.getUrlEncoder().encodeToString(token.getHeader().getBytes())

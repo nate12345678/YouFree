@@ -94,7 +94,7 @@ public class MyExceptionHandler {
 	
 	
 	public ResponseEntity<String> handleServerConfigurationException(ServerConfigurationException ex) {
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server configuration error. Please contact administrator.");
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
 	}
 
 }

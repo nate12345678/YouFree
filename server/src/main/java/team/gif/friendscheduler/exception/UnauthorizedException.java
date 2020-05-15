@@ -6,4 +6,9 @@ public class UnauthorizedException extends RuntimeException {
 		super("Invalid token");
 	}
 	
+	
+	public UnauthorizedException(String message) {
+		super(message);
+	}
+	
 }

@@ -38,6 +38,7 @@ public class AuthController {
 		User target = userService.authenticate(email, password);
 		String token = authService.generateSessionToken(target.getId());
 		
+		// TODO: Use typical token/bearer terminology
 		return ResponseEntity.status(HttpStatus.OK)
 				.header("token", "" + token)
 				.body(target);
