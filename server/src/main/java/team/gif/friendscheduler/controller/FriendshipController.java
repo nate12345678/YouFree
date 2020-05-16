@@ -1,6 +1,7 @@
 package team.gif.friendscheduler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.UserService;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,6 +72,39 @@ public class FriendshipController {
 		friendshipService.deleteFriendship(requesterId, id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	
+	@GetMapping("/blocked")
+	public ResponseEntity<List<User>> getBlocked(
+			@RequestHeader("token") String token) {
+		
+		// TODO: get list of blocked users
+		
+		List<User> result = new LinkedList<>();
+		return ResponseEntity.ok(result);
+	}
+	
+	
+	@PutMapping("/blocked/{id}")
+	public ResponseEntity<Void> block(
+			@PathVariable Long id,
+			@RequestHeader("token") String token) {
+		
+		// TODO: block the user
+		
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+	}
+	
+	
+	@DeleteMapping("/blocked/{id}")
+	public ResponseEntity<Void> unblock(
+			@PathVariable Long id,
+			@RequestHeader("token") String token) {
+		
+		// TODO: unblock the user
+		
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
 	}
 	
 }
