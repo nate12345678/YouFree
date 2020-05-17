@@ -51,25 +51,25 @@ public class FriendshipController {
 	}
 	
 	
-	@PutMapping("/friends/{id}")
+	@PutMapping("/friends/{userId}")
 	public ResponseEntity<Void> addFriend(
-			@PathVariable Long id,
+			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
 		Long requesterId = authService.getUserIdFromToken(token);
-		friendshipService.addFriendship(requesterId, id);
+		friendshipService.addFriendship(requesterId, userId);
 		
 		return ResponseEntity.ok().build();
 	}
 	
 	
-	@DeleteMapping("/friends/{id}")
+	@DeleteMapping("/friends/{userId}")
 	public ResponseEntity<Void> removeFriend(
-			@PathVariable Long id,
+			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
 		Long requesterId = authService.getUserIdFromToken(token);
-		friendshipService.deleteFriendship(requesterId, id);
+		friendshipService.deleteFriendship(requesterId, userId);
 		
 		return ResponseEntity.noContent().build();
 	}
@@ -86,9 +86,9 @@ public class FriendshipController {
 	}
 	
 	
-	@PutMapping("/blocked/{id}")
+	@PutMapping("/blocked/{userId}")
 	public ResponseEntity<Void> block(
-			@PathVariable Long id,
+			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
 		// TODO: block the user
@@ -97,9 +97,9 @@ public class FriendshipController {
 	}
 	
 	
-	@DeleteMapping("/blocked/{id}")
+	@DeleteMapping("/blocked/{userId}")
 	public ResponseEntity<Void> unblock(
-			@PathVariable Long id,
+			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
 		// TODO: unblock the user
