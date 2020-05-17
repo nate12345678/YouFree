@@ -20,21 +20,50 @@ public class FriendshipService {
 	
 	private final FriendshipRepository friendshipRepository;
 	
+	
 	@Autowired
 	public FriendshipService(FriendshipRepository friendshipRepository) {
 		this.friendshipRepository = friendshipRepository;
 	}
 	
-	public List<Long> getFriends(User user) {
-		List<Friendship> friendships = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserIdOrFriendshipKey_SmallerUserId(user.getId(), user.getId());
+	
+	/**
+	 * Checks to see if two users are friends.
+	 * This is intended to only look up one pair of users; if it is desired to check
+	 * if multiple users are friends with one target, it is likely more efficient
+	 * to get a list of the target's friends, sort it, and search through it.
+	 *
+	 * @param userId An ID of one of the users in the relationship
+	 * @param otherUserId An ID of the other user in the relationship
+	 * @return Whether these two users are friends
+	 */
+	public boolean hasFriendship(Long userId, Long otherUserId) {
+		long smaller = Math.min(userId, otherUserId);
+		long larger = Math.max(userId, otherUserId);
+		
+		FriendshipKey key = new FriendshipKey(smaller, larger);
+		Optional<Friendship> optional = friendshipRepository.getFriendshipByFriendshipKey(key);
+		
+		return optional.isPresent() && optional.get().getStatus() == FriendshipStatus.FRIENDS;
+	}
+	
+	
+	public List<Long> getFriends(Long userId) {
+		List<Friendship> friendships = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserIdOrFriendshipKey_SmallerUserId(userId, userId);
 		
 		return friendships.parallelStream()
 				.filter(friendship -> friendship.getStatus() == FriendshipStatus.FRIENDS)
-				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId().equals(user.getId())
+				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId().equals(userId)
 						? friendship.getFriendshipKey().getLargerUserId()
 						: friendship.getFriendshipKey().getSmallerUserId())
 				.collect(Collectors.toList());
 	}
+	
+	
+	public List<Long> getFriends(User user) {
+		return getFriends(user.getId());
+	}
+	
 	
 	public void addFriendship(Long requesterId, Long targetId) {
 		
