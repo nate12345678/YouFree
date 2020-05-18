@@ -65,6 +65,26 @@ public class FriendshipService {
 	}
 	
 	
+	public List<Long> getPendingRequests(Long userId) {
+		List<Friendship> firstList = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserId(userId);
+		List<Friendship> secondList = friendshipRepository.getFriendshipsByFriendshipKey_SmallerUserId(userId);
+		
+		List<Long> result = firstList.stream()
+				.filter(friendship -> friendship.getStatus() == FriendshipStatus.AWAITING_LARGER_ID_APPROVAL)
+				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId())
+				.collect(Collectors.toList());
+		
+		result.addAll(
+				secondList.stream()
+				.filter(friendship -> friendship.getStatus() == FriendshipStatus.AWAITING_SMALLER_ID_APPROVAL)
+				.map(friendship -> friendship.getFriendshipKey().getLargerUserId())
+				.collect(Collectors.toList())
+		);
+		
+		return result;
+	}
+	
+	
 	public void addFriendship(Long requesterId, Long targetId) {
 		
 		long smaller = Math.min(requesterId, targetId);

@@ -75,6 +75,21 @@ public class FriendshipController {
 	}
 	
 	
+	@GetMapping("/friends/pending")
+	public ResponseEntity<List<User>> getPendingRequests(
+			@RequestHeader("token") String token) {
+		
+		Long requesterId = authService.getUserIdFromToken(token);
+		
+		List<User> friendRequests = friendshipService.getPendingRequests(requesterId)
+				.stream()
+				.map(userService::getUser)
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(friendRequests);
+	}
+	
+	
 	@GetMapping("/blocked")
 	public ResponseEntity<List<User>> getBlocked(
 			@RequestHeader("token") String token) {
