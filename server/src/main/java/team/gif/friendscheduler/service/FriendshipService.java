@@ -116,9 +116,8 @@ public class FriendshipService {
 		long smaller = Math.min(requesterId, targetId);
 		long larger = Math.max(requesterId, targetId);
 		
+		// If no relationship exists between the users
 		Optional<Friendship> current = friendshipRepository.getFriendshipByFriendshipKey(new FriendshipKey(smaller, larger));
-		
-		// No relationship exists between the users
 		if (current.isEmpty()) {
 			FriendshipStatus status = (smaller == requesterId) ? FriendshipStatus.AWAITING_LARGER_ID_APPROVAL : FriendshipStatus.AWAITING_SMALLER_ID_APPROVAL;
 			Friendship friendship = new Friendship(smaller, larger, status);
@@ -134,6 +133,11 @@ public class FriendshipService {
 				case AWAITING_SMALLER_ID_APPROVAL:
 					// Accepting request
 					friendship.setStatus(FriendshipStatus.FRIENDS);
+					friendshipRepository.save(friendship);
+					break;
+				case SMALLER_BLOCKED_LARGER:
+					// Unblocking and sending request
+					friendship.setStatus(FriendshipStatus.AWAITING_LARGER_ID_APPROVAL);
 					friendshipRepository.save(friendship);
 					break;
 				case AWAITING_LARGER_ID_APPROVAL:
@@ -153,6 +157,11 @@ public class FriendshipService {
 					friendship.setStatus(FriendshipStatus.FRIENDS);
 					friendshipRepository.save(friendship);
 					break;
+				case LARGER_BLOCKED_SMALLER:
+					// Unblocking and sending request
+					friendship.setStatus(FriendshipStatus.AWAITING_SMALLER_ID_APPROVAL);
+					friendshipRepository.save(friendship);
+					break;
 				case AWAITING_SMALLER_ID_APPROVAL:
 					// Double-sending request
 					throw new FriendRequestException("Pending friend request to target user already exists");
@@ -163,9 +172,63 @@ public class FriendshipService {
 					throw new FriendRequestException("Target user has blocked all requests from sender");
 			}
 		}
+	}
+	
+	
+	public void block(Long requesterId, Long targetId) {
 		
-		/* TODO: Friendship request with blocked user status logic */
+		long smaller = Math.min(requesterId, targetId);
+		long larger = Math.max(requesterId, targetId);
 		
+		// If no relationship exists between the users
+		Optional<Friendship> current = friendshipRepository.getFriendshipByFriendshipKey(new FriendshipKey(smaller, larger));
+		if (current.isEmpty()) {
+			FriendshipStatus status = (smaller == requesterId) ? FriendshipStatus.SMALLER_BLOCKED_LARGER : FriendshipStatus.LARGER_BLOCKED_SMALLER;
+			Friendship friendship = new Friendship(smaller, larger, status);
+			friendshipRepository.save(friendship);
+			return;
+		}
+		
+		Friendship friendship = current.get();
+		
+		// Smaller ID is sending request
+		if (smaller == requesterId) {
+			switch (friendship.getStatus()) {
+				case FRIENDS: // Fallthrough
+				case AWAITING_LARGER_ID_APPROVAL: // Fallthrough
+				case AWAITING_SMALLER_ID_APPROVAL:
+					friendship.setStatus(FriendshipStatus.SMALLER_BLOCKED_LARGER);
+					friendshipRepository.save(friendship);
+					break;
+				case LARGER_BLOCKED_SMALLER:
+					// Mutually blocking
+					friendship.setStatus(FriendshipStatus.BOTH_BLOCKED);
+					friendshipRepository.save(friendship);
+					break;
+				case SMALLER_BLOCKED_LARGER: // Fallthrough
+				case BOTH_BLOCKED:
+					// Double-sending request
+					throw new FriendRequestException("Target user is already blocked");
+			}
+		} else { // Larger ID is sending request
+			switch (friendship.getStatus()) {
+				case FRIENDS: // Fallthrough
+				case AWAITING_LARGER_ID_APPROVAL: // Fallthrough
+				case AWAITING_SMALLER_ID_APPROVAL:
+					friendship.setStatus(FriendshipStatus.LARGER_BLOCKED_SMALLER);
+					friendshipRepository.save(friendship);
+					break;
+				case SMALLER_BLOCKED_LARGER:
+					// Mutually blocking
+					friendship.setStatus(FriendshipStatus.BOTH_BLOCKED);
+					friendshipRepository.save(friendship);
+					break;
+				case LARGER_BLOCKED_SMALLER: // Fallthrough
+				case BOTH_BLOCKED:
+					// Double-sending request
+					throw new FriendRequestException("Target user is already blocked");
+			}
+		}
 	}
 	
 	

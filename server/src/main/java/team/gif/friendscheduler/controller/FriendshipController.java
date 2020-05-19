@@ -79,6 +79,7 @@ public class FriendshipController {
 	public ResponseEntity<List<User>> getPendingRequests(
 			@RequestHeader("token") String token) {
 		
+		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
 		
 		List<User> friendRequests = friendshipService.getPendingRequests(requesterId)
@@ -106,23 +107,27 @@ public class FriendshipController {
 	}
 	
 	
-	@PutMapping("/blocked/{id}")
+	@PutMapping("/blocked/{userId}")
 	public ResponseEntity<Void> block(
-			@PathVariable Long id,
+			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
-		// TODO: block the user
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
+		friendshipService.block(requesterId, userId);
 		
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+		return ResponseEntity.ok().build();
 	}
 	
 	
-	@DeleteMapping("/blocked/{id}")
+	@DeleteMapping("/blocked/{userId}")
 	public ResponseEntity<Void> unblock(
-			@PathVariable Long id,
+			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
 		// TODO: unblock the user
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
 		
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
 	}
