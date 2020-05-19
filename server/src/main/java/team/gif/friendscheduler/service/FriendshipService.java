@@ -66,17 +66,43 @@ public class FriendshipService {
 	
 	
 	public List<Long> getPendingRequests(Long userId) {
-		List<Friendship> firstList = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserId(userId);
-		List<Friendship> secondList = friendshipRepository.getFriendshipsByFriendshipKey_SmallerUserId(userId);
 		
+		// When user is larger ID, get requests awaiting approval of larger ID
+		List<Friendship> firstList = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserId(userId);
 		List<Long> result = firstList.stream()
 				.filter(friendship -> friendship.getStatus() == FriendshipStatus.AWAITING_LARGER_ID_APPROVAL)
 				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId())
 				.collect(Collectors.toList());
 		
+		// When user is smaller ID, get requests awaiting approval of smaller ID
+		List<Friendship> secondList = friendshipRepository.getFriendshipsByFriendshipKey_SmallerUserId(userId);
 		result.addAll(
 				secondList.stream()
 				.filter(friendship -> friendship.getStatus() == FriendshipStatus.AWAITING_SMALLER_ID_APPROVAL)
+				.map(friendship -> friendship.getFriendshipKey().getLargerUserId())
+				.collect(Collectors.toList())
+		);
+		
+		return result;
+	}
+	
+	
+	public List<Long> getBlockedUsers(Long userId) {
+		
+		// When user is larger ID, get relations in which they've blocked the smaller user ID
+		List<Friendship> firstList = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserId(userId);
+		List<Long> result = firstList.stream()
+				.filter(friendship -> friendship.getStatus() == FriendshipStatus.LARGER_BLOCKED_SMALLER
+						|| friendship.getStatus() == FriendshipStatus.BOTH_BLOCKED)
+				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId())
+				.collect(Collectors.toList());
+		
+		// When user is smaller ID, get relations in which they've blocked the larger user ID
+		List<Friendship> secondList = friendshipRepository.getFriendshipsByFriendshipKey_SmallerUserId(userId);
+		result.addAll(
+				secondList.stream()
+				.filter(friendship -> friendship.getStatus() == FriendshipStatus.SMALLER_BLOCKED_LARGER
+						|| friendship.getStatus() == FriendshipStatus.BOTH_BLOCKED)
 				.map(friendship -> friendship.getFriendshipKey().getLargerUserId())
 				.collect(Collectors.toList())
 		);

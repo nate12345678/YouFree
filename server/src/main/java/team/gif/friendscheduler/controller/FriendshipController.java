@@ -94,9 +94,14 @@ public class FriendshipController {
 	public ResponseEntity<List<User>> getBlocked(
 			@RequestHeader("token") String token) {
 		
-		// TODO: get list of blocked users
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
 		
-		List<User> result = new LinkedList<>();
+		List<User> result = friendshipService.getBlockedUsers(requesterId)
+				.stream()
+				.map(userService::getUser)
+				.collect(Collectors.toList());
+		
 		return ResponseEntity.ok(result);
 	}
 	
