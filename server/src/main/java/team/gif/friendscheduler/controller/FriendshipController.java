@@ -1,7 +1,6 @@
 package team.gif.friendscheduler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +15,6 @@ import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.UserService;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -112,6 +110,7 @@ public class FriendshipController {
 			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
+		// TODO: Verify target user exists (this *should* be handled by database)
 		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
 		friendshipService.block(requesterId, userId);
@@ -125,11 +124,12 @@ public class FriendshipController {
 			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
-		// TODO: unblock the user
+		// TODO: Verify target user exists (this *should* be handled by database)
 		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
+		friendshipService.unblock(requesterId, userId);
 		
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+		return ResponseEntity.ok().build();
 	}
 	
 }

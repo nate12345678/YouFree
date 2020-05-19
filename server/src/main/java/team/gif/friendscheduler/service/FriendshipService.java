@@ -244,6 +244,52 @@ public class FriendshipService {
 	}
 	
 	
+	public void unblock(Long requesterId, Long targetId) {
+		
+		long smaller = Math.min(requesterId, targetId);
+		long larger = Math.max(requesterId, targetId);
+		
+		// If no relationship exists between the users
+		Optional<Friendship> current = friendshipRepository.getFriendshipByFriendshipKey(new FriendshipKey(smaller, larger));
+		if (current.isEmpty()) {
+			throw new FriendRequestException("Target user is not blocked");
+		}
+		
+		Friendship friendship = current.get();
+		if (smaller == requesterId) {
+			switch (friendship.getStatus()) {
+				case FRIENDS: // Fallthrough
+				case AWAITING_LARGER_ID_APPROVAL: // Fallthrough
+				case AWAITING_SMALLER_ID_APPROVAL: // Fallthrough
+				case LARGER_BLOCKED_SMALLER: // Fallthrough
+					throw new FriendRequestException("Target user is not blocked");
+				case SMALLER_BLOCKED_LARGER:
+					friendshipRepository.deleteById(friendship.getFriendshipKey());
+					break;
+				case BOTH_BLOCKED:
+					friendship.setStatus(FriendshipStatus.LARGER_BLOCKED_SMALLER);
+					friendshipRepository.save(friendship);
+					break;
+			}
+		} else {
+			switch (friendship.getStatus()) {
+				case FRIENDS: // Fallthrough
+				case AWAITING_LARGER_ID_APPROVAL: // Fallthrough
+				case AWAITING_SMALLER_ID_APPROVAL: // Fallthrough
+				case SMALLER_BLOCKED_LARGER: // Fallthrough
+					throw new FriendRequestException("Target user is not blocked");
+				case LARGER_BLOCKED_SMALLER:
+					friendshipRepository.deleteById(friendship.getFriendshipKey());
+					break;
+				case BOTH_BLOCKED:
+					friendship.setStatus(FriendshipStatus.SMALLER_BLOCKED_LARGER);
+					friendshipRepository.save(friendship);
+					break;
+			}
+		}
+	}
+	
+	
 	public void removeUser(Long userId) {
 		friendshipRepository.deleteAllByFriendshipKey_LargerUserIdOrFriendshipKey_SmallerUserId(userId, userId);
 	}
