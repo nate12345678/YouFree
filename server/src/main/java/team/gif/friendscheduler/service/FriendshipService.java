@@ -87,6 +87,28 @@ public class FriendshipService {
 	}
 	
 	
+	public List<Long> getSentRequests(Long userId) {
+		
+		// When user is larger ID, get requests awaiting approval of smaller ID
+		List<Friendship> firstList = friendshipRepository.getFriendshipsByFriendshipKey_LargerUserId(userId);
+		List<Long> result = firstList.stream()
+				.filter(friendship -> friendship.getStatus() == FriendshipStatus.AWAITING_SMALLER_ID_APPROVAL)
+				.map(friendship -> friendship.getFriendshipKey().getSmallerUserId())
+				.collect(Collectors.toList());
+		
+		// When user is smaller ID, get requests awaiting approval of smaller ID
+		List<Friendship> secondList = friendshipRepository.getFriendshipsByFriendshipKey_SmallerUserId(userId);
+		result.addAll(
+				secondList.stream()
+				.filter(friendship -> friendship.getStatus() == FriendshipStatus.AWAITING_LARGER_ID_APPROVAL)
+				.map(friendship -> friendship.getFriendshipKey().getLargerUserId())
+				.collect(Collectors.toList())
+		);
+		
+		return result;
+	}
+	
+	
 	public List<Long> getBlockedUsers(Long userId) {
 		
 		// When user is larger ID, get relations in which they've blocked the smaller user ID

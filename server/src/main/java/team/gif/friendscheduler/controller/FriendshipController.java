@@ -89,6 +89,22 @@ public class FriendshipController {
 	}
 	
 	
+	@GetMapping("/friends/sent")
+	public ResponseEntity<List<User>> getSentRequests(
+			@RequestHeader("token") String token) {
+		
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
+		
+		List<User> requests = friendshipService.getSentRequests(requesterId)
+				.stream()
+				.map(userService::getUser)
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(requests);
+	}
+	
+	
 	@GetMapping("/blocked")
 	public ResponseEntity<List<User>> getBlocked(
 			@RequestHeader("token") String token) {
