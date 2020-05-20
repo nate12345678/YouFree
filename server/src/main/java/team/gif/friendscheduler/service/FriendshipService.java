@@ -232,15 +232,31 @@ public class FriendshipService {
 	}
 	
 	
-	public void deleteFriendship(Long user1, Long user2) {
+	public void deleteFriendship(Long requesterId, Long targetId) {
 		
-		// TODO: don't allow this if no friendship exists OR if one user has blocked the other
+		long smaller = Math.min(requesterId, targetId);
+		long larger = Math.max(requesterId, targetId);
 		
-		FriendshipKey key = (user1 < user2)
-				? new FriendshipKey(user1, user2)
-				: new FriendshipKey(user2, user1);
+		// If no relationship exists between the users
+		Optional<Friendship> current = friendshipRepository.getFriendshipByFriendshipKey(new FriendshipKey(smaller, larger));
+		if (current.isEmpty()) {
+			throw new FriendRequestException("Target user is not a friend");
+		}
 		
-		friendshipRepository.deleteById(key);
+		Friendship friendship = current.get();
+		switch (friendship.getStatus()) {
+			case AWAITING_LARGER_ID_APPROVAL: // Fallthrough
+			case AWAITING_SMALLER_ID_APPROVAL: // Fallthrough
+			case FRIENDS:
+				// Revoke/reject request or delete friendship
+				friendshipRepository.deleteById(friendship.getFriendshipKey());
+				break;
+			case LARGER_BLOCKED_SMALLER:
+				throw new FriendRequestException("Blocked by target user");
+			case SMALLER_BLOCKED_LARGER: // Fallthrough
+			case BOTH_BLOCKED:
+				throw new FriendRequestException("Target user is already blocked");
+		}
 	}
 	
 	
