@@ -1,7 +1,6 @@
 package team.gif.friendscheduler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +15,6 @@ import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.UserService;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,13 +73,50 @@ public class FriendshipController {
 	}
 	
 	
+	@GetMapping("/friends/pending")
+	public ResponseEntity<List<User>> getPendingRequests(
+			@RequestHeader("token") String token) {
+		
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
+		
+		List<User> friendRequests = friendshipService.getPendingRequests(requesterId)
+				.stream()
+				.map(userService::getUser)
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(friendRequests);
+	}
+	
+	
+	@GetMapping("/friends/sent")
+	public ResponseEntity<List<User>> getSentRequests(
+			@RequestHeader("token") String token) {
+		
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
+		
+		List<User> requests = friendshipService.getSentRequests(requesterId)
+				.stream()
+				.map(userService::getUser)
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(requests);
+	}
+	
+	
 	@GetMapping("/blocked")
 	public ResponseEntity<List<User>> getBlocked(
 			@RequestHeader("token") String token) {
 		
-		// TODO: get list of blocked users
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
 		
-		List<User> result = new LinkedList<>();
+		List<User> result = friendshipService.getBlockedUsers(requesterId)
+				.stream()
+				.map(userService::getUser)
+				.collect(Collectors.toList());
+		
 		return ResponseEntity.ok(result);
 	}
 	
@@ -91,9 +126,12 @@ public class FriendshipController {
 			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
-		// TODO: block the user
+		// TODO: Verify target user exists (this *should* be handled by database)
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
+		friendshipService.block(requesterId, userId);
 		
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+		return ResponseEntity.ok().build();
 	}
 	
 	
@@ -102,9 +140,12 @@ public class FriendshipController {
 			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
-		// TODO: unblock the user
+		// TODO: Verify target user exists (this *should* be handled by database)
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
+		friendshipService.unblock(requesterId, userId);
 		
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+		return ResponseEntity.ok().build();
 	}
 	
 }
