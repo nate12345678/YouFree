@@ -390,7 +390,6 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		params.rightToRight = idxToRes[day];
 		params.topToTop = idxToRes[day];
 		params.topMargin = (int) (((float) (start + 8)) * scale);
-		Log.w("start", params.topMargin + "");
 		box.setBackgroundColor(getColor(R.color.blue));
 		box.setText("" + id);
 		box.setTextColor(getColor(R.color.blue));
@@ -440,7 +439,6 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 								Schedule.Interval curr = Globals.user.schedule.schedule[i][j];
 								TextView box = createTimeBox(curr.dayOfWeek, curr.startMin, curr.endMin, curr.id);
 								currRow.addView(box);
-								Log.w("day" + curr.dayOfWeek, "s:" + curr.startMin + " e:" + curr.endMin + " id:" + curr.id + " resId:" + box.getId());
 								intervalIds.put(box.getText().toString(), curr.id);
 
 							}
@@ -555,20 +553,6 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		emailText.setOnClickListener((v -> {
 			updateProfile("email");
 		}));
-//        saveProfileButton.setOnClickListener((v -> {
-//            Globals.user.discordSnowflake = Long.parseLong(snowflakeText.getText().toString());
-//            Toast.makeText(this, "fuck me in the ass", Toast.LENGTH_SHORT).show();
-//            updateUserRequest();
-//        }));
-
-//        snowflakeText.setOnClickListener((v -> {
-//            updateProfile("discordSnowflake");
-//        }));
-
-//        snowflakeText.setOnFocusChangeListener(((v, focused)-> {
-//            if(focused) Toast.makeText(this, "went into focus", Toast.LENGTH_SHORT).show();
-//            else Toast.makeText(this, "lost focus", Toast.LENGTH_SHORT).show();
-//        }));
 
 		profileImage.setOnClickListener((v -> {
 			newProfileImage();
@@ -676,7 +660,9 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		// Provide a reference to the views for each data item
 		// Complex data items may need more than one view per item, and
 		// you provide access to all the views for a data item in a view holder
-
+		TextView createFriendTimeBox(ConstraintLayout c, int start, int end){
+			return null;
+		}
 
 		// Provide a suitable constructor (depends on the kind of dataset)
 		public FriendAdapter() {
@@ -703,6 +689,28 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 			int day = (currentTime.get(Calendar.DAY_OF_WEEK) == 1) ? 6 : currentTime.get(Calendar.DAY_OF_WEEK) - 2;
 			int min = currentTime.get(Calendar.MINUTE) / 15;
 			int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+//			Schedule.Interval[] today = Globals.friendsList.friends[position].schedule.schedule[day];
+//			for (int i = 0; i < today.length; i++) {
+//				TextView box;
+//				if(today[i].startMin > hour * 60 + min && today[i].startMin < (hour + 3) * 60 + min) {
+//					//startmin is in interval, endmin is in interval or future
+//					if(today[i].endMin < (hour + 3) * 60 + min) {
+//						//wholly inside interval
+//						box = createFriendTimeBox(holder.rowLayout,
+//								today[i].startMin - (hour*60 + min), today[i].endMin - (hour * 60 + min));
+//					} else {
+//						//ends after interval
+//						box = createFriendTimeBox(holder.rowLayout,
+//								today[i].startMin - (hour*60 + min), 3 * 60);
+//					}
+//				} else if(today[i].endMin > hour * 60 + min && today[i].endMin < (hour + 3) * 60 + min) {
+//					//endmin is in interval, but start is in past
+//					box = createFriendTimeBox(holder.rowLayout, 0, today[i].endMin - (hour * 60 + min));
+//				} else if(today[i].startMin < hour * 60 + min && today[i].endMin > (hour + 3) * 60 + min) {
+//					//startmin in past, endmin in future
+//					box = createFriendTimeBox(holder.rowLayout, 0, 3 * 60);
+//				}
+//			}
 
 		}
 
@@ -716,11 +724,14 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 		public class ViewHolder extends RecyclerView.ViewHolder {
 			// each data item is just a string in this case
 			final TextView friendNameText;
+			final ConstraintLayout rowLayout;
 
 
 			public ViewHolder(View v) {
 				super(v);
 				friendNameText = v.findViewById(R.id.friendNameText);
+				rowLayout = v.findViewById(R.id.friendAvailLineLayout);
+
 			}
 		}
 	}
