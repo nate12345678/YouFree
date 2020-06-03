@@ -65,7 +65,8 @@ public class ScheduleController {
 		Long requesterId = authService.getUserIdFromToken(token);
 		User target = userService.getUser(userId);
 		
-		if (!friendshipService.hasFriendship(requesterId, userId)) {
+		// 404 if target is not self and not a friend
+		if (!requesterId.equals(userId) && !friendshipService.hasFriendship(requesterId, userId)) {
 			throw new FriendshipNotFoundException(userId);
 		}
 		

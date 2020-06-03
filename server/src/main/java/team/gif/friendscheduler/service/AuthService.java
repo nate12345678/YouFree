@@ -66,15 +66,6 @@ public class AuthService {
 	
 	// TODO: Fail if a token already exists? -> should be able to log in from multiple devices
 	public String generateSessionToken(Long userId) {
-		TokenListing tokenListing = new TokenListing(userId, userId + "");
-		tokenRepository.save(tokenListing);
-		
-		return tokenListing.getToken();
-	}
-	
-	
-	// TODO: Fail if a token already exists? -> should be able to log in from multiple devices
-	public String generateSessionToken2(Long userId) {
 		// Generate token with default fields
 		Token token = new Token(userId);
 		

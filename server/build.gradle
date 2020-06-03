@@ -32,6 +32,7 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
 	runtimeOnly group: 'org.postgresql', name: 'postgresql'
+//	runtimeOnly group: 'com.h2database', name: 'h2'
 
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-core',   version: '2.13.2'
 
@@ -59,7 +60,7 @@ task appNpmInstall(type: NpmTask) {
 
 appNpmBuild.dependsOn appNpmInstall
 copyReact.dependsOn appNpmBuild
-compileJava.dependsOn copyReact
+//compileJava.dependsOn copyReact
 
 node {
 	version = '13.9.0'

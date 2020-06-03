@@ -79,6 +79,7 @@ public class UserController {
 		logger.info("Received getUser request");
 		User result = userService.queryUsers(id, username, email);
 		
+		// If no query params specified, get self
 		if (result == null) {
 			result = userService.getUser(authService.getUserIdFromToken(token));
 		}
