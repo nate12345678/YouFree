@@ -131,7 +131,7 @@ class Login : AppCompatActivity() {
 					}
 				} else {
 					val user = response.body()!!.string() // TODO: convert from JSON to Java object
-					val token = java.lang.Long.parseLong(response.header("token")!!)
+					val token = response.header("token")!!
 					runOnUiThread {
 						Globals.user = User.userFromJson(user)
 						Globals.token = token
@@ -173,7 +173,7 @@ class Login : AppCompatActivity() {
 				if (response.isSuccessful) {
 					Snackbar.make(findViewById(R.id.loginCoordinator), "User created", Snackbar.LENGTH_LONG).show()
 					val user = response.body()!!.string()
-					val token = java.lang.Long.parseLong(response.header("token")!!)
+					val token = response.header("token")!!
 					runOnUiThread {
 						Globals.user = User.userFromJson(user)
 						Globals.token = token
