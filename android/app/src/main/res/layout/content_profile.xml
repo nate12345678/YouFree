@@ -39,4 +39,23 @@
             android:text="Click on any above attributes to change"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/usernameText" />
+
+    <TextView
+        android:id="@+id/UserIDLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="User ID"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <TextView
+        android:id="@+id/UserIDText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="00000"
+        app:layout_constraintStart_toStartOf="@+id/UserIDLabel"
+        app:layout_constraintTop_toBottomOf="@+id/UserIDLabel" />
 </androidx.constraintlayout.widget.ConstraintLayout>
