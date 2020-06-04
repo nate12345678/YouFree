@@ -77,6 +77,8 @@ public class UserController {
 			@RequestHeader("token") String token) {
 		
 		logger.info("Received getUser request");
+		authService.validateTokenString(token);
+		
 		User result = userService.queryUsers(id, username, email);
 		
 		// If no query params specified, get self
@@ -94,6 +96,7 @@ public class UserController {
 			@Valid @RequestBody NewUser user) {
 		
 		logger.info("Received updateUser request");
+		authService.validateTokenString(token);
 		
 		if (!fieldValidator.validateOneNonNull(user)) {
 			throw new InvalidFieldException("One or more fields must be non-empty");
@@ -111,6 +114,8 @@ public class UserController {
 			@RequestHeader("token") String token) {
 		
 		logger.info("Received deleteUser request");
+		authService.validateTokenString(token);
+		
 		Long id = authService.getUserIdFromToken(token);
 		friendshipService.removeUser(id);
 		intervalService.removeAllIntervals(id);
