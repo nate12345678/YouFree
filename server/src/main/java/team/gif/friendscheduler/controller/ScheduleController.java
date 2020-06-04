@@ -44,8 +44,8 @@ public class ScheduleController {
 	public ScheduleController(AuthService authService,
 	                          FriendshipService friendshipService,
 	                          IntervalService intervalService,
-	                          UserService userService) {
-		
+	                          UserService userService
+	) {
 		this.authService = authService;
 		this.friendshipService = friendshipService;
 		this.intervalService = intervalService;
