@@ -25,6 +25,7 @@ import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -122,6 +123,20 @@ public class UserController {
 		userService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	
+	@GetMapping(value = "/search")
+	public ResponseEntity<List<User>> searchUsers(
+			@RequestHeader("token") String token,
+			@RequestHeader("query") String query) {
+		
+		logger.info("Received searchUsers request");
+		authService.validateTokenString(token);
+		
+		List<User> result = userService.searchUsers(query);
+		
+		return ResponseEntity.ok(result);
 	}
 	
 }

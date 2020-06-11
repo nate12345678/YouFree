@@ -12,7 +12,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 public class User {
 	
 	@Id

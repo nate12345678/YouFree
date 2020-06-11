@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * This represents a relationship between two Users.
  */
 @Entity
-@Table(name = "FRIENDSHIPS")
+@Table(name = "friendships")
 public class Friendship {
 	
 	@EmbeddedId
