@@ -11,14 +11,13 @@ function Schedule(props) {
 		let duration = props.schedule[0][i].endMin - props.schedule[0][i].startMin;
 		let width = duration / LENGTH_OF_DAY;
 		let leftMargin = (i === 0)
-			? props.schedule[0][i] / LENGTH_OF_DAY
-			: (props.schedule[0][i].start - props.schedule[0][i - 1].end) / LENGTH_OF_DAY;
+			? props.schedule[0][i].startMin / LENGTH_OF_DAY
+			: (props.schedule[0][i].startMin - props.schedule[0][i - 1].endMin) / LENGTH_OF_DAY;
 
 		let box = (
-			<div className="bar" style={{
+			<div key={props.schedule[0][i]} className="Bar" style={{
 				marginLeft: 100 * leftMargin + '%',
-				width: 100 * width + '%',
-				backgroundColor: props.color
+				width: 100 * width + '%'
 			}} />
 		);
 
@@ -26,7 +25,7 @@ function Schedule(props) {
 	}
 
 	return (
-		<div className="intervals">
+		<div className="Intervals">
 			{boxes}
 		</div>
 	);

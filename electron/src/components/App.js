@@ -76,6 +76,8 @@ class App extends React.Component {
 				userId: user.id
 			}
 		});
+
+		await this.getSchedule(user.id);
 	}
 
 
@@ -158,7 +160,7 @@ class App extends React.Component {
 		return (
 			<div>
 				<IntervalManagement onSubmit={this.addInterval} />
-				<Dashboard schedule={this.state.schedule} initSchedule={() => this.getSchedule(this.state.userId)}/>
+				<Dashboard schedule={this.state.schedule}/>
 			</div>
 		);
 	}
