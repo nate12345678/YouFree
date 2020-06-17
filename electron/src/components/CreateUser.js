@@ -2,7 +2,8 @@ import '../css/CreateUser.css';
 import React from 'react';
 import {
 	Button,
-	InputBase
+	Card,
+	TextField
 } from '@material-ui/core';
 
 class CreateUser extends React.Component {
@@ -28,44 +29,15 @@ class CreateUser extends React.Component {
 
 
 	render() {
-
-		const emailInput = (
-			<InputBase
-				id="emailInput"
-				placeholder="Email..."
-				value={this.state.email}
-				onChange={(event) => this.setState({ email: event.target.value })}
-				inputProps={{'aria-label': 'Email'}}
-			/>
-		);
-
-		const usernameInput = (
-			<InputBase
-				id="usernameInput"
-				placeholder="Username..."
-				value={this.state.username}
-				onChange={(event) => this.setState({ username: event.target.value })}
-				inputProps={{'aria-label': 'Username'}}
-			/>
-		);
-
-		const passwordInput = (
-			<InputBase
-				id="passwordInput"
-				placeholder="Password..."
-				value={this.state.password}
-				onChange={(event) => this.setState({ password: event.target.value })}
-				inputProps={{'aria-label': 'Password'}}
-			/>
-		);
-
 		return (
-			<form id="createUserForm">
-				{emailInput}
-				{usernameInput}
-				{passwordInput}
-				<Button onClick={this.onFormSubmit}>Submit</Button>
-			</form>
+			<Card id="createUserCard">
+				<form id="createUserForm">
+					<TextField className="createUserField" label="Email" type="email" onChange={(event) => this.setState({ email: event.target.value })} />
+					<TextField className="createUserField" label="Username" type="text" onChange={(event) => this.setState({ username: event.target.value })} />
+					<TextField className="createUserField" label="Password" type="password" onChange={(event) => this.setState({ password: event.target.value })} />
+					<Button color="primary" onClick={this.onFormSubmit}>Submit</Button>
+				</form>
+			</Card>
 		);
 	}
 }

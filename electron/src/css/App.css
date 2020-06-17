@@ -9,3 +9,11 @@
 /*  font-size: calc(10px + 2vmin);*/
 /*  color: white;*/
 /*}*/
+
+#content {
+	margin-left: 5%;
+	padding-right: 5%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}

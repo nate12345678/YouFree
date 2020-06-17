@@ -1,6 +1,15 @@
 
+#createUserCard {
+	width: fit-content;
+	padding: 2em 4em;
+}
+
 #createUserForm {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+
+.createUserField {
+	margin-bottom: 1em !important;
 }

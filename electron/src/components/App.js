@@ -148,19 +148,24 @@ class App extends React.Component {
 
 
 	render() {
+		let content = null;
 		if (this.state.token == null) {
-			return (
+			content = <CreateUser onSubmit={this.createUserAndLogin}/>;
+		} else {
+			content = (
 				<div>
-					<Header />
-					<CreateUser onSubmit={this.createUserAndLogin}/>
+					<IntervalManagement onSubmit={this.addInterval} />
+					<Dashboard schedule={this.state.schedule}/>
 				</div>
-			);
+			)
 		}
 
 		return (
 			<div>
-				<IntervalManagement onSubmit={this.addInterval} />
-				<Dashboard schedule={this.state.schedule}/>
+				<Header />
+				<div id="content">
+					{content}
+				</div>
 			</div>
 		);
 	}
