@@ -1,10 +1,10 @@
 import '../css//App.css';
 import React from 'react';
 import youfree from '../api/Youfree';
-import CreateUser from './CreateUser';
 import Dashboard from './Dashboard';
 import Header from './Header';
 import IntervalManagement from './IntervalManagement';
+import Authentication from './login/Authentication';
 
 class App extends React.Component {
 
@@ -45,6 +45,46 @@ class App extends React.Component {
 
 		// Login
 		let token = null;
+		try {
+			const loginReq = await youfree.get('/login', {
+				headers: {
+					email: email,
+					password: password
+				}
+			});
+
+			user = loginReq.data;
+			token = loginReq.headers.token;
+			console.log("Logged in");
+		} catch (error) {
+			if (error.response !== undefined) {
+				console.log(error.response);
+				// TODO: pop up with error message
+				// TODO: indicate user was created but couldn't log in
+				return;
+			}
+
+			console.log("An unknown error has occurred");
+			// TODO: pop up with error message
+			// TODO: indicate user was created but couldn't log in
+			return;
+		}
+
+		this.setState(() => {
+			return {
+				token: token,
+				userId: user.id
+			}
+		});
+
+		await this.getSchedule(user.id);
+	}
+
+
+	login = async (email, password) => {
+		// Login
+		let token = null;
+		let user = null;
 		try {
 			const loginReq = await youfree.get('/login', {
 				headers: {
@@ -150,14 +190,14 @@ class App extends React.Component {
 	render() {
 		let content = null;
 		if (this.state.token == null) {
-			content = <CreateUser onSubmit={this.createUserAndLogin}/>;
+			content = <Authentication onLoginSubmit={this.login} onCreateUserSubmit={this.createUserAndLogin}/>;
 		} else {
 			content = (
 				<div>
 					<IntervalManagement onSubmit={this.addInterval} />
 					<Dashboard schedule={this.state.schedule}/>
 				</div>
-			)
+			);
 		}
 
 		return (

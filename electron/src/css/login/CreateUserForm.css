@@ -1,9 +1,4 @@
 
-#createUserCard {
-	width: fit-content;
-	padding: 2em 4em;
-}
-
 #createUserForm {
 	display: flex;
 	flex-direction: column;
@@ -12,4 +7,8 @@
 
 .createUserField {
 	margin-bottom: 1em !important;
+}
+
+#createUserSubmitButton {
+	margin-top: 0.75em;
 }
