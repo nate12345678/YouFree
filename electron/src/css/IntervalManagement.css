@@ -1,0 +1,16 @@
+
+#dayOfWeekSelect {
+	width: 5em;
+	/*height: fit-content;*/
+}
+
+#timesDiv {
+	margin-left: 2em;
+	margin-right: 2em;
+	justify-content: space-around;
+	align-content: space-around;
+}
+
+#submitButton {
+	height: fit-content;
+}

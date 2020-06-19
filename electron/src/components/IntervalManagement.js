@@ -1,7 +1,11 @@
 import '../css/IntervalManagement.css';
 import React from 'react';
 import {
-	Button
+	Button,
+	Card,
+	CardContent,
+	MenuItem,
+	TextField
 } from '@material-ui/core';
 
 class IntervalManagement extends React.Component {
@@ -10,25 +14,69 @@ class IntervalManagement extends React.Component {
 		super(props);
 
 		this.state = {
-			dayofWeek: -1,
-			startMin: -1,
-			endMin: -1
+			dayOfWeek: '',
+			startMin: '',
+			endMin: ''
 		}
 	}
+
 
 	onFormSubmit = (event) => {
 		event.preventDefault();
 		this.props.onSubmit(this.state.dayOfWeek, this.state.startMin, this.state.endMin);
 	}
 
+
 	render() {
 		return (
-			<form id="AddIntervalForm">
-				<input id="dayOfWeekInput" type="number" onChange={(event) => this.setState({dayOfWeek: event.target.value})} />
-				<input id="startMin" type="number" onChange={(event) => this.setState({startMin: event.target.value})} />
-				<input id="endMin" type="number" onChange={(event) => this.setState({endMin: event.target.value})} />
-				<Button variant="contained" color="primary" onClick={this.onFormSubmit}>Add Interval</Button>
-			</form>
+			<Card elevation={4}>
+				<CardContent>
+					<form id="addIntervalForm">
+						<div className="row centered">
+							<TextField
+								id="dayOfWeekSelect"
+								label="Day"
+								value={this.state.dayOfWeek}
+								variant="outlined"
+								onChange={(event) => this.setState({dayOfWeek: event.target.value})}
+								select
+							>
+								<MenuItem value={''}/>
+								<MenuItem value={0}>Monday</MenuItem>
+								<MenuItem value={1}>Tuesday</MenuItem>
+								<MenuItem value={2}>Wednesday</MenuItem>
+								<MenuItem value={3}>Thursday</MenuItem>
+								<MenuItem value={4}>Friday</MenuItem>
+								<MenuItem value={5}>Saturday</MenuItem>
+								<MenuItem value={6}>Sunday</MenuItem>
+							</TextField>
+
+							<div id="timesDiv" className="col">
+								<TextField
+									id="startMinField"
+									label="Start Time"
+									variant="outlined"
+									size="small"
+									margin="dense"
+									type="number"
+									value={this.state.startMin}
+									onChange={(event) => this.setState({startMin: +event.target.value})} />
+								<TextField
+									id="endMinField"
+									label="End Time"
+									variant="outlined"
+									size="small"
+									margin="dense"
+									type="number"
+									value={this.state.endMin}
+									onChange={(event) => this.setState({endMin: +event.target.value})} />
+							</div>
+
+							<Button id="submitButton" variant="contained" color="primary" onClick={this.onFormSubmit}>Add Interval</Button>
+						</div>
+					</form>
+				</CardContent>
+			</Card>
 		);
 	}
 

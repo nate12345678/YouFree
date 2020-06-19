@@ -25,14 +25,6 @@ code {
 	--black: #000000;
 }
 
-body {
-	margin: 0;
-	padding: 0;
-	background: var(--wallpaper);
-	color: var(--text);
-	transition: background 500ms ease-in-out, color 1000ms ease-in-out;
-}
-
 .light {
 	--header: var(--blue);
 	--wallpaper: var(--white);
@@ -49,4 +41,18 @@ body {
 	--text: var(--white);
 	--header_text: var(--white);
 	--primary: var(--blue);
+}
+
+.col {
+	display: flex;
+	flex-direction: column;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+}
+
+.col.centered, .row.centered {
+	align-items: center;
 }
