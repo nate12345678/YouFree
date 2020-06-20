@@ -1,0 +1,11 @@
+
+.MyScheduleCard {
+	margin-bottom: 0.5em;
+	background: var(--elements) !important;
+	color: var(--text) !important;
+	transition: var(--change_color_transition) !important;
+}
+
+.MyScheduleCard .Title {
+	margin-bottom: 0.75em !important;
+}

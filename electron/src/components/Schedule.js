@@ -15,7 +15,7 @@ function Schedule(props) {
 			: (props.schedule[0][i].startMin - props.schedule[0][i - 1].endMin) / LENGTH_OF_DAY;
 
 		let box = (
-			<div key={props.schedule[0][i]} className="Bar" style={{
+			<div key={props.schedule[0][i].startMin} className="Bar" style={{
 				marginLeft: 100 * leftMargin + '%',
 				width: 100 * width + '%'
 			}} />

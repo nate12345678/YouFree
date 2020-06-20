@@ -3,8 +3,9 @@ import React from 'react';
 import youfree from '../api/Youfree';
 import Dashboard from './Dashboard';
 import Header from './Header';
-import IntervalManagement from './IntervalManagement';
+import EditScheduleForm from './EditScheduleForm';
 import Authentication from './login/Authentication';
+import MyScheduleCard from './MyScheduleCard';
 
 class App extends React.Component {
 
@@ -15,7 +16,7 @@ class App extends React.Component {
 			token: null,
 			userId: null,
 			schedule: null
-		}
+		};
 	}
 
 
@@ -30,7 +31,7 @@ class App extends React.Component {
 			});
 
 			user = createUserReq.data;
-			console.log("Created new user");
+			console.log('Created new user');
 		} catch (error) {
 			if (error.response !== undefined) {
 				console.log(error.response);
@@ -38,7 +39,7 @@ class App extends React.Component {
 				return;
 			}
 
-			console.log("An unknown error has occurred");
+			console.log('An unknown error has occurred');
 			// TODO: pop up with error message
 			return;
 		}
@@ -55,7 +56,7 @@ class App extends React.Component {
 
 			user = loginReq.data;
 			token = loginReq.headers.token;
-			console.log("Logged in");
+			console.log('Logged in');
 		} catch (error) {
 			if (error.response !== undefined) {
 				console.log(error.response);
@@ -64,7 +65,7 @@ class App extends React.Component {
 				return;
 			}
 
-			console.log("An unknown error has occurred");
+			console.log('An unknown error has occurred');
 			// TODO: pop up with error message
 			// TODO: indicate user was created but couldn't log in
 			return;
@@ -74,11 +75,11 @@ class App extends React.Component {
 			return {
 				token: token,
 				userId: user.id
-			}
+			};
 		});
 
 		await this.getSchedule(user.id);
-	}
+	};
 
 
 	login = async (email, password) => {
@@ -95,7 +96,7 @@ class App extends React.Component {
 
 			user = loginReq.data;
 			token = loginReq.headers.token;
-			console.log("Logged in");
+			console.log('Logged in');
 		} catch (error) {
 			if (error.response !== undefined) {
 				console.log(error.response);
@@ -104,7 +105,7 @@ class App extends React.Component {
 				return;
 			}
 
-			console.log("An unknown error has occurred");
+			console.log('An unknown error has occurred');
 			// TODO: pop up with error message
 			// TODO: indicate user was created but couldn't log in
 			return;
@@ -114,11 +115,11 @@ class App extends React.Component {
 			return {
 				token: token,
 				userId: user.id
-			}
+			};
 		});
 
 		await this.getSchedule(user.id);
-	}
+	};
 
 
 	addInterval = async (dayOfWeek, startMin, endMin) => {
@@ -134,7 +135,7 @@ class App extends React.Component {
 				}
 			});
 
-			console.log("Added interval");
+			console.log('Added interval');
 			schedule = addIntervalReq.data;
 		} catch (error) {
 			if (error.response !== undefined) {
@@ -143,7 +144,7 @@ class App extends React.Component {
 				return;
 			}
 
-			console.log("An unknown error has occurred");
+			console.log('An unknown error has occurred');
 			// TODO: pop up with error message
 			return;
 		}
@@ -151,10 +152,10 @@ class App extends React.Component {
 		this.setState(() => {
 			return {
 				schedule: schedule
-			}
+			};
 		});
 		console.log(this.state.schedule);
-	}
+	};
 
 
 	getSchedule = async (userId) => {
@@ -166,7 +167,7 @@ class App extends React.Component {
 				}
 			}); // TODO: add token header
 			schedule = getScheduleReq.data;
-			console.log("Got own schedule");
+			console.log('Got own schedule');
 		} catch (error) {
 			if (error.response !== undefined) {
 				console.log(error.response);
@@ -174,7 +175,7 @@ class App extends React.Component {
 				return;
 			}
 
-			console.log("An unknown error has occurred");
+			console.log('An unknown error has occurred');
 			// TODO: pop up with error message
 			return;
 		}
@@ -182,9 +183,9 @@ class App extends React.Component {
 		this.setState(() => {
 			return {
 				schedule: schedule
-			}
+			};
 		});
-	}
+	};
 
 
 	render() {
@@ -193,16 +194,17 @@ class App extends React.Component {
 			content = <Authentication onLoginSubmit={this.login} onCreateUserSubmit={this.createUserAndLogin}/>;
 		} else {
 			content = (
-				<div>
-					<IntervalManagement onSubmit={this.addInterval} />
-					<Dashboard schedule={this.state.schedule}/>
+				<div style={{ width: '100%' }}>
+					{/*<EditScheduleForm onSubmit={this.addInterval} />*/}
+					{/*<Dashboard schedule={this.state.schedule}/>*/}
+					<MyScheduleCard schedule={this.state.schedule} onEdit={this.addInterval}/>
 				</div>
 			);
 		}
 
 		return (
 			<div>
-				<Header />
+				<Header/>
 				<div id="content">
 					{content}
 				</div>
