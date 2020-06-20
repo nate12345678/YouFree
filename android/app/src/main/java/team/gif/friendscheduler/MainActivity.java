@@ -52,12 +52,14 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
     FloatingActionButton fab;
     NavigationView navigationView;
     DrawerLayout drawer;
+    EditText searchEditText;
     TextView usernameNavLabel;
     TextView emailNavLabel;
     TextView usernameText;
     TextView emailText;
     TextView userIDText;
     ImageView profileImage;
+    ImageView searchButton;
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
     CoordinatorLayout mainCoordinator;
@@ -78,6 +80,10 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
     RecyclerView friendRecycler;
     RecyclerView.Adapter friendAdapter;
     RecyclerView.LayoutManager friendManager;
+
+    RecyclerView searchRecycler;
+    RecyclerView.Adapter searchAdapter;
+    RecyclerView.LayoutManager searchManager;
 
     OkHttpClient client = new OkHttpClient();
 
@@ -127,6 +133,40 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         });
     }
 
+    void searchForFriends() {
+        String term = readInput(searchEditText);
+        Request request = new Request.Builder().url(Globals.BASE_URL + "/search/")
+                .addHeader("token", Globals.token + "")
+                .addHeader("query", term)
+                .get().build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.w("test", "shit");
+                if (e.getMessage().contains("Failed to connect")) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator),
+                            "Lost connection to server", Snackbar.LENGTH_SHORT).show();
+                }
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.w("test", "Unexpected code " + response);
+                } else {
+                    final String body = response.body().string(); // TODO: convert from JSON to Java object
+                    response.body().close();
+                    Log.w("search", body);
+                    SearchList results = SearchList.searchListFromJson("{\"results\":" + body + "}");
+                    String[] names = results.toStringArray();
+                    Log.w("search", names[0]);
+                }
+            }
+        });
+    }
+
+
     // FRIEND PAGE
     void getFriends() {
         Request request = new Request.Builder()
@@ -154,6 +194,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 
                 } else {
                     final String body = response.body().string(); // TODO: convert from JSON to Java object
+                    response.body().close();
                     Globals.friendsList = FriendsList.friendsListFromJson("{\"friends\":" + body + "}");
                     getFriendSchedule();
                     runOnUiThread(() -> {
@@ -199,6 +240,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
                     } else {
                         String body = "{\"schedule\":" + response.body().string() + "}";
                         Globals.friendsList.friends[I_FINAL].schedule = Schedule.scheduleFromJson(body);
+                        response.body().close();
                         if (friendScheduleLoadedCount.incrementAndGet() == Globals.friendsList.friends.length) {
                             runOnUiThread(() -> {
                                 Log.w("friends", "All friends loaded");
@@ -252,6 +294,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 
                             } else {
                                 final String friend = response.body().string();
+                                response.body().close();
                                 Log.w("newuser", friend);
                                 User newFriend = User.userFromJson(friend);
                                 makeFriendRequest(newFriend.id);
@@ -296,6 +339,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
                     Log.w("test", "Unexpected code " + response);
                 } else {
                     Globals.user = User.userFromJson(response.body().string());
+                    response.body().close();
                     Log.w("success! code ", response.code() + "");
                     Log.w("ss", User.userToJson(Globals.user));
                 }
@@ -431,7 +475,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         box.setBackgroundColor(getColor(R.color.blue));
         box.setText("" + id);
         box.setTextColor(getColor(R.color.blue));
-        box.setOnLongClickListener(new removeClickLister());
+        box.setOnLongClickListener(new RemoveClickLister());
         box.setLayoutParams(params);
 
         return box;
@@ -445,7 +489,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
             }
             intervalIds.clear();
         });
-        Log.w("help", "" + Globals.user.id);
+        Log.w("userid", "" + Globals.user.id);
         Request request = new Request.Builder()
                 .url(Globals.BASE_URL + "/schedule/" + Globals.user.id)
                 .addHeader("token", Globals.token + "")
@@ -469,6 +513,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
 
                 } else {
                     String body = "{\"schedule\":" + response.body().string() + "}";
+                    response.body().close();
                     Globals.user.schedule = Schedule.scheduleFromJson(body);
                     runOnUiThread(() -> {
                         for (int i = 0; i < Globals.user.schedule.schedule.length; i++) {
@@ -552,6 +597,8 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         usernameText = findViewById(R.id.emailText);
         emailText = findViewById(R.id.usernameText);
         userIDText = findViewById(R.id.UserIDText);
+        searchEditText = findViewById(R.id.searchEditText);
+        searchButton = findViewById(R.id.searchButton);
         profileImage = findViewById(R.id.profileImage);
         currentInclude = findViewById(R.id.currentInclude);
         dailyInclude = findViewById(R.id.dailyInclude);
@@ -618,6 +665,8 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         friendsInclude.setVisibility(View.VISIBLE);
 
         friendRecycler.setHasFixedSize(true);
+
+        searchForFriends();
 
     }
 
@@ -776,7 +825,13 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         }
     }
 
-    private class removeClickLister implements View.OnLongClickListener {
+
+    public class SearchAdapter {
+
+    }
+
+
+    private class RemoveClickLister implements View.OnLongClickListener {
 
         @Override
         public boolean onLongClick(View v) {
