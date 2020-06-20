@@ -44,8 +44,8 @@ public class ScheduleController {
 	public ScheduleController(AuthService authService,
 	                          FriendshipService friendshipService,
 	                          IntervalService intervalService,
-	                          UserService userService) {
-		
+	                          UserService userService
+	) {
 		this.authService = authService;
 		this.friendshipService = friendshipService;
 		this.intervalService = intervalService;
@@ -58,14 +58,14 @@ public class ScheduleController {
 			@PathVariable Long userId,
 			@RequestHeader String token) {
 		
-		// TODO: validate token
-		
 		logger.info("Received getSchedule request");
+		authService.validateTokenString(token);
 		
 		Long requesterId = authService.getUserIdFromToken(token);
 		User target = userService.getUser(userId);
 		
-		if (!friendshipService.hasFriendship(requesterId, userId)) {
+		// 404 if target is not self and not a friend
+		if (!requesterId.equals(userId) && !friendshipService.hasFriendship(requesterId, userId)) {
 			throw new FriendshipNotFoundException(userId);
 		}
 		
@@ -77,9 +77,8 @@ public class ScheduleController {
 			@RequestHeader String token,
 			@RequestBody LinkedList<Long> userIds) {
 		
-		// TODO: validate token
-	
 		logger.info("Received getSchedules request");
+		authService.validateTokenString(token);
 		
 		long requesterId = authService.getUserIdFromToken(token);
 		Long[] friends = friendshipService.getFriends(requesterId).toArray(new Long[0]);
@@ -100,6 +99,8 @@ public class ScheduleController {
 			@RequestBody NewInterval interval) {
 		
 		logger.info("Received addInterval request");
+		authService.validateTokenString(token);
+		
 		Long userId = authService.getUserIdFromToken(token);
 		User user = userService.getUser(userId);
 		intervalService.addInterval(userId, interval);
@@ -114,8 +115,9 @@ public class ScheduleController {
 			@RequestHeader("token") String token) {
 		
 		logger.info("Received removeInterval request: " + intervalId);
-		Long userId = authService.getUserIdFromToken(token);
+		authService.validateTokenString(token);
 		
+		Long userId = authService.getUserIdFromToken(token);
 		Interval target = intervalService.getInterval(intervalId).orElseThrow(() -> new IntervalNotFoundException(intervalId));
 		if (!userId.equals(target.getUserId())) {
 			throw new AccessDeniedException(userId, target.getUserId());

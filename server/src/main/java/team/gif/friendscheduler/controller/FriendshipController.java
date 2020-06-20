@@ -1,5 +1,7 @@
 package team.gif.friendscheduler.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +24,17 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FriendshipController {
 	
+	private static final Logger logger = LogManager.getLogger(FriendshipController.class);
 	private final AuthService authService;
 	private final FriendshipService friendshipService;
 	private final UserService userService;
 	
 	@Autowired
-	public FriendshipController(AuthService authService, UserService userService, FriendshipService friendshipService) {
+	public FriendshipController(
+			AuthService authService,
+			UserService userService,
+			FriendshipService friendshipService
+	) {
 		this.authService = authService;
 		this.friendshipService = friendshipService;
 		this.userService = userService;
@@ -38,10 +45,12 @@ public class FriendshipController {
 	public ResponseEntity<List<User>> getFriends(
 			@RequestHeader("token") String token) {
 		
-		User user = userService.getUser(authService.getUserIdFromToken(token));
-		List<Long> friendIds = friendshipService.getFriends(user);
+		logger.info("Received getFriends request");
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
 		
-		List<User> friends = friendIds.stream()
+		List<User> friends = friendshipService.getFriends(requesterId)
+				.stream()
 				.map(userService::getUser)
 				.collect(Collectors.toList());
 		
@@ -49,25 +58,29 @@ public class FriendshipController {
 	}
 	
 	
-	@PutMapping("/friends/{id}")
+	@PutMapping("/friends/{userId}")
 	public ResponseEntity<Void> addFriend(
-			@PathVariable Long id,
+			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
+		logger.info("Received addFriend request");
+		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
-		friendshipService.addFriendship(requesterId, id);
+		friendshipService.addFriendship(requesterId, userId);
 		
 		return ResponseEntity.ok().build();
 	}
 	
 	
-	@DeleteMapping("/friends/{id}")
+	@DeleteMapping("/friends/{userId}")
 	public ResponseEntity<Void> removeFriend(
-			@PathVariable Long id,
+			@PathVariable Long userId,
 			@RequestHeader("token") String token) {
 		
+		logger.info("Received removeFriend request");
+		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
-		friendshipService.deleteFriendship(requesterId, id);
+		friendshipService.deleteFriendship(requesterId, userId);
 		
 		return ResponseEntity.noContent().build();
 	}
@@ -77,6 +90,7 @@ public class FriendshipController {
 	public ResponseEntity<List<User>> getPendingRequests(
 			@RequestHeader("token") String token) {
 		
+		logger.info("Received getPendingRequests request");
 		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
 		
@@ -93,6 +107,7 @@ public class FriendshipController {
 	public ResponseEntity<List<User>> getSentRequests(
 			@RequestHeader("token") String token) {
 		
+		logger.info("Received getSentRequests request");
 		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
 		
@@ -109,6 +124,7 @@ public class FriendshipController {
 	public ResponseEntity<List<User>> getBlocked(
 			@RequestHeader("token") String token) {
 		
+		logger.info("Received getBlocked request");
 		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
 		
@@ -127,6 +143,7 @@ public class FriendshipController {
 			@RequestHeader("token") String token) {
 		
 		// TODO: Verify target user exists (this *should* be handled by database)
+		logger.info("Received blockUser request");
 		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
 		friendshipService.block(requesterId, userId);
@@ -141,6 +158,7 @@ public class FriendshipController {
 			@RequestHeader("token") String token) {
 		
 		// TODO: Verify target user exists (this *should* be handled by database)
+		logger.info("Received unblockUser request");
 		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
 		friendshipService.unblock(requesterId, userId);

@@ -45,6 +45,16 @@ public class Token {
 			typ = "JWT";
 			alg = "HS512";
 		}
+		
+		
+		public String getTyp() {
+			return typ;
+		}
+		
+		
+		public String getAlg() {
+			return alg;
+		}
 	}
 	
 	private static class Payload {
@@ -54,6 +64,16 @@ public class Token {
 		private Payload(Long userId) {
 			iss = "YouFree";
 			sub = userId + "";
+		}
+		
+		
+		public String getIss() {
+			return iss;
+		}
+		
+		
+		public String getSub() {
+			return sub;
 		}
 	}
 	

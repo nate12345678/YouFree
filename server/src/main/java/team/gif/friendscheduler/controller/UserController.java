@@ -25,6 +25,7 @@ import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -77,8 +78,11 @@ public class UserController {
 			@RequestHeader("token") String token) {
 		
 		logger.info("Received getUser request");
+		authService.validateTokenString(token);
+		
 		User result = userService.queryUsers(id, username, email);
 		
+		// If no query params specified, get self
 		if (result == null) {
 			result = userService.getUser(authService.getUserIdFromToken(token));
 		}
@@ -93,6 +97,7 @@ public class UserController {
 			@Valid @RequestBody NewUser user) {
 		
 		logger.info("Received updateUser request");
+		authService.validateTokenString(token);
 		
 		if (!fieldValidator.validateOneNonNull(user)) {
 			throw new InvalidFieldException("One or more fields must be non-empty");
@@ -110,12 +115,28 @@ public class UserController {
 			@RequestHeader("token") String token) {
 		
 		logger.info("Received deleteUser request");
+		authService.validateTokenString(token);
+		
 		Long id = authService.getUserIdFromToken(token);
 		friendshipService.removeUser(id);
 		intervalService.removeAllIntervals(id);
 		userService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	
+	@GetMapping(value = "/search")
+	public ResponseEntity<List<User>> searchUsers(
+			@RequestHeader("token") String token,
+			@RequestHeader("query") String query) {
+		
+		logger.info("Received searchUsers request");
+		authService.validateTokenString(token);
+		
+		List<User> result = userService.searchUsers(query);
+		
+		return ResponseEntity.ok(result);
 	}
 	
 }
