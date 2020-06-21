@@ -1,10 +1,11 @@
 import '../css//App.css';
 import React from 'react';
 import youfree from '../api/Youfree';
-import Dashboard from './Dashboard';
-import Header from './Header';
-import EditScheduleForm from './EditScheduleForm';
 import Authentication from './login/Authentication';
+import Dashboard from './Dashboard';
+import EditScheduleForm from './EditScheduleForm';
+import FriendSchedulesCard from './FriendSchedulesCard';
+import Header from './Header';
 import MyScheduleCard from './MyScheduleCard';
 
 class App extends React.Component {
@@ -15,13 +16,33 @@ class App extends React.Component {
 		this.state = {
 			token: null,
 			userId: null,
-			schedule: null
+			schedule: null,
+			friends: null,
+			friendSchedules: null
 		};
 	}
 
 
-	createUserAndLogin = async (email, username, password) => {
-		// Create user
+	createUserAndGetDashboard = async (email, username, password) => {
+		await this.createUser(email, username, password);
+		await this.loginAndGetDashboard(email, password);
+	};
+
+
+	loginAndGetDashboard = async (email, password) => {
+		await this.login(email, password);
+		await this.getDashboard(this.state.userId);
+	};
+
+
+	getDashboard = async (userId) => {
+		// TODO: can do these simultaneously
+		await this.getSchedule(userId);
+		await this.getFriendSchedules();
+	};
+
+
+	createUser = async (email, username, password) => {
 		let user = null;
 		try {
 			const createUserReq = await youfree.post('/user', {
@@ -43,47 +64,10 @@ class App extends React.Component {
 			// TODO: pop up with error message
 			return;
 		}
-
-		// Login
-		let token = null;
-		try {
-			const loginReq = await youfree.get('/login', {
-				headers: {
-					email: email,
-					password: password
-				}
-			});
-
-			user = loginReq.data;
-			token = loginReq.headers.token;
-			console.log('Logged in');
-		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				// TODO: indicate user was created but couldn't log in
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
-			// TODO: indicate user was created but couldn't log in
-			return;
-		}
-
-		this.setState(() => {
-			return {
-				token: token,
-				userId: user.id
-			};
-		});
-
-		await this.getSchedule(user.id);
 	};
 
 
 	login = async (email, password) => {
-		// Login
 		let token = null;
 		let user = null;
 		try {
@@ -111,14 +95,10 @@ class App extends React.Component {
 			return;
 		}
 
-		this.setState(() => {
-			return {
-				token: token,
-				userId: user.id
-			};
-		});
-
-		await this.getSchedule(user.id);
+		this.setState(() => ({
+			token: token,
+			userId: user.id
+		}));
 	};
 
 
@@ -149,25 +129,22 @@ class App extends React.Component {
 			return;
 		}
 
-		this.setState(() => {
-			return {
-				schedule: schedule
-			};
-		});
-		console.log(this.state.schedule);
+		this.setState(() => ({
+			schedule: schedule
+		}));
 	};
 
 
 	getSchedule = async (userId) => {
 		let schedule = null;
 		try {
-			const getScheduleReq = await youfree.get(`/schedule/${userId}`, {
+			const getScheduleResponse = await youfree.get(`/schedule/${userId}`, {
 				headers: {
 					token: this.state.token
 				}
-			}); // TODO: add token header
-			schedule = getScheduleReq.data;
-			console.log('Got own schedule');
+			});
+			schedule = getScheduleResponse.data;
+
 		} catch (error) {
 			if (error.response !== undefined) {
 				console.log(error.response);
@@ -180,24 +157,79 @@ class App extends React.Component {
 			return;
 		}
 
-		this.setState(() => {
-			return {
-				schedule: schedule
-			};
-		});
+		this.setState(() => ({
+			schedule: schedule
+		}));
 	};
+
+
+	getFriends = async () => {
+		let friends = null;
+
+		try {
+			const getFriendsResponse = await youfree.get('/friends', {
+				headers: {
+					token: this.state.token
+				}
+			});
+
+			friends = getFriendsResponse.data;
+		} catch (error) {
+			if (error.response !== undefined) {
+				console.log(error.response);
+				// TODO: pop up with error message
+				return;
+			}
+
+			console.log('An unknown error has occurred');
+			// TODO: pop up with error message
+			return;
+		}
+
+		this.setState(() => ({
+			friends: friends
+		}));
+	}
+
+
+	getFriendSchedules = async () => {
+		let friendSchedules = null;
+
+		try {
+			const getFriendSchedulesResponse = await youfree.get('/schedule/friends', {
+				headers: {
+					token: this.state.token
+				}
+			});
+
+			friendSchedules = getFriendSchedulesResponse.data;
+		} catch (error) {
+			if (error.response !== undefined) {
+				console.log(error.response);
+				// TODO: pop up with error message
+				return;
+			}
+
+			console.log('An unknown error has occurred');
+			// TODO: pop up with error message
+			return;
+		}
+
+		this.setState(() => ({
+			friendSchedules: friendSchedules
+		}));
+	}
 
 
 	render() {
 		let content = null;
 		if (this.state.token == null) {
-			content = <Authentication onLoginSubmit={this.login} onCreateUserSubmit={this.createUserAndLogin}/>;
+			content = <Authentication onLoginSubmit={this.loginAndGetDashboard} onCreateUserSubmit={this.createUserAndGetDashboard}/>;
 		} else {
 			content = (
 				<div style={{ width: '100%' }}>
-					{/*<EditScheduleForm onSubmit={this.addInterval} />*/}
-					{/*<Dashboard schedule={this.state.schedule}/>*/}
 					<MyScheduleCard schedule={this.state.schedule} onEdit={this.addInterval}/>
+					<FriendSchedulesCard friends={this.state.friendSchedules} />
 				</div>
 			);
 		}

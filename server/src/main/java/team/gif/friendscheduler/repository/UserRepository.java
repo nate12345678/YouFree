@@ -14,7 +14,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	Optional<User> findUserByEmail(@Param("email") String email);
 
 	@Query(
-			value = "SELECT users FROM User users WHERE LOWER(users.username) LIKE LOWER('%:query%')"
+			value = "SELECT users FROM User users WHERE LOWER(users.username) LIKE LOWER('%' || :query || '%')"
 	)
 	List<User> searchUsers(@Param("query") String query);
 	

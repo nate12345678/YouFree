@@ -19,6 +19,8 @@ import team.gif.friendscheduler.exception.IntervalNotFoundException;
 import team.gif.friendscheduler.model.Interval;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.model.request.NewInterval;
+import team.gif.friendscheduler.model.response.NamedSchedule;
+import team.gif.friendscheduler.model.response.UserResponse;
 import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.IntervalService;
@@ -73,6 +75,23 @@ public class ScheduleController {
 	}
 	
 	
+	@GetMapping("/schedule/friends")
+	public ResponseEntity<List<NamedSchedule>> getFriendSchedules(@RequestHeader String token) {
+		logger.info("Received getFriendSchedules request");
+		authService.validateTokenString(token);
+		
+		Long requesterId = authService.getUserIdFromToken(token);
+		List<Long> friendIds = friendshipService.getFriends(requesterId);
+		
+		List<NamedSchedule> response = friendIds.stream()
+				.map(id -> new NamedSchedule(UserResponse.convert(userService.getUser(id)), intervalService.getIntervals(id)))
+				.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	
+	// TODO: Make a Schedule object that holds this generic fuckery
 	public ResponseEntity<List<ArrayList<LinkedList<Interval>>>> getSchedules(
 			@RequestHeader String token,
 			@RequestBody LinkedList<Long> userIds) {
