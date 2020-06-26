@@ -13,6 +13,7 @@ import team.gif.friendscheduler.repository.TokenRepository;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.transaction.Transactional;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -22,6 +23,7 @@ import java.util.Base64;
 // This would reduce the amount of memory in the database and would improve string comparison times
 // IF THIS IS DONE, WOULD HAVE TO HASH RETURNED TOKEN TO VERIFY THE USERID MATCHES THE SIGNATURE
 @Service
+@Transactional
 public class AuthService {
 	
 	private static final Logger logger = LogManager.getLogger(AuthService.class);
