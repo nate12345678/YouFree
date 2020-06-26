@@ -132,6 +132,7 @@ class Login : AppCompatActivity() {
 				} else {
 					val user = response.body()!!.string() // TODO: convert from JSON to Java object
 					val token = response.header("token")!!
+					response.body()!!.close()
 					runOnUiThread {
 						Globals.user = User.userFromJson(user)
 						Globals.token = token
@@ -174,6 +175,7 @@ class Login : AppCompatActivity() {
 					Snackbar.make(findViewById(R.id.loginCoordinator), "User created", Snackbar.LENGTH_LONG).show()
 					val user = response.body()!!.string()
 					val token = response.header("token")!!
+					response.body()!!.close()
 					runOnUiThread {
 						Globals.user = User.userFromJson(user)
 						Globals.token = token
@@ -247,6 +249,7 @@ class Login : AppCompatActivity() {
 			override fun onResponse(call: Call, response: Response) {
 				if (response.code() == 200) {
 					val output = response.body()!!.string()
+					response.body()!!.close()
 					Log.w("ApiTest", output)
 				} else {
 					Log.w("ApiTest", "Api not functional")
