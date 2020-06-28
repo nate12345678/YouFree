@@ -40,7 +40,7 @@ public class AuthController {
 		
 		// TODO: Use typical token/bearer terminology
 		return ResponseEntity.status(HttpStatus.OK)
-				.header("token", "" + token)
+				.header("token", token)
 				.body(target);
 	}
 	
