@@ -45,7 +45,7 @@ class LoginForm extends React.Component {
 					onChange={this.handleChange}/>
 				<TextField
 					className="createUserField"
-					email="password"
+					name="password"
 					label="Password" type="password"
 					onChange={this.handleChange}/>
 				<Button

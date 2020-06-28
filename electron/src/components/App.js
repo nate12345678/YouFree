@@ -20,6 +20,19 @@ class App extends React.Component {
 	}
 
 
+	componentDidMount() {
+		// Auto-login
+		const token = localStorage.getItem('token');
+		const userId = +localStorage.getItem('userId');
+		if (token && userId) {
+			this.setState({
+				token: token,
+				userId: userId
+			});
+		}
+	}
+
+
 	getDashboard = async () => {
 		// TODO: can do these simultaneously
 		await this.getSchedule(this.state.userId);
@@ -85,6 +98,9 @@ class App extends React.Component {
 			// TODO: indicate user was created but couldn't log in
 			return;
 		}
+
+		localStorage.setItem('token', token);
+		localStorage.setItem('userId', user.id);
 
 		this.setState(() => ({
 			token: token,
