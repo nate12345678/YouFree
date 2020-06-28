@@ -65,7 +65,7 @@ public class UserController {
 		String token = authService.generateSessionToken(user.getId());
 		
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.header("token", "" + token)
+				.header("token", token)
 				.body(user);
 	}
 	
