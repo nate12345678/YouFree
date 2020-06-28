@@ -25,17 +25,29 @@ class LoginForm extends React.Component {
 	};
 
 
+	handleChange = (event) => {
+		const input = event.target;
+		const value = input.value;
+
+		this.setState({
+			[input.name]: value
+		});
+	}
+
+
 	render() {
 		return (
 			<form id="createUserForm" onSubmit={this.onFormSubmit}>
 				<TextField
 					className="createUserField"
+					name="email"
 					label="Email" type="email"
-					onChange={(event) => this.setState({ email: event.target.value })}/>
+					onChange={this.handleChange}/>
 				<TextField
 					className="createUserField"
+					email="password"
 					label="Password" type="password"
-					onChange={(event) => this.setState({ password: event.target.value })}/>
+					onChange={this.handleChange}/>
 				<Button
 					id="loginSubmitButton"
 					variant="contained"

@@ -4,8 +4,10 @@
 	background: var(--elements) !important;
 	color: var(--text) !important;
 	transition: var(--change_color_transition) !important;
+	width: 100%;
 }
 
 .MyScheduleCard .Title {
 	margin-bottom: 0.75em !important;
+	width: 100%;
 }
