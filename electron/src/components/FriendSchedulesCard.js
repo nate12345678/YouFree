@@ -12,6 +12,10 @@ function FriendSchedulesCard(props) {
 		return "Loading friends' schedules...";
 	}
 
+	if (props.friends.length === 0) {
+		return null;
+	}
+
 	props.friends.sort((a, b) => a.id.localeCompare(b.id));
 
 	let names = [];

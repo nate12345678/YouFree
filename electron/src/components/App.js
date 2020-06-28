@@ -3,10 +3,7 @@ import React from 'react';
 import youfree from '../api/Youfree';
 import Authentication from './login/Authentication';
 import Dashboard from './Dashboard';
-import EditScheduleForm from './EditScheduleForm';
-import FriendSchedulesCard from './FriendSchedulesCard';
 import Header from './Header';
-import MyScheduleCard from './MyScheduleCard';
 
 class App extends React.Component {
 
@@ -23,21 +20,9 @@ class App extends React.Component {
 	}
 
 
-	createUserAndGetDashboard = async (email, username, password) => {
-		await this.createUser(email, username, password);
-		await this.loginAndGetDashboard(email, password);
-	};
-
-
-	loginAndGetDashboard = async (email, password) => {
-		await this.login(email, password);
-		await this.getDashboard(this.state.userId);
-	};
-
-
-	getDashboard = async (userId) => {
+	getDashboard = async () => {
 		// TODO: can do these simultaneously
-		await this.getSchedule(userId);
+		await this.getSchedule(this.state.userId);
 		await this.getFriendSchedules();
 	};
 
@@ -45,13 +30,19 @@ class App extends React.Component {
 	createUser = async (email, username, password) => {
 		let user = null;
 		try {
-			const createUserReq = await youfree.post('/user', {
+			const createUserResponse = await youfree.post('/user', {
 				email: email,
 				username: username,
 				password: password
 			});
 
-			user = createUserReq.data;
+			user = createUserResponse.data;
+
+			this.setState({
+				token: createUserResponse.headers.token,
+				userId: user.id
+			});
+
 			console.log('Created new user');
 		} catch (error) {
 			if (error.response !== undefined) {
@@ -222,16 +213,11 @@ class App extends React.Component {
 
 
 	render() {
-		let content = null;
+		let content;
 		if (this.state.token == null) {
-			content = <Authentication onLoginSubmit={this.loginAndGetDashboard} onCreateUserSubmit={this.createUserAndGetDashboard}/>;
+			content = <Authentication onLoginSubmit={this.login} onCreateUserSubmit={this.createUser}/>;
 		} else {
-			content = (
-				<div style={{ width: '100%' }}>
-					<MyScheduleCard schedule={this.state.schedule} onEdit={this.addInterval}/>
-					<FriendSchedulesCard friends={this.state.friendSchedules} />
-				</div>
-			);
+			content = <Dashboard getDashboard={this.getDashboard} schedule={this.state.schedule} friends={this.state.friendSchedules} onEdit={this.addInterval}/>;
 		}
 
 		return (

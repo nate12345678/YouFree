@@ -1,24 +1,37 @@
 import '../css/Dashboard.css';
 import React from 'react';
-import Schedule from './Schedule';
 import MyScheduleCard from './MyScheduleCard';
 import FriendSchedulesCard from './FriendSchedulesCard';
 
-function Dashboard(props) {
-	let content = props.schedule
-		? <Schedule schedule={props.schedule} />
-		: "Loading...";
+class Dashboard extends React.Component {
 
-	let friendSchedule = props.friendSchedules
-		? <FriendSchedulesCard friends={props.friendSchedules} />
-		: "Loading...";
+	constructor(props) {
+		super(props);
+	}
 
-	return (
-		<div>
-			<MyScheduleCard schedule={props.schedule} onEdit={this.addInterval}/>
-			<FriendSchedulesCard friends={props.friendSchedules} />
-		</div>
-	);
+
+	componentDidMount() {
+		this.props.getDashboard();
+	}
+
+
+	render() {
+		let mySchedule = this.props.schedule == null
+			? "Loading..."
+			: <MyScheduleCard schedule={this.props.schedule} onEdit={this.props.addInterval} />;
+
+		let friendSchedules = this.props.friends == null
+			? "Loading..."
+			: <FriendSchedulesCard friends={this.props.friends} />;
+
+		return (
+			<>
+				{mySchedule}
+				{friendSchedules}
+			</>
+		);
+	}
+
 }
 
 export default Dashboard;
