@@ -47,7 +47,7 @@ class MyScheduleCard extends React.Component {
 					</IconButton>
 				</CardActions>
 				<Collapse in={this.state.isExpanded} unmountOnExit>
-					<EditScheduleForm onSubmit={this.props.onEdit}/>
+					<EditScheduleForm onSubmit={this.props.onAddInterval}/>
 				</Collapse>
 			</Card>
 		);

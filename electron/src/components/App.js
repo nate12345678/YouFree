@@ -215,9 +215,13 @@ class App extends React.Component {
 	render() {
 		let content;
 		if (this.state.token == null) {
-			content = <Authentication onLoginSubmit={this.login} onCreateUserSubmit={this.createUser}/>;
+			content = <Authentication onLoginSubmit={this.login}
+			                          onCreateUserSubmit={this.createUser}/>;
 		} else {
-			content = <Dashboard getDashboard={this.getDashboard} schedule={this.state.schedule} friends={this.state.friendSchedules} onEdit={this.addInterval}/>;
+			content = <Dashboard getDashboard={this.getDashboard}
+			                     schedule={this.state.schedule}
+			                     friends={this.state.friendSchedules}
+			                     onAddInterval={this.addInterval}/>;
 		}
 
 		return (

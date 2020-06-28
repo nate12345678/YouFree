@@ -5,9 +5,9 @@ import FriendSchedulesCard from './FriendSchedulesCard';
 
 class Dashboard extends React.Component {
 
-	// constructor(props) {
-	// 	super(props);
-	// }
+	constructor(props) {
+		super(props);
+	}
 
 
 	componentDidMount() {
@@ -18,7 +18,7 @@ class Dashboard extends React.Component {
 	render() {
 		let mySchedule = this.props.schedule == null
 			? "Loading..."
-			: <MyScheduleCard schedule={this.props.schedule} onEdit={this.props.addInterval} />;
+			: <MyScheduleCard schedule={this.props.schedule} onAddInterval={this.props.onAddInterval} />;
 
 		let friendSchedules = this.props.friends == null
 			? "Loading..."
