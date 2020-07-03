@@ -1,0 +1,29 @@
+
+.user-content {
+	display: flex;
+	flex-direction: row;
+	min-width: 20em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.user-pic {
+	width: 4rem;
+	height: 4rem;
+	border-radius: 25%;
+	background-color: var(--grey_light);
+}
+
+.user-info {
+	display: flex;
+	flex-direction: column;
+	margin-left: 1rem;
+}
+
+.user-username {
+	margin-top: 0.25rem;
+}
+
+.user-email {
+	margin-top: 0.5rem;
+}

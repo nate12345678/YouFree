@@ -34,6 +34,8 @@ code {
 	--text: var(--black);
 	--header_text: var(--white);
 	--primary: var(--blue);
+
+	--border-color: rgba(0, 0, 0, 0.12);
 }
 
 .dark {

@@ -4,6 +4,12 @@ import youfree from '../api/Youfree';
 import Authentication from './login/Authentication';
 import Dashboard from './Dashboard';
 import Header from './Header';
+import {
+	BrowserRouter as Router,
+	Route,
+	Switch
+} from 'react-router-dom';
+import SearchPage from './search/SearchPage';
 
 class App extends React.Component {
 
@@ -229,24 +235,34 @@ class App extends React.Component {
 
 
 	render() {
+
 		let content;
 		if (this.state.token == null) {
 			content = <Authentication onLoginSubmit={this.login}
-			                          onCreateUserSubmit={this.createUser}/>;
+			                       onCreateUserSubmit={this.createUser}/>;
 		} else {
-			content = <Dashboard getDashboard={this.getDashboard}
-			                     schedule={this.state.schedule}
-			                     friends={this.state.friendSchedules}
-			                     onAddInterval={this.addInterval}/>;
+			content = (
+				<Switch>
+					<Route path="/search">
+						<SearchPage token={this.state.token} />
+					</Route>
+					<Route path="/">
+						<Dashboard getDashboard={this.getDashboard}
+						           schedule={this.state.schedule}
+						           friends={this.state.friendSchedules}
+						           onAddInterval={this.addInterval}/>
+					</Route>
+				</Switch>
+			);
 		}
 
 		return (
-			<div>
-				<Header/>
+			<Router>
+				<Header />
 				<div id="content">
 					{content}
 				</div>
-			</div>
+			</Router>
 		);
 	}
 }
