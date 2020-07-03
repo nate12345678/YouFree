@@ -9,17 +9,18 @@ function UserList(props) {
 
 	let userDivs = props.users.map(user => {
 		return (
-			<div key={user.id}>
+			<li className="users-li" key={user.id}>
 				<User username={user.username} email={user.email} />
-				<Divider />
-			</div>
+			</li>
 		);
 	});
 
 	return (
 		<Card elevation={4}>
 			<CardContent>
-				{userDivs}
+				<ul className="users-ul">
+					{userDivs}
+				</ul>
 			</CardContent>
 		</Card>
 	);
