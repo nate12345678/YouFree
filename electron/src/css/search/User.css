@@ -2,7 +2,6 @@
 .user-content {
 	display: flex;
 	flex-direction: row;
-	min-width: 20em;
 }
 
 .user-pic {
