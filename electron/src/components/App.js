@@ -90,6 +90,13 @@ class App extends React.Component {
 
 			user = loginReq.data;
 			token = loginReq.headers.token;
+
+			localStorage.setItem('token', token);
+			localStorage.setItem('userId', user.id);
+			this.setState({
+				token: token,
+				userId: user.id
+			});
 			console.log('Logged in');
 		} catch (error) {
 			if (error.response !== undefined) {
@@ -102,17 +109,37 @@ class App extends React.Component {
 			console.log('An unknown error has occurred');
 			// TODO: pop up with error message
 			// TODO: indicate user was created but couldn't log in
-			return;
 		}
-
-		localStorage.setItem('token', token);
-		localStorage.setItem('userId', user.id);
-
-		this.setState(() => ({
-			token: token,
-			userId: user.id
-		}));
 	};
+
+
+	logout = async () => {
+		try {
+			const logoutResponse = await youfree.get('/logout', {
+				headers: {
+					token: this.state.token
+				}
+			});
+
+			localStorage.clear();
+			this.setState({
+				token: null,
+				userId: null
+			})
+			console.log('Logged out');
+		} catch (error) {
+			if (error.response !== undefined) {
+				console.log(error.response);
+				// TODO: pop up with error message
+				// TODO: indicate user was created but couldn't log in
+				return;
+			}
+
+			console.log('An unknown error has occurred');
+			// TODO: pop up with error message
+			// TODO: indicate user was created but couldn't log in
+		}
+	}
 
 
 	addInterval = async (dayOfWeek, startMin, endMin) => {
@@ -258,7 +285,7 @@ class App extends React.Component {
 
 		return (
 			<Router>
-				<Header />
+				<Header logout={this.logout} />
 				<div id="content">
 					{content}
 				</div>
