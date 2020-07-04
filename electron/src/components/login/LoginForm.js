@@ -1,9 +1,10 @@
-import '../../css/login/LoginForm.css';
 import React from 'react';
 import {
 	Button,
 	TextField
 } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class LoginForm extends React.Component {
 
@@ -12,7 +13,8 @@ class LoginForm extends React.Component {
 
 		this.state = {
 			email: '',
-			password: ''
+			password: '',
+			remember: false
 		};
 	}
 
@@ -21,13 +23,13 @@ class LoginForm extends React.Component {
 		event.preventDefault();
 		let strippedEmail = this.state.email.replace(/\s+/g, '');
 
-		this.props.onSubmit(strippedEmail, this.state.password);
+		this.props.onSubmit(strippedEmail, this.state.password, this.state.remember);
 	};
 
 
 	handleChange = (event) => {
 		const input = event.target;
-		const value = input.value;
+		const value = (input.type === 'checkbox') ? input.checked : input.value;
 
 		this.setState({
 			[input.name]: value
@@ -37,23 +39,26 @@ class LoginForm extends React.Component {
 
 	render() {
 		return (
-			<form id="createUserForm" onSubmit={this.onFormSubmit}>
-				<TextField
-					className="createUserField"
-					name="email"
-					label="Email" type="email"
-					onChange={this.handleChange}/>
-				<TextField
-					className="createUserField"
-					name="password"
-					label="Password" type="password"
-					onChange={this.handleChange}/>
-				<Button
-					id="loginSubmitButton"
-					variant="contained"
-					color="primary"
-					type="submit"
-				>Login
+			<form id="authForm" onSubmit={this.onFormSubmit}>
+				<TextField className="AuthField"
+				           name="email"
+				           label="Email"
+				           type="email"
+				           onChange={this.handleChange}/>
+				<TextField className="AuthField"
+				           name="password"
+				           label="Password"
+				           type="password"
+				           onChange={this.handleChange}/>
+				<FormControlLabel name="remember"
+				                  control={<Checkbox checked={this.state.remember} onChange={this.handleChange} />}
+				                  label="Remember me"/>
+				<Button id="authSubmitButton"
+				        variant="contained"
+				        color="primary"
+				        type="submit"
+				>
+					Login
 				</Button>
 			</form>
 		);

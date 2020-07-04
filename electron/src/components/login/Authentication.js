@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import LoginForm from './LoginForm';
+import CardContent from '@material-ui/core/CardContent';
 
 class Authentication extends React.Component {
 
@@ -47,7 +48,9 @@ class Authentication extends React.Component {
 					</Tabs>
 				</Paper>
 
-				{content}
+				<CardContent id="authCardContent">
+					{content}
+				</CardContent>
 			</Card>
 		);
 	}

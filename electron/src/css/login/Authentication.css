@@ -1,9 +1,28 @@
 
 #authCard {
 	width: fit-content;
-	padding-bottom: 2em;
+	/*padding-bottom: 2em;*/
 }
 
 #tabs {
 	margin-bottom: 1em;
+}
+
+#authCardContent {
+	padding-left: 3em;
+	padding-right: 3em;
+	padding-bottom: 3em;
+}
+
+#authForm {
+	display: flex;
+	flex-direction: column;
+}
+
+.AuthField {
+	margin-bottom: 1em !important;
+}
+
+#authSubmitButton {
+	margin-top: 1em;
 }
