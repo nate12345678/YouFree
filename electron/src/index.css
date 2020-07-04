@@ -20,7 +20,8 @@ code {
 
 :root {
 	--white: #FFFFFF;
-	--blue: #3f51b5;
+	--blue: #3F51B5;
+	--pink: #F50057;
 	--grey_dark: #23272A;
 	--grey: #2C2F33;
 	--grey_light: #393D41;
@@ -34,6 +35,7 @@ code {
 	--text: var(--black);
 	--header_text: var(--white);
 	--primary: var(--blue);
+	--secondary: var(--pink);
 
 	--border-color: rgba(0, 0, 0, 0.12);
 }
@@ -45,6 +47,7 @@ code {
 	--text: var(--white);
 	--header_text: var(--white);
 	--primary: var(--blue);
+	--secondary: var(--pink);
 }
 
 .col {

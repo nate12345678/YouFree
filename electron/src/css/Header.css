@@ -18,3 +18,7 @@
 #lightModeIcon:hover {
 	cursor: pointer;
 }
+
+#tab-search {
+	margin-left: 1em;
+}
