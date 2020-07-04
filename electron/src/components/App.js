@@ -120,7 +120,7 @@ class App extends React.Component {
 
 	logout = async () => {
 		try {
-			const logoutResponse = await youfree.get('/logout', {
+			await youfree.get('/logout', {
 				headers: {
 					token: this.state.token
 				}
