@@ -1,4 +1,10 @@
 
+#EditScheduleForm {
+	width: fit-content;
+	display: flex;
+	align-items: center;
+}
+
 #dayOfWeekSelect {
 	width: 5em;
 	/*height: fit-content;*/

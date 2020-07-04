@@ -50,6 +50,10 @@ code {
 	--secondary: var(--pink);
 }
 
+div {
+	box-sizing: border-box;
+}
+
 .col {
 	display: flex;
 	flex-direction: column;

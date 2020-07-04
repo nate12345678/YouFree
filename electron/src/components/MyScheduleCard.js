@@ -42,12 +42,14 @@ class MyScheduleCard extends React.Component {
 					{schedule}
 				</CardContent>
 				<CardActions>
-					<IconButton aria-expanded={this.state.isExpanded} aria-label="show more" onClick={this.handleExpansion}>
+					<IconButton id="ExpandButton" aria-expanded={this.state.isExpanded} aria-label="show more" onClick={this.handleExpansion}>
 						<Icon>expand_more</Icon>
 					</IconButton>
 				</CardActions>
-				<Collapse in={this.state.isExpanded} unmountOnExit>
-					<EditScheduleForm onSubmit={this.props.onAddInterval}/>
+				<Collapse id="EditScheduleCollapse" in={this.state.isExpanded} unmountOnExit>
+					<div id="EditScheduleForm">
+						<EditScheduleForm onSubmit={this.props.onAddInterval}/>
+					</div>
 				</Collapse>
 			</Card>
 		);
