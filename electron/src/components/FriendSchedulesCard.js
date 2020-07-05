@@ -29,7 +29,7 @@ function FriendSchedulesCard(props) {
 	}
 
 	return (
-		<Card elevation={4}>
+		<Card className="FriendSchedulesCard" elevation={4}>
 			<CardContent>
 				<div className="Names" style={{ height: (names.length * 1.75) + 'em' }}>
 					{names}
