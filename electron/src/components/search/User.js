@@ -14,7 +14,12 @@ function User(props) {
 				<span className="user-username">{props.username}</span>
 				<span className="user-email">{props.email}</span>
 			</div>
-			<Button className="user-add-friend-button" color="primary" variant="outlined" size="small" disableElevation>
+			<Button className="user-add-friend-button"
+			        color="primary"
+			        variant="outlined"
+			        size="small"
+			        onClick={props.addFriend}
+			        disableElevation>
 				<Icon>person_add</Icon>
 			</Button>
 		</div>

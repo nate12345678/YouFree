@@ -266,6 +266,28 @@ class App extends React.Component {
 	}
 
 
+	addFriend = async (userId) => {
+		try {
+			await youfree.put(`/friends/${userId}`, {}, {
+				headers: {
+					token: this.state.token
+				}
+			});
+
+		} catch (error) {
+			if (error.response !== undefined) {
+				console.log(error.response);
+				// TODO: pop up with error message
+				return;
+			}
+
+			console.log('An unknown error has occurred');
+			// TODO: pop up with error message
+			return;
+		}
+	}
+
+
 	render() {
 
 		let content;
@@ -276,7 +298,7 @@ class App extends React.Component {
 			content = (
 				<Switch>
 					<Route path="/search">
-						<SearchPage token={this.state.token} />
+						<SearchPage token={this.state.token} addFriend={this.addFriend} />
 					</Route>
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}
