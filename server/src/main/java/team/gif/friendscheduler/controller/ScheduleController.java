@@ -26,6 +26,7 @@ import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -115,7 +116,7 @@ public class ScheduleController {
 	@PutMapping("/schedule")
 	public ResponseEntity<ArrayList<LinkedList<Interval>>> addInterval(
 			@RequestHeader("token") String token,
-			@RequestBody NewInterval interval) {
+			@Valid @RequestBody NewInterval interval) {
 		
 		logger.info("Received addInterval request");
 		authService.validateTokenString(token);
