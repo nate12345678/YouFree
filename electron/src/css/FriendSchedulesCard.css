@@ -1,0 +1,6 @@
+
+.FriendSchedulesCard {
+	background: var(--elements) !important;
+	color: var(--text) !important;
+	width: 100%;
+}

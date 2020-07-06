@@ -56,7 +56,7 @@ class SearchPage extends React.Component {
 		const userDivs = this.state.users.map(user => {
 			return (
 				<li className="users-li" key={user.id}>
-					<User username={user.username} email={user.email} />
+					<User username={user.username} email={user.email} addFriend={() => this.props.addFriend(user.id)} />
 				</li>
 			);
 		});

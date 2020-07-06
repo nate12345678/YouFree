@@ -46,8 +46,7 @@ class App extends React.Component {
 	};
 
 
-	createUser = async (email, username, password) => {
-		let user = null;
+	createUser = async (email, username, password, remember) => {
 		try {
 			const createUserResponse = await youfree.post('/user', {
 				email: email,
@@ -55,10 +54,16 @@ class App extends React.Component {
 				password: password
 			});
 
-			user = createUserResponse.data;
+			const token = createUserResponse.headers.token;
+			const user = createUserResponse.data;
+
+			if (remember) {
+				localStorage.setItem('token', token);
+				localStorage.setItem('userId', user.id);
+			}
 
 			this.setState({
-				token: createUserResponse.headers.token,
+				token: token,
 				userId: user.id
 			});
 
@@ -72,14 +77,11 @@ class App extends React.Component {
 
 			console.log('An unknown error has occurred');
 			// TODO: pop up with error message
-			return;
 		}
 	};
 
 
-	login = async (email, password) => {
-		let token = null;
-		let user = null;
+	login = async (email, password, remember) => {
 		try {
 			const loginReq = await youfree.get('/login', {
 				headers: {
@@ -88,11 +90,14 @@ class App extends React.Component {
 				}
 			});
 
-			user = loginReq.data;
-			token = loginReq.headers.token;
+			const user = loginReq.data;
+			const token = loginReq.headers.token;
 
-			localStorage.setItem('token', token);
-			localStorage.setItem('userId', user.id);
+			if (remember) {
+				localStorage.setItem('token', token);
+				localStorage.setItem('userId', user.id);
+			}
+
 			this.setState({
 				token: token,
 				userId: user.id
@@ -115,7 +120,7 @@ class App extends React.Component {
 
 	logout = async () => {
 		try {
-			const logoutResponse = await youfree.get('/logout', {
+			await youfree.get('/logout', {
 				headers: {
 					token: this.state.token
 				}
@@ -261,6 +266,28 @@ class App extends React.Component {
 	}
 
 
+	addFriend = async (userId) => {
+		try {
+			await youfree.put(`/friends/${userId}`, {}, {
+				headers: {
+					token: this.state.token
+				}
+			});
+
+		} catch (error) {
+			if (error.response !== undefined) {
+				console.log(error.response);
+				// TODO: pop up with error message
+				return;
+			}
+
+			console.log('An unknown error has occurred');
+			// TODO: pop up with error message
+			return;
+		}
+	}
+
+
 	render() {
 
 		let content;
@@ -271,7 +298,7 @@ class App extends React.Component {
 			content = (
 				<Switch>
 					<Route path="/search">
-						<SearchPage token={this.state.token} />
+						<SearchPage token={this.state.token} addFriend={this.addFriend} />
 					</Route>
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}

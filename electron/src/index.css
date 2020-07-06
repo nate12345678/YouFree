@@ -29,13 +29,15 @@ code {
 }
 
 .light {
-	--header: var(--blue);
-	--wallpaper: var(--white);
-	--elements: var(--white);
-	--text: var(--black);
-	--header_text: var(--white);
 	--primary: var(--blue);
 	--secondary: var(--pink);
+
+	--header: var(--blue);
+	--wallpaper: #FAFAFA;
+	--elements: var(--white);
+	--element_hover: rgba(0, 0, 0, 0.03);
+	--text: rgba(0, 0, 0, 0.87);
+	--header_text: var(--white);
 
 	--border-color: rgba(0, 0, 0, 0.12);
 }
