@@ -1,7 +1,4 @@
-import '../../css/login/Authentication.css';
 import React from 'react';
-import CreateUserForm from './CreateUserForm';
-import LoginForm from './LoginForm';
 import {
 	Card,
 	CardContent,
@@ -9,15 +6,16 @@ import {
 	Tab,
 	Tabs
 } from '@material-ui/core';
+import SearchPage from './SearchPage';
 
-class Authentication extends React.Component {
+class People extends React.Component {
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			currentTab: 0
-		};
+		}
 	}
 
 
@@ -25,18 +23,27 @@ class Authentication extends React.Component {
 		this.setState(() => {
 			return {
 				currentTab: newValue
-			};
+			}
 		});
-	};
+	}
 
 
 	render() {
-		let content = this.state.currentTab === 1
-			? <CreateUserForm onSubmit={this.props.onCreateUserSubmit}/>
-			: <LoginForm onSubmit={this.props.onLoginSubmit}/>;
+
+		let content;
+		switch (this.state.currentTab) {
+			case 0:
+				content = <div>Friends</div>
+				break;
+			case 1:
+				content = <div>Pending</div>
+				break;
+			default:
+				content = <SearchPage token={this.props.token} addFriend={this.props.addFriend} />
+		}
 
 		return (
-			<Card id="authCard" elevation={4}>
+			<Card id="peopleCard" elevation={4}>
 				<Paper id="tabs" square elevation={1}>
 					<Tabs value={this.state.currentTab}
 					      variant="fullWidth"
@@ -44,12 +51,13 @@ class Authentication extends React.Component {
 					      textColor="primary"
 					      onChange={this.handleChange}>
 
-						<Tab label="Login"/>
-						<Tab label="Create User"/>
+						<Tab label="Friends" />
+						<Tab label="Pending" />
+						<Tab label="Search" />
 					</Tabs>
 				</Paper>
 
-				<CardContent id="authCardContent">
+				<CardContent id="peopleCardContent">
 					{content}
 				</CardContent>
 			</Card>
@@ -57,4 +65,4 @@ class Authentication extends React.Component {
 	}
 }
 
-export default Authentication;
+export default People;

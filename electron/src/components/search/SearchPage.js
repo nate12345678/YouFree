@@ -1,10 +1,8 @@
 import '../../css/search/SearchPage.css';
 import React from 'react';
+import TextField from '@material-ui/core/TextField';
 import youfree from '../../api/Youfree';
 import User from './User';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import TextField from '@material-ui/core/TextField';
 
 class SearchPage extends React.Component {
 
@@ -62,22 +60,20 @@ class SearchPage extends React.Component {
 		});
 
 		return (
-			<Card id="search-card" elevation={4}>
-				<CardContent>
-					<TextField id="search-field"
-					           variant="outlined"
-					           margin="normal"
-					           placeholder="Search"
-					           label="Search"
-					           onChange={this.handleOnChange}
-					           onBlur={this.searchUsers}
-					           fullWidth
-					/>
-					<ul className="users-ul">
-						{userDivs}
-					</ul>
-				</CardContent>
-			</Card>
+			<div id="search-card">
+				<TextField id="search-field"
+				           variant="outlined"
+				           margin="normal"
+				           placeholder="Search"
+				           label="Search"
+				           onChange={this.handleOnChange}
+				           onBlur={this.searchUsers}
+				           fullWidth
+				/>
+				<ul className="users-ul">
+					{userDivs}
+				</ul>
+			</div>
 		);
 	}
 

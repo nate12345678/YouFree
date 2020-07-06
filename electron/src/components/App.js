@@ -9,7 +9,7 @@ import {
 	Route,
 	Switch
 } from 'react-router-dom';
-import SearchPage from './search/SearchPage';
+import People from './search/People';
 
 class App extends React.Component {
 
@@ -298,7 +298,7 @@ class App extends React.Component {
 			content = (
 				<Switch>
 					<Route path="/search">
-						<SearchPage token={this.state.token} addFriend={this.addFriend} />
+						<People token={this.state.token} addFriend={this.addFriend} />
 					</Route>
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}
