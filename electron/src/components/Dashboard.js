@@ -5,10 +5,6 @@ import FriendSchedulesCard from './FriendSchedulesCard';
 
 class Dashboard extends React.Component {
 
-	constructor(props) {
-		super(props);
-	}
-
 	componentDidMount() {
 		this.props.getDashboard();
 	}

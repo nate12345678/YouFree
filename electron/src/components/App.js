@@ -20,7 +20,6 @@ class App extends React.Component {
 			token: null,
 			userId: null,
 			schedule: null,
-			friends: null,
 			friendSchedules: null
 		};
 	}
@@ -39,6 +38,18 @@ class App extends React.Component {
 	}
 
 
+	handleError = (error) => {
+		if (error.response !== undefined) {
+			console.log(error.response);
+			// TODO: pop up with error message
+			return;
+		}
+
+		console.log('An unknown error has occurred');
+		// TODO: pop up with error message
+	}
+
+
 	getDashboard = async () => {
 		// TODO: can do these simultaneously
 		await this.getSchedule(this.state.userId);
@@ -48,11 +59,7 @@ class App extends React.Component {
 
 	createUser = async (email, username, password, remember) => {
 		try {
-			const createUserResponse = await youfree.post('/user', {
-				email: email,
-				username: username,
-				password: password
-			});
+			const createUserResponse = await youfree.createUser(email, username, password);
 
 			const token = createUserResponse.headers.token;
 			const user = createUserResponse.data;
@@ -69,26 +76,14 @@ class App extends React.Component {
 
 			console.log('Created new user');
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
+			this.handleError(error);
 		}
 	};
 
 
 	login = async (email, password, remember) => {
 		try {
-			const loginReq = await youfree.get('/login', {
-				headers: {
-					email: email,
-					password: password
-				}
-			});
+			const loginReq = await youfree.login(email, password);
 
 			const user = loginReq.data;
 			const token = loginReq.headers.token;
@@ -104,156 +99,82 @@ class App extends React.Component {
 			});
 			console.log('Logged in');
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				// TODO: indicate user was created but couldn't log in
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
-			// TODO: indicate user was created but couldn't log in
+			this.handleError(error);
 		}
 	};
 
 
 	logout = async () => {
 		try {
-			await youfree.get('/logout', {
-				headers: {
-					token: this.state.token
-				}
-			});
+			await youfree.logout(this.state.token);
 
 			localStorage.clear();
 			this.setState({
 				token: null,
 				userId: null
-			})
+			});
 			console.log('Logged out');
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				// TODO: indicate user was created but couldn't log in
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
-			// TODO: indicate user was created but couldn't log in
+			this.handleError(error);
 		}
-	}
+	};
 
 
 	addInterval = async (dayOfWeek, startMin, endMin) => {
 		let schedule = null;
 		try {
-			const addIntervalReq = await youfree.put('/schedule', {
-				dayOfWeek: dayOfWeek,
-				startMin: startMin,
-				endMin: endMin
-			}, {
-				headers: {
-					token: this.state.token
-				}
-			});
+			const addIntervalReq = await youfree.addInterval(this.state.token, dayOfWeek, startMin, endMin);
 
 			console.log('Added interval');
 			schedule = addIntervalReq.data;
+
+			this.setState({
+				schedule: schedule
+			});
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
-			return;
+			this.handleError(error);
 		}
-
-		this.setState(() => ({
-			schedule: schedule
-		}));
 	};
 
 
 	getSchedule = async (userId) => {
 		let schedule = null;
 		try {
-			const getScheduleResponse = await youfree.get(`/schedule/${userId}`, {
-				headers: {
-					token: this.state.token
-				}
-			});
+			const getScheduleResponse = await youfree.getSchedule(this.state.token, userId);
 			schedule = getScheduleResponse.data;
 
+			this.setState({
+				schedule: schedule
+			});
+
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
-			return;
+			this.handleError(error);
 		}
-
-		this.setState(() => ({
-			schedule: schedule
-		}));
 	};
 
 
 	getFriendSchedules = async () => {
 		try {
-			const getFriendSchedulesResponse = await youfree.get('/schedule/friends', {
-				headers: {
-					token: this.state.token
-				}
-			});
+			const getFriendSchedulesResponse = await youfree.getFriendSchedules(this.state.token);
 
 			this.setState({
 				friendSchedules: getFriendSchedulesResponse.data
 			});
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
-			return;
+			this.handleError(error);
 		}
 
-	}
+	};
 
 
 	addFriend = async (userId) => {
 		try {
-			await youfree.put(`/friends/${userId}`, {}, {
-				headers: {
-					token: this.state.token
-				}
-			});
+			await youfree.addFriend(this.state.token, userId);
 
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
-			return;
+			this.handleError(error);
 		}
-	}
+	};
 
 
 	render() {
@@ -261,12 +182,12 @@ class App extends React.Component {
 		let content;
 		if (this.state.token == null) {
 			content = <Authentication onLoginSubmit={this.login}
-			                       onCreateUserSubmit={this.createUser}/>;
+			                          onCreateUserSubmit={this.createUser}/>;
 		} else {
 			content = (
 				<Switch>
 					<Route path="/search">
-						<People token={this.state.token} addFriend={this.addFriend} />
+						<People token={this.state.token} addFriend={this.addFriend}/>
 					</Route>
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}
@@ -280,7 +201,7 @@ class App extends React.Component {
 
 		return (
 			<Router>
-				<Header logout={this.logout} />
+				<Header logout={this.logout}/>
 				<div id="content">
 					{content}
 				</div>

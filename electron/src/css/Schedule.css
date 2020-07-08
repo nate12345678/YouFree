@@ -1,9 +1,10 @@
 
 .Intervals {
 	display: flex;
+	height: 1em;
 }
 
 .Intervals .Bar {
-	height: 1em;
+	height: 100%;
 	background-color: var(--primary);
 }
