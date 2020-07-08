@@ -16,7 +16,7 @@ function FriendSchedulesCard(props) {
 		return null;
 	}
 
-	props.friends.sort((a, b) => a.id.localeCompare(b.id));
+	props.friends.sort((a, b) => a.user.username.localeCompare(b.user.username));
 
 	let names = [];
 	let schedules = [];
@@ -31,11 +31,13 @@ function FriendSchedulesCard(props) {
 	return (
 		<Card className="FriendSchedulesCard" elevation={4}>
 			<CardContent>
-				<div className="Names" style={{ height: (names.length * 1.75) + 'em' }}>
-					{names}
-				</div>
-				<div className="Schedules">
-					{schedules}
+				<div className="FriendSchedulesDiv">
+					<div className="Names">
+						{names}
+					</div>
+					<div className="Schedules">
+						{schedules}
+					</div>
 				</div>
 			</CardContent>
 		</Card>

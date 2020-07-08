@@ -1,4 +1,4 @@
-import '../../css/search/User.css';
+import '../../css/people/User.css';
 import React from 'react'
 import {
 	Button,

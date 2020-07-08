@@ -1,3 +1,4 @@
+import '../../css/people/People.css';
 import React from 'react';
 import {
 	Card,
@@ -7,6 +8,8 @@ import {
 	Tabs
 } from '@material-ui/core';
 import SearchPage from './SearchPage';
+import Friends from './Friends';
+import Pending from './Pending';
 
 class People extends React.Component {
 
@@ -33,10 +36,10 @@ class People extends React.Component {
 		let content;
 		switch (this.state.currentTab) {
 			case 0:
-				content = <div>Friends</div>
+				content = <Friends token={this.props.token} />;
 				break;
 			case 1:
-				content = <div>Pending</div>
+				content = <Pending token={this.props.token} />
 				break;
 			default:
 				content = <SearchPage token={this.props.token} addFriend={this.props.addFriend} />

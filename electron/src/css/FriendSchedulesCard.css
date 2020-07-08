@@ -4,3 +4,18 @@
 	color: var(--text) !important;
 	width: 100%;
 }
+
+.FriendSchedulesDiv {
+	display: flex;
+	flex-direction: row;
+}
+
+.Names {
+	margin-right: 0.5em;
+}
+
+.Schedules {
+	width: 100%;
+	border-left: 1px solid var(--text);
+	border-right: 1px solid var(--text);
+}

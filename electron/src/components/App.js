@@ -1,15 +1,15 @@
 import '../css//App.css';
 import React from 'react';
 import youfree from '../api/Youfree';
-import Authentication from './login/Authentication';
 import Dashboard from './Dashboard';
 import Header from './Header';
+import Authentication from './login/Authentication';
+import People from './people/People';
 import {
 	BrowserRouter as Router,
 	Route,
 	Switch
 } from 'react-router-dom';
-import People from './search/People';
 
 class App extends React.Component {
 
@@ -208,38 +208,7 @@ class App extends React.Component {
 	};
 
 
-	getFriends = async () => {
-		let friends = null;
-
-		try {
-			const getFriendsResponse = await youfree.get('/friends', {
-				headers: {
-					token: this.state.token
-				}
-			});
-
-			friends = getFriendsResponse.data;
-		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
-			return;
-		}
-
-		this.setState(() => ({
-			friends: friends
-		}));
-	}
-
-
 	getFriendSchedules = async () => {
-		let friendSchedules = null;
-
 		try {
 			const getFriendSchedulesResponse = await youfree.get('/schedule/friends', {
 				headers: {
@@ -247,7 +216,9 @@ class App extends React.Component {
 				}
 			});
 
-			friendSchedules = getFriendSchedulesResponse.data;
+			this.setState({
+				friendSchedules: getFriendSchedulesResponse.data
+			});
 		} catch (error) {
 			if (error.response !== undefined) {
 				console.log(error.response);
@@ -260,9 +231,6 @@ class App extends React.Component {
 			return;
 		}
 
-		this.setState(() => ({
-			friendSchedules: friendSchedules
-		}));
 	}
 
 

@@ -32,7 +32,7 @@ class MyScheduleCard extends React.Component {
 
 	render() {
 		const schedule = this.props.schedule
-			? <Schedule schedule={this.props.schedule}/>
+			? <Schedule schedule={this.props.schedule} id="MySchedule"/>
 			: 'Loading...';
 
 		return (
