@@ -42,7 +42,11 @@ class MyScheduleCard extends React.Component {
 					{schedule}
 				</CardContent>
 				<CardActions>
-					<IconButton id="ExpandButton" aria-expanded={this.state.isExpanded} aria-label="show more" onClick={this.handleExpansion}>
+					<IconButton id="ExpandButton"
+					            className={this.state.isExpanded ? 'expanded' : 'collapsed'}
+					            aria-expanded={this.state.isExpanded}
+					            aria-label="show more"
+					            onClick={this.handleExpansion}>
 						<Icon>expand_more</Icon>
 					</IconButton>
 				</CardActions>
