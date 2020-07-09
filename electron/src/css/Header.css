@@ -7,7 +7,6 @@
 }
 
 #home {
-	/*cursor: pointer;*/
 	margin-right: 2em;
 }
 
@@ -17,13 +16,4 @@
 
 #logout-button {
 	margin-left: auto;
-	/*color: var(--text);*/
-}
-
-#lightModeIcon {
-	margin-left: 1em;
-}
-
-#lightModeIcon:hover {
-	cursor: pointer;
 }

@@ -1,25 +1,31 @@
 import '../css/Header.css';
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
 	AppBar,
 	Button,
 	Icon,
+	IconButton,
 	Toolbar,
+	Tooltip,
 	Typography
 } from '@material-ui/core';
 
 function Header(props) {
 
 	const history = useHistory();
+	const [theme, setTheme] = useState('light');
 
 	function invertTheme() {
 		const body = document.body;
 
-		if (body.classList.replace('light', 'dark')) {
+		if (theme === 'light') {
+			setTheme('dark');
+			body.classList.replace('light', 'dark')
 			return;
 		}
 
+		setTheme('light');
 		body.classList.replace('dark', 'light');
 	}
 
@@ -31,7 +37,11 @@ function Header(props) {
 				<Button id="tab-home" variant="contained" color="secondary" onClick={() => history.push('/')} disableElevation>Home</Button>
 				<Button id="tab-search" variant="contained" color="secondary" onClick={() => history.push('/search')} disableElevation>Friends</Button>
 				<Button id="logout-button" variant="text" color="inherit" onClick={props.logout} disableElevation>Logout</Button>
-				<Icon id="lightModeIcon" color="inherit" onClick={invertTheme}>cloud</Icon>
+				<Tooltip title="Toggle light/dark theme">
+					<IconButton id="lightModeIcon" color="inherit" onClick={invertTheme}>
+						<Icon>{theme === 'light' ? 'brightness_2' : 'brightness_5'}</Icon>
+					</IconButton>
+				</Tooltip>
 			</Toolbar>
 		</AppBar>
 	);
