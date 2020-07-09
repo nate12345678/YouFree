@@ -20,24 +20,13 @@ class Pending extends React.Component {
 
 	getPending = async () => {
 		try {
-			const getPendingResponse = await youfree.get('/friends/pending', {
-				headers: {
-					token: this.props.token
-				}
-			});
+			const getPendingResponse = await youfree.getPending(this.props.token);
 
 			this.setState({
 				pending: getPendingResponse.data
 			});
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
+			this.props.handleError(error);
 		}
 	}
 
@@ -46,7 +35,7 @@ class Pending extends React.Component {
 		const userDivs = this.state.pending.map(user => {
 			return (
 				<li className="users-li" key={user.id}>
-					<User username={user.username} email={user.email} />
+					<User variant="pending" username={user.username} email={user.email} addFriend={() => this.props.addFriend(user.id)} deleteFriend={() => this.props.deleteFriend(user.id)} />
 				</li>
 			);
 		});

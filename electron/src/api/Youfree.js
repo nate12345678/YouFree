@@ -15,7 +15,7 @@ class Youfree {
 			username: username,
 			password: password
 		});
-	}
+	};
 
 
 	login = (email, password) => {
@@ -47,7 +47,7 @@ class Youfree {
 				token: token
 			}
 		});
-	}
+	};
 
 
 	getSchedule = (token, userId) => {
@@ -68,13 +68,50 @@ class Youfree {
 	};
 
 
+	getFriends = (token) => {
+		return this.client.get('/friends', {
+			headers: {
+				token: token
+			}
+		});
+	};
+
+
 	addFriend = (token, userId) => {
 		return this.client.put(`/friends/${userId}`, {}, {
 			headers: {
 				token: token
 			}
 		});
-	}
+	};
+
+
+	deleteFriend = (token, userId) => {
+		return this.client.delete(`/friends/${userId}`, {
+			headers: {
+				token: token
+			}
+		});
+	};
+
+
+	getPending = (token) => {
+		return this.client.get('/friends/pending', {
+			headers: {
+				token: token
+			}
+		});
+	};
+
+
+	searchUsers = (token, query) => {
+		return this.client.get('/search', {
+			headers: {
+				token: token,
+				query: query
+			}
+		});
+	};
 
 }
 

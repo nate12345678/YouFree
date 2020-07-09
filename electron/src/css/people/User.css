@@ -1,31 +1,35 @@
 
-.user-content {
+.UserContent {
 	display: flex;
 	flex-direction: row;
 }
 
-.user-pic {
+.UserPic {
 	width: 4rem;
 	height: 4rem;
 	border-radius: 25%;
 	background-color: var(--grey_light);
 }
 
-.user-info {
+.UserInfo {
 	display: flex;
 	flex-direction: column;
 	margin-left: 1rem;
 	margin-right: 1rem;
 }
 
-.user-username {
+.UserUsername {
 	margin-top: 0.25rem;
 }
 
-.user-email {
+.UserEmail {
 	margin-top: 0.5rem;
 }
 
-.user-add-friend-button {
+.UserAddFriendButton, .UserDenyFriendButton {
 	margin-left: auto !important;
+}
+
+.UserConfirmFriendButton {
+	margin-left: 0.5em !important;
 }

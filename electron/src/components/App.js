@@ -47,7 +47,7 @@ class App extends React.Component {
 
 		console.log('An unknown error has occurred');
 		// TODO: pop up with error message
-	}
+	};
 
 
 	getDashboard = async () => {
@@ -163,7 +163,6 @@ class App extends React.Component {
 		} catch (error) {
 			this.handleError(error);
 		}
-
 	};
 
 
@@ -171,6 +170,15 @@ class App extends React.Component {
 		try {
 			await youfree.addFriend(this.state.token, userId);
 
+		} catch (error) {
+			this.handleError(error);
+		}
+	};
+
+
+	deleteFriend = async (userId) => {
+		try {
+			await youfree.deleteFriend(this.state.token, userId);
 		} catch (error) {
 			this.handleError(error);
 		}
@@ -187,7 +195,7 @@ class App extends React.Component {
 			content = (
 				<Switch>
 					<Route path="/search">
-						<People token={this.state.token} addFriend={this.addFriend}/>
+						<People token={this.state.token} addFriend={this.addFriend} deleteFriend={this.deleteFriend} handleError={this.handleError}/>
 					</Route>
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}

@@ -17,26 +17,14 @@ class SearchPage extends React.Component {
 
 	searchUsers = async () => {
 		try {
-			const searchUsersResponse = await youfree.get('/search', {
-				headers: {
-					token: this.props.token,
-					query: this.state.query
-				}
-			});
+			const searchUsersResponse = await youfree.searchUsers(this.props.token, this.state.query);
 
 			this.setState({
 				users: searchUsersResponse.data
 			});
 
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
+			this.props.handleError(error);
 		}
 	}
 
@@ -53,7 +41,7 @@ class SearchPage extends React.Component {
 		const userDivs = this.state.users.map(user => {
 			return (
 				<li className="users-li" key={user.id}>
-					<User username={user.username} email={user.email} addFriend={() => this.props.addFriend(user.id)} />
+					<User variant="stranger" username={user.username} email={user.email} addFriend={() => this.props.addFriend(user.id)} />
 				</li>
 			);
 		});

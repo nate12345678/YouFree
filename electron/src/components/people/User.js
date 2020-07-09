@@ -7,21 +7,57 @@ import {
 
 function User(props) {
 
+	let actionArea;
+	switch (props.variant) {
+		case 'none':
+			actionArea = null;
+			break;
+		case 'pending':
+			actionArea = (
+				<>
+					<Button className="UserDenyFriendButton"
+					        color="primary"
+					        variant="outlined"
+					        size="small"
+					        onClick={props.deleteFriend}
+					        disableElevation>
+						<Icon>person_remove</Icon>
+					</Button>
+					<Button className="UserConfirmFriendButton"
+					        color="primary"
+					        variant="outlined"
+					        size="small"
+					        onClick={props.addFriend}
+					        disableElevation>
+						<Icon>person_add</Icon>
+					</Button>
+				</>
+			);
+			break;
+		case 'stranger':
+			actionArea = (
+				<Button className="UserAddFriendButton"
+				        color="primary"
+				        variant="outlined"
+				        size="small"
+				        onClick={props.addFriend}
+				        disableElevation>
+					<Icon>person_add</Icon>
+				</Button>
+			);
+			break;
+		default:
+			actionArea = null;
+	}
+
 	return (
-		<div className="user-content">
-			<div className="user-pic"> </div>
-			<div className="user-info">
-				<span className="user-username">{props.username}</span>
-				<span className="user-email">{props.email}</span>
+		<div className="UserContent">
+			<div className="UserPic"> </div>
+			<div className="UserInfo">
+				<span className="UserUsername">{props.username}</span>
+				<span className="UserEmail">{props.email}</span>
 			</div>
-			<Button className="user-add-friend-button"
-			        color="primary"
-			        variant="outlined"
-			        size="small"
-			        onClick={props.addFriend}
-			        disableElevation>
-				<Icon>person_add</Icon>
-			</Button>
+			{actionArea}
 		</div>
 	);
 

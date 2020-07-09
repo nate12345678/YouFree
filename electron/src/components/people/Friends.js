@@ -20,24 +20,13 @@ class Friends extends React.Component {
 
 	getFriends = async () => {
 		try {
-			const getFriendsResponse = await youfree.get('/friends', {
-				headers: {
-					token: this.props.token
-				}
-			});
+			const getFriendsResponse = await youfree.getFriends(this.props.token);
 
 			this.setState({
 				friends: getFriendsResponse.data
 			});
 		} catch (error) {
-			if (error.response !== undefined) {
-				console.log(error.response);
-				// TODO: pop up with error message
-				return;
-			}
-
-			console.log('An unknown error has occurred');
-			// TODO: pop up with error message
+			this.props.handleError(error);
 		}
 	}
 

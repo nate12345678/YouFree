@@ -36,13 +36,13 @@ class People extends React.Component {
 		let content;
 		switch (this.state.currentTab) {
 			case 0:
-				content = <Friends token={this.props.token} />;
+				content = <Friends token={this.props.token} handleError={this.props.handleError}/>;
 				break;
 			case 1:
-				content = <Pending token={this.props.token} />
+				content = <Pending token={this.props.token} addFriend={this.props.addFriend} deleteFriend={this.props.deleteFriend} handleError={this.props.handleError}/>
 				break;
 			default:
-				content = <SearchPage token={this.props.token} addFriend={this.props.addFriend} />
+				content = <SearchPage token={this.props.token} addFriend={this.props.addFriend} handleError={this.props.handleError}/>
 		}
 
 		return (
