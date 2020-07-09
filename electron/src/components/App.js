@@ -10,6 +10,8 @@ import {
 	Route,
 	Switch
 } from 'react-router-dom';
+import AboutPage from './AboutPage';
+import MyProfilePage from './MyProfilePage';
 
 class App extends React.Component {
 
@@ -196,6 +198,12 @@ class App extends React.Component {
 				<Switch>
 					<Route path="/search">
 						<People token={this.state.token} addFriend={this.addFriend} deleteFriend={this.deleteFriend} handleError={this.handleError}/>
+					</Route>
+					<Route path="/profile">
+						<MyProfilePage />
+					</Route>
+					<Route path="/about">
+						<AboutPage />
 					</Route>
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}

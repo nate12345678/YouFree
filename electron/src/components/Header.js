@@ -36,6 +36,8 @@ function Header(props) {
 				<Typography id="home" variant="h5" color="inherit">You Free</Typography>
 				<Button id="tab-home" variant="contained" color="secondary" onClick={() => history.push('/')} disableElevation>Home</Button>
 				<Button id="tab-search" variant="contained" color="secondary" onClick={() => history.push('/search')} disableElevation>Friends</Button>
+				<Button id="tab-profile" variant="contained" color="secondary" onClick={() => history.push('/profile')} disableElevation>My Profile</Button>
+				<Button id="tab-about" variant="contained" color="secondary" onClick={() => history.push('/about')} disableElevation>About</Button>
 				<Button id="logout-button" variant="text" color="inherit" onClick={props.logout} disableElevation>Logout</Button>
 				<Tooltip title="Toggle light/dark theme">
 					<IconButton id="lightModeIcon" color="inherit" onClick={invertTheme}>

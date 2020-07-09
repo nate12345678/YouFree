@@ -1,7 +1,6 @@
 
 #appBar {
 	margin-bottom: 1.4em;
-	padding-right: 1em;
 	color: var(--header_text);
 	background: var(--header);
 }
@@ -10,7 +9,7 @@
 	margin-right: 2em;
 }
 
-#tab-search {
+#tab-search, #tab-about, #tab-profile {
 	margin-left: 1em;
 }
 
