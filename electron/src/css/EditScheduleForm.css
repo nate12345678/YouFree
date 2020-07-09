@@ -3,16 +3,16 @@
 	width: fit-content;
 	display: flex;
 	align-items: center;
+	margin-bottom: 1rem;
 }
 
 #dayOfWeekSelect {
 	width: 5em;
-	/*height: fit-content;*/
 }
 
 #timesDiv {
-	margin-left: 2em;
-	margin-right: 2em;
+	margin-left: 2rem;
+	margin-right: 2rem;
 	justify-content: space-around;
 	align-content: space-around;
 }
