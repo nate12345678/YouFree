@@ -15,9 +15,16 @@ class SearchPage extends React.Component {
 	}
 
 
-	searchUsers = async () => {
+	handleOnChange = async (event) => {
+		const query = event.target.value;
+
+		this.setState({
+			query: query
+		});
+
+		// Make search query
 		try {
-			const searchUsersResponse = await youfree.searchUsers(this.props.token, this.state.query);
+			const searchUsersResponse = await youfree.searchUsers(this.props.token, query);
 
 			this.setState({
 				users: searchUsersResponse.data
@@ -26,13 +33,6 @@ class SearchPage extends React.Component {
 		} catch (error) {
 			this.props.handleError(error);
 		}
-	}
-
-
-	handleOnChange = (event) => {
-		this.setState({
-			query: event.target.value
-		});
 	}
 
 
@@ -54,7 +54,6 @@ class SearchPage extends React.Component {
 				           placeholder="Search"
 				           label="Search"
 				           onChange={this.handleOnChange}
-				           onBlur={this.searchUsers}
 				           fullWidth
 				/>
 				<ul className="users-ul">

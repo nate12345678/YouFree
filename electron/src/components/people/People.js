@@ -46,7 +46,7 @@ class People extends React.Component {
 		}
 
 		return (
-			<Card id="peopleCard" elevation={4}>
+			<Card id="people-card" elevation={4}>
 				<Paper id="tabs" square elevation={1}>
 					<Tabs value={this.state.currentTab}
 					      variant="fullWidth"

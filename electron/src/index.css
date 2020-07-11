@@ -44,13 +44,16 @@ code {
 }
 
 .dark {
+	--primary: var(--blue);
+	--secondary: var(--pink);
+
 	--header: var(--grey_dark);
 	--wallpaper: var(--grey);
 	--elements: var(--grey_light);
 	--text: var(--white);
 	--header_text: var(--white);
-	--primary: var(--blue);
-	--secondary: var(--pink);
+
+	--border-color: rgba(255, 255, 255, 0.12);
 }
 
 div {
