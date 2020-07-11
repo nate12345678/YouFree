@@ -18,26 +18,23 @@ function FriendSchedulesCard(props) {
 
 	props.friends.sort((a, b) => a.user.username.localeCompare(b.user.username));
 
-	let names = [];
-	let schedules = [];
+	let combined = [];
 	for (let i = 0; i < props.friends.length; i++) {
-		let nameDiv = <div className="NameListing" key={i}>{props.friends[i].user.username}</div>;
-		let scheduleDiv = <Schedule key={i} schedule={props.friends[i].schedule}/>;
+		let nameDiv = <div className="name" key={i}>{props.friends[i].user.username}</div>;
+		let scheduleDiv = (
+			<div className="schedule">
+				<Schedule key={i} schedule={props.friends[i].schedule}/>
+			</div>
+		);
 
-		names.push(nameDiv);
-		schedules.push(scheduleDiv);
+		combined.push(nameDiv, scheduleDiv);
 	}
 
 	return (
-		<Card className="FriendSchedulesCard" elevation={4}>
+		<Card className="friend-schedules-card" elevation={4}>
 			<CardContent>
-				<div className="FriendSchedulesDiv">
-					<div className="Names">
-						{names}
-					</div>
-					<div className="Schedules">
-						{schedules}
-					</div>
+				<div id="schedules-grid">
+					{combined}
 				</div>
 			</CardContent>
 		</Card>

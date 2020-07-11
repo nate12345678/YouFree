@@ -6,11 +6,12 @@ body {
 	font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
 		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
-	transition: var(--change_color_transition);
+	transition: var(--background_transition), var(--color_transition);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
-	--change_color_transition: background 500ms ease-in-out, color 1000ms ease-in-out;
+	--background_transition: background 500ms ease-in-out;
+	--color_transition: color 1000ms ease-in-out;
 }
 
 code {
