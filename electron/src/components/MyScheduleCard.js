@@ -1,7 +1,7 @@
 import '../css/MyScheduleCard.css';
 import React from 'react';
 import EditScheduleForm from './EditScheduleForm';
-import Schedule from './Schedule';
+import DailySchedule from './DailySchedule';
 import {
 	Card,
 	CardActions,
@@ -32,7 +32,7 @@ class MyScheduleCard extends React.Component {
 
 	render() {
 		const schedule = this.props.schedule
-			? <Schedule schedule={this.props.schedule} />
+			? <DailySchedule schedule={this.props.schedule} />
 			: 'Loading...';
 
 		return (

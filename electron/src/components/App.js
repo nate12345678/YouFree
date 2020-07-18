@@ -19,6 +19,7 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
+			currentDay: 0,
 			token: null,
 			userId: null,
 			schedule: null,
@@ -139,6 +140,7 @@ class App extends React.Component {
 	};
 
 
+	// TODO: Fetching someone else's schedule shouldn't affect self-schedule
 	getSchedule = async (userId) => {
 		let schedule = null;
 		try {
@@ -153,6 +155,11 @@ class App extends React.Component {
 			this.handleError(error);
 		}
 	};
+
+
+	getSelfSchedule = () => {
+		return this.getSchedule(this.state.userId);
+	}
 
 
 	getFriendSchedules = async () => {
@@ -200,15 +207,16 @@ class App extends React.Component {
 						<People token={this.state.token} addFriend={this.addFriend} deleteFriend={this.deleteFriend} handleError={this.handleError}/>
 					</Route>
 					<Route path="/profile">
-						<MyProfilePage />
+						<MyProfilePage schedule={this.state.schedule} userId={this.state.userId} getSchedule={this.getSelfSchedule}/>
 					</Route>
 					<Route path="/about">
 						<AboutPage />
 					</Route>
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}
-						           schedule={this.state.schedule}
+						           schedule={this.state.schedule ? this.state.schedule[this.state.currentDay] : null}
 						           friends={this.state.friendSchedules}
+						           day={this.state.currentDay}
 						           onAddInterval={this.addInterval}/>
 					</Route>
 				</Switch>

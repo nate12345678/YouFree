@@ -1,6 +1,6 @@
 import '../css/FriendSchedulesCard.css';
 import React from 'react';
-import Schedule from './Schedule';
+import DailySchedule from './DailySchedule';
 import {
 	Card,
 	CardContent
@@ -23,7 +23,7 @@ function FriendSchedulesCard(props) {
 		let nameDiv = <div className="name" key={i}>{props.friends[i].user.username}</div>;
 		let scheduleDiv = (
 			<div className="schedule">
-				<Schedule key={i} schedule={props.friends[i].schedule}/>
+				<DailySchedule key={i} schedule={props.friends[i].schedule[props.day]}/>
 			</div>
 		);
 
