@@ -20,10 +20,14 @@ function FriendSchedulesCard(props) {
 
 	let combined = [];
 	for (let i = 0; i < props.friends.length; i++) {
-		let nameDiv = <div className="name" key={i}>{props.friends[i].user.username}</div>;
+		let nameDiv = (
+			<div className="name" key={props.friends[i].user.username}>
+				{props.friends[i].user.username}
+			</div>
+		);
 		let scheduleDiv = (
-			<div className="schedule">
-				<DailySchedule key={i} schedule={props.friends[i].schedule[props.day]}/>
+			<div className="schedule" key={props.friends[i].user.username + 'schedule'}>
+				<DailySchedule schedule={props.friends[i].schedule[props.day]}/>
 			</div>
 		);
 

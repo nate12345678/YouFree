@@ -17,7 +17,7 @@ class Dashboard extends React.Component {
 
 		let friendSchedules = this.props.friends == null
 			? "Loading..."
-			: <FriendSchedulesCard friends={this.props.friends} />;
+			: <FriendSchedulesCard friends={this.props.friends} day={this.props.day} />;
 
 		return (
 			<>
