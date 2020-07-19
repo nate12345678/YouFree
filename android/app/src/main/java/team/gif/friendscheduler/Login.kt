@@ -130,13 +130,14 @@ class Login : AppCompatActivity() {
 						}
 					}
 				} else {
-					val user = response.body()!!.string() // TODO: convert from JSON to Java object
+					val user = response.body()!!.string()
 					val token = response.header("token")!!
 					response.body()!!.close()
 					runOnUiThread {
 						Globals.user = User.userFromJson(user)
 						Globals.token = token
 						startActivity(Intent(applicationContext, MainActivity::class.java))
+						finish()
 					}
 				}
 			}
@@ -180,6 +181,7 @@ class Login : AppCompatActivity() {
 						Globals.user = User.userFromJson(user)
 						Globals.token = token
 						startActivity(Intent(applicationContext, MainActivity::class.java))
+						finish()
 					}
 				} else {
 					Log.w("test", "Unexpected code $response")

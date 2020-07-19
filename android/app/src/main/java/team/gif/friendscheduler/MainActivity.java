@@ -4,7 +4,10 @@ package team.gif.friendscheduler;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +24,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -69,6 +73,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
     View scheduleInclude;
     View friendsInclude;
     View profileInclude;
+    View searchInclude;
     ConstraintLayout mondayLayout;
     ConstraintLayout tuesdayLayout;
     ConstraintLayout wednesdayLayout;
@@ -103,17 +108,19 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
     final int[] idxToRes = {R.id.mondayLayout, R.id.tuesdayLayout, R.id.wednesdayLayout, R.id.thursdayLayout,
             R.id.fridayLayout, R.id.saturdayLayout, R.id.sundayLayout};
 
+    SearchList results;
 
-    void makeFriendRequest(long id) {
+    void logOut() {
         Request request = new Request.Builder()
-                .url(Globals.BASE_URL + "/friends/" + id)
+                .url(Globals.BASE_URL + "/logout")
                 .addHeader("token", Globals.token + "")
-                .put(RequestBody.create(Globals.JSON, ""))
+                .get()
                 .build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.w("test", "shit");
+                Log.w("test", "failed to make request");
                 if (e.getMessage().contains("Failed to connect")) {
                     Snackbar.make(findViewById(R.id.loginCoordinator),
                             "Lost connection to server", Snackbar.LENGTH_SHORT).show();
@@ -125,47 +132,26 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     Log.w("test", "Unexpected code " + response);
-
+                    runOnUiThread(() -> {
+                        Snackbar.make(mainCoordinator, "Failed to log out", Snackbar.LENGTH_LONG).show();
+                    });
                 } else {
-                    Log.w("test", "friend request made");
+                    Globals.token = "";
+                    Globals.user = new User();
+                    Globals.enteredPass = "";
+                    SharedPreferences prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+                    prefs.edit().remove("password").apply();
+                    prefs.edit().remove("email").apply();
+                    prefs.edit().remove("stayLoggedOn").apply();
+                    startActivity(new Intent(getApplicationContext(), Login.class));
                 }
             }
         });
     }
 
-    void searchForFriends() {
-        String term = readInput(searchEditText);
-        Request request = new Request.Builder().url(Globals.BASE_URL + "/search/")
-                .addHeader("token", Globals.token + "")
-                .addHeader("query", term)
-                .get().build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.w("test", "shit");
-                if (e.getMessage().contains("Failed to connect")) {
-                    Snackbar.make(findViewById(R.id.loginCoordinator),
-                            "Lost connection to server", Snackbar.LENGTH_SHORT).show();
-                }
-                e.printStackTrace();
-            }
+    void toSettings() {
 
-            @Override
-            public void onResponse(Call call, final Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    Log.w("test", "Unexpected code " + response);
-                } else {
-                    final String body = response.body().string(); // TODO: convert from JSON to Java object
-                    response.body().close();
-                    Log.w("search", body);
-                    SearchList results = SearchList.searchListFromJson("{\"results\":" + body + "}");
-                    String[] names = results.toStringArray();
-                    Log.w("search", names[0]);
-                }
-            }
-        });
     }
-
 
     // FRIEND PAGE
     void getFriends() {
@@ -174,12 +160,11 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
                 .addHeader("token", Globals.token + "")
                 .get()
                 .build();
-        Log.w("token", Globals.token + "");
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.w("test", "shit");
+                Log.w("test", "failed to make request");
                 if (e.getMessage().contains("Failed to connect")) {
                     Snackbar.make(findViewById(R.id.loginCoordinator),
                             "Lost connection to server", Snackbar.LENGTH_SHORT).show();
@@ -224,7 +209,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.w("test", "shit");
+                    Log.w("test", "failed to make request");
                     if (e.getMessage().contains("Failed to connect")) {
                         Snackbar.make(findViewById(R.id.loginCoordinator),
                                 "Lost connection to server", Snackbar.LENGTH_SHORT).show();
@@ -252,68 +237,74 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         }
     }
 
-    void friendRequest() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Enter a new friend's username:");
-        final EditText input = new EditText(this);
-//		input.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
-        builder.setView(input);
-        builder.setCancelable(true);
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+    void makeFriendRequest(long id) {
+        Request request = new Request.Builder()
+                .url(Globals.BASE_URL + "/friends/" + id)
+                .addHeader("token", Globals.token + "")
+                .put(RequestBody.create(Globals.JSON, ""))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onCancel(DialogInterface dialogInterface) {
+            public void onFailure(Call call, IOException e) {
+                Log.w("test", "failed to make request");
+                if (e.getMessage().contains("Failed to connect")) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator),
+                            "Lost connection to server", Snackbar.LENGTH_SHORT).show();
+                }
+                e.printStackTrace();
             }
-        });
-        builder.setPositiveButton("Invite", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
 
-                if (!readInput(input).equals("")) {
-                    Request request = new Request.Builder()
-                            .url(Globals.BASE_URL + "/user/?username=" + readInput(input))
-                            .addHeader("token", Globals.token + "")
-                            .get()
-                            .build();
-                    Log.w("token", Globals.token + "");
-
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Log.w("test", "shit");
-                            if (e.getMessage().contains("Failed to connect")) {
-                                Snackbar.make(findViewById(R.id.loginCoordinator),
-                                        "Lost connection to server", Snackbar.LENGTH_SHORT).show();
-                            }
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onResponse(Call call, final Response response) throws IOException {
-                            if (!response.isSuccessful()) {
-                                Log.w("test", "Unexpected code " + response);
-
-                            } else {
-                                final String friend = response.body().string();
-                                response.body().close();
-                                Log.w("newuser", friend);
-                                User newFriend = User.userFromJson(friend);
-                                makeFriendRequest(newFriend.id);
-                            }
-                        }
-                    });
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.w("test", "Unexpected code " + response);
 
                 } else {
-                    Snackbar.make(mainCoordinator, "cancelled", Snackbar.LENGTH_LONG).show();
+                    Log.w("test", "friend request made");
                 }
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
+    }
+
+    void searchForFriends() {
+        String term = readInput(searchEditText);
+        Request request = new Request.Builder().url(Globals.BASE_URL + "/search/")
+                .addHeader("token", Globals.token + "")
+                .addHeader("query", term)
+                .get().build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.w("test", "failed to make request");
+                if (e.getMessage().contains("Failed to connect")) {
+                    Snackbar.make(findViewById(R.id.loginCoordinator),
+                            "Lost connection to server", Snackbar.LENGTH_SHORT).show();
+                }
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.w("test", "Unexpected code " + response);
+                } else {
+                    final String body = response.body().string(); // TODO: convert from JSON to Java object
+                    response.body().close();
+                    results = SearchList.searchListFromJson("{\"results\":" + body + "}");
+                    runOnUiThread(() -> {
+                        try {
+                            searchManager = new LinearLayoutManager(MainActivity.this);
+                            searchRecycler.setLayoutManager(searchManager);
+                            searchAdapter = new SearchAdapter();
+                            searchRecycler.setAdapter(searchAdapter);
+                        } catch (Exception e) {
+                            Toast.makeText(MainActivity.this, "Failed to load friends list from database",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
 
@@ -325,7 +316,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.w("test", "shit");
+                Log.w("test", "failed to make request");
                 if (e.getMessage().contains("Failed to connect")) {
                     Snackbar.make(findViewById(R.id.loginCoordinator),
                             "Lost connection to server", Snackbar.LENGTH_SHORT).show();
@@ -341,14 +332,12 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
                     Globals.user = User.userFromJson(response.body().string());
                     response.body().close();
                     Log.w("success! code ", response.code() + "");
-                    Log.w("ss", User.userToJson(Globals.user));
                 }
             }
         });
     }
 
     void updateSchedule() {
-        Log.w("Ss", Globals.token + "");
         Request request = new Request.Builder()
                 .url(Globals.BASE_URL + "/schedule")
                 .addHeader("token", Globals.token + "")
@@ -361,7 +350,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.w("test", "shit");
+                Log.w("test", "failed to make request");
                 if (e.getMessage().contains("Failed to connect")) {
                     Snackbar.make(findViewById(R.id.loginCoordinator),
                             "Lost connection to server", Snackbar.LENGTH_SHORT).show();
@@ -390,7 +379,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.w("test", "shit");
+                Log.w("test", "failed to make request");
                 if (e.getMessage().contains("Failed to connect")) {
                     Snackbar.make(findViewById(R.id.loginCoordinator),
                             "Lost connection to server", Snackbar.LENGTH_SHORT).show();
@@ -481,7 +470,6 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         return box;
     }
 
-    // TODO we dont actually need to make a second request on reload
     void fillSchedule() {
         runOnUiThread(() -> {
             for (int i = 0; i < 7; i++) {
@@ -489,7 +477,6 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
             }
             intervalIds.clear();
         });
-        Log.w("userid", "" + Globals.user.id);
         Request request = new Request.Builder()
                 .url(Globals.BASE_URL + "/schedule/" + Globals.user.id)
                 .addHeader("token", Globals.token + "")
@@ -498,7 +485,7 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.w("test", "shit");
+                Log.w("test", "failed to make request");
                 if (e.getMessage().contains("Failed to connect")) {
                     Snackbar.make(findViewById(R.id.loginCoordinator),
                             "Lost connection to server", Snackbar.LENGTH_SHORT).show();
@@ -550,7 +537,6 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
                 dialog.cancel();
 
                 if (!readInput(input).equals("")) {
-                    Log.w("test", User.userToJson(Globals.user));
                     if ("email".equals(component)) {
                         Globals.user.email = readInput(input);
                         emailText.setText(Globals.user.email);
@@ -582,7 +568,8 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         } else if (scheduleInclude.getVisibility() == View.VISIBLE) {
             addFreeTime();
         } else if (friendsInclude.getVisibility() == View.VISIBLE) {
-            friendRequest();
+            friendsInclude.setVisibility(View.GONE);
+            searchInclude.setVisibility(View.VISIBLE);
         }
     }
 
@@ -605,7 +592,9 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         scheduleInclude = findViewById(R.id.scheduleInclude);
         friendsInclude = findViewById(R.id.friendInclude);
         profileInclude = findViewById(R.id.profileInclude);
+        searchInclude = findViewById(R.id.searchInclude);
         friendRecycler = findViewById(R.id.friendRecycler);
+        searchRecycler = findViewById(R.id.searchRecycler);
         mondayLayout = findViewById(R.id.mondayLayout);
         tuesdayLayout = findViewById(R.id.tuesdayLayout);
         wednesdayLayout = findViewById(R.id.wednesdayLayout);
@@ -639,6 +628,9 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         emailText.setOnClickListener((v -> {
             updateProfile("email");
         }));
+        searchButton.setOnClickListener((v -> {
+            searchForFriends();
+        }));
 
         profileImage.setOnClickListener((v -> {
             newProfileImage();
@@ -663,11 +655,9 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         scheduleInclude.setVisibility(View.GONE);
         profileInclude.setVisibility(View.GONE);
         friendsInclude.setVisibility(View.VISIBLE);
+        searchInclude.setVisibility(View.GONE);
 
         friendRecycler.setHasFixedSize(true);
-
-        searchForFriends();
-
     }
 
     @Override
@@ -693,9 +683,13 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                toSettings();
+                return true;
+            case R.id.action_logout:
+                logOut();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -710,7 +704,9 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
         scheduleInclude.setVisibility(View.GONE);
         friendsInclude.setVisibility(View.GONE);
         profileInclude.setVisibility(View.GONE);
+        searchInclude.setVisibility(View.GONE);
 
+        fab.setVisibility(View.VISIBLE);
         fab.setForeground(getDrawable(R.drawable.ic_add_white_24dp));
 
         switch (id) {
@@ -826,8 +822,52 @@ public class MainActivity extends ExtendedActivity implements NavigationView.OnN
     }
 
 
-    public class SearchAdapter {
+    public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
+        public SearchAdapter() {
+
+        }
+
+        @Override
+        public SearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.search_result_line, parent, false);
+
+            SearchAdapter.ViewHolder vh = new SearchAdapter.ViewHolder(v);
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            holder.searchUsernameText.setText(results.results[position].username);
+            holder.searchEmailText.setText(results.results[position].email);
+        }
+
+        @Override
+        public int getItemCount() {
+            return results.results.length;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            // each data item is just a string in this case
+            final TextView searchUsernameText;
+            final TextView searchEmailText;
+            final ImageView searchProfileImage;
+            final ConstraintLayout searchLineLayout;
+
+
+            public ViewHolder(View v) {
+                super(v);
+                searchUsernameText = v.findViewById(R.id.searchUsernameText);
+                searchEmailText = v.findViewById(R.id.searchEmailText);
+                searchProfileImage = v.findViewById(R.id.searchProfileImage);
+                searchLineLayout = v.findViewById(R.id.searchLineLayout);
+
+                searchLineLayout.setOnClickListener((a -> {
+                    makeFriendRequest(results.results[this.getAdapterPosition()].id);
+                }));
+            }
+        }
     }
 
 
