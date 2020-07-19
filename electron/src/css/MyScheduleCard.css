@@ -1,28 +1,28 @@
 
-.MyScheduleCard {
+.my-daily-schedule-card {
 	margin-bottom: 0.5em;
 	background: var(--elements) !important;
 	color: var(--text) !important;
-	transition: var(--change_color_transition) !important;
+	transition: var(--background_transition), var(--color_transition) !important;
 	width: 100%;
 }
 
-.MyScheduleCard .Title {
+.my-daily-schedule-card .title {
 	margin-bottom: 0.75em !important;
 	width: 100%;
 }
 
-#ExpandButton {
+#card-expand-button {
 	margin-left: auto;
 }
 
-#ExpandIcon {
+#card-expand-icon {
 	transition: transform 250ms ease-in-out;
 }
 
-#EditScheduleCollapse {}
+.edit-daily-schedule-collapse {}
 
-#EditScheduleForm {
+.edit-daily-schedule-form {
 	width: fit-content;
 	margin-left: auto;
 	margin-right: auto;

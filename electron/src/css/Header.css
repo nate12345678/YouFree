@@ -3,6 +3,7 @@
 	margin-bottom: 1.4em;
 	color: var(--header_text);
 	background: var(--header);
+	transition: var(--background_transition), var(--color_transition) !important;
 }
 
 #home {

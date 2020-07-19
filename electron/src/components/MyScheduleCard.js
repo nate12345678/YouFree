@@ -36,21 +36,21 @@ class MyScheduleCard extends React.Component {
 			: 'Loading...';
 
 		return (
-			<Card className="MyScheduleCard" elevation={4}>
+			<Card className="my-daily-schedule-card" elevation={4}>
 				<CardContent style={{ width: '100%' }}>
-					<Typography className="Title" variant="h6">My Schedule</Typography>
+					<Typography className="title" variant="h6">My Schedule</Typography>
 					{schedule}
 				</CardContent>
 				<CardActions>
-					<IconButton id="ExpandButton"
+					<IconButton id="card-expand-button"
 					            aria-expanded={this.state.isExpanded}
 					            aria-label="show more"
 					            onClick={this.handleExpansion}>
-						<Icon id="ExpandIcon" className={this.state.isExpanded ? 'expanded' : 'collapsed'}>expand_more</Icon>
+						<Icon id="card-expand-icon" className={this.state.isExpanded ? 'expanded' : 'collapsed'}>expand_more</Icon>
 					</IconButton>
 				</CardActions>
-				<Collapse id="EditScheduleCollapse" in={this.state.isExpanded} unmountOnExit>
-					<div id="EditScheduleForm">
+				<Collapse className="edit-daily-schedule-collapse" in={this.state.isExpanded} unmountOnExit>
+					<div className="edit-daily-schedule-form">
 						<EditScheduleForm onSubmit={this.props.onAddInterval}/>
 					</div>
 				</Collapse>

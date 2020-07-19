@@ -1,0 +1,18 @@
+
+.weekly-schedule-title {
+	margin-bottom: 0.75em !important;
+}
+
+.weekly-schedule-grid {
+	display: grid;
+	grid-template-columns: max-content auto;
+}
+
+.weekly-schedule-names {
+	margin-right: 0.5em;
+}
+
+.weekly-schedule-schedules {
+	border-left: 1px solid var(--text);
+	border-right: 1px solid var(--text);
+}

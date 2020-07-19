@@ -5,20 +5,9 @@ import {
 	CardContent,
 	Typography
 } from '@material-ui/core';
-import DailySchedule from './DailySchedule';
+import WeeklySchedule from './WeeklySchedule';
 
 class MyProfilePage extends React.Component {
-
-	dayOfWeek = {
-		0: 'Monday',
-		1: 'Tuesday',
-		2: 'Wednesday',
-		3: 'Thursday',
-		4: 'Friday',
-		5: 'Saturday',
-		6: 'Sunday'
-	};
-
 
 	componentDidMount() {
 		this.props.getSchedule();
@@ -26,19 +15,6 @@ class MyProfilePage extends React.Component {
 
 
 	render() {
-		let weeklySchedule = <span>Loading</span>
-		if (this.props.schedule != null) {
-			weeklySchedule = [];
-			for (let i = 0; i < this.props.schedule.length; i++) {
-				weeklySchedule.push(<div key={this.dayOfWeek[i]} className="weekly-schedule-names">{this.dayOfWeek[i]}</div>);
-				weeklySchedule.push(
-					<div key={this.dayOfWeek[i] + 'schedule'} className="weekly-schedule-schedules">
-						<DailySchedule schedule={this.props.schedule[i]}/>
-					</div>
-				);
-			}
-		}
-
 		return (
 			<>
 				<Card className="my-profile-card" elevation={4}>
@@ -54,10 +30,7 @@ class MyProfilePage extends React.Component {
 				</Card>
 				<Card className="my-weekly-schedule-card" elevation={4}>
 					<CardContent>
-						<Typography className="Title" variant="h6">Weekly Schedule</Typography>
-						<div className="weekly-schedule-grid">
-							{weeklySchedule}
-						</div>
+						<WeeklySchedule schedule={this.props.schedule} />
 					</CardContent>
 				</Card>
 			</>
