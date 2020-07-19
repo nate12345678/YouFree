@@ -21,7 +21,7 @@ class App extends React.Component {
 		this.state = {
 			currentDay: 0,
 			token: null,
-			userId: null,
+			self: null,
 			schedule: null,
 			friendSchedules: null
 		};
@@ -31,11 +31,11 @@ class App extends React.Component {
 	componentDidMount() {
 		// Auto-login
 		const token = localStorage.getItem('token');
-		const userId = +localStorage.getItem('userId');
-		if (token && userId) {
+		const self = JSON.parse(localStorage.getItem('self'));
+		if (token && self) {
 			this.setState({
 				token: token,
-				userId: userId
+				self: self
 			});
 		}
 	}
@@ -55,7 +55,7 @@ class App extends React.Component {
 
 	getDashboard = async () => {
 		// TODO: can do these simultaneously
-		await this.getSchedule(this.state.userId);
+		await this.getSchedule(this.state.self.id);
 		await this.getFriendSchedules();
 	};
 
@@ -69,12 +69,12 @@ class App extends React.Component {
 
 			if (remember) {
 				localStorage.setItem('token', token);
-				localStorage.setItem('userId', user.id);
+				localStorage.setItem('self', JSON.stringify(user));
 			}
 
 			this.setState({
 				token: token,
-				userId: user.id
+				self: user
 			});
 
 			console.log('Created new user');
@@ -93,12 +93,12 @@ class App extends React.Component {
 
 			if (remember) {
 				localStorage.setItem('token', token);
-				localStorage.setItem('userId', user.id);
+				localStorage.setItem('self', JSON.stringify(user));
 			}
 
 			this.setState({
 				token: token,
-				userId: user.id
+				self: user
 			});
 			console.log('Logged in');
 		} catch (error) {
@@ -114,7 +114,7 @@ class App extends React.Component {
 			localStorage.clear();
 			this.setState({
 				token: null,
-				userId: null
+				self: null
 			});
 			console.log('Logged out');
 		} catch (error) {
@@ -158,7 +158,7 @@ class App extends React.Component {
 
 
 	getSelfSchedule = () => {
-		return this.getSchedule(this.state.userId);
+		return this.getSchedule(this.state.self.id);
 	}
 
 
@@ -207,7 +207,7 @@ class App extends React.Component {
 						<People token={this.state.token} addFriend={this.addFriend} deleteFriend={this.deleteFriend} handleError={this.handleError}/>
 					</Route>
 					<Route path="/profile">
-						<MyProfilePage schedule={this.state.schedule} userId={this.state.userId} getSchedule={this.getSelfSchedule}/>
+						<MyProfilePage user={this.state.self} schedule={this.state.schedule} getSchedule={this.getSelfSchedule}/>
 					</Route>
 					<Route path="/about">
 						<AboutPage />

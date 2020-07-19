@@ -1,6 +1,5 @@
 import '../css/MyProfilePage.css';
 import React from 'react';
-import youfree from '../api/Youfree';
 import {
 	Card,
 	CardContent,
@@ -26,19 +25,6 @@ class MyProfilePage extends React.Component {
 	}
 
 
-	getSchedule = () => {
-		try {
-			const getScheduleResponse = youfree.getSchedule();
-
-			this.setState({
-				schedule: getScheduleResponse.data
-			});
-		} catch (error) {
-			this.props.handleError();
-		}
-	}
-
-
 	render() {
 		let weeklySchedule = <span>Loading</span>
 		if (this.props.schedule != null) {
@@ -54,14 +40,27 @@ class MyProfilePage extends React.Component {
 		}
 
 		return (
-			<Card className="my-profile-card" elevation={4}>
-				<CardContent>
-					<Typography className="Title" variant="h6">Weekly Schedule</Typography>
-					<div className="weekly-schedule-grid">
-						{weeklySchedule}
-					</div>
-				</CardContent>
-			</Card>
+			<>
+				<Card className="my-profile-card" elevation={4}>
+					<CardContent>
+						<div className="my-profile-user">
+							<div className="my-profile-pic" />
+							<div className="my-profile-info">
+								<Typography className="my-profile-username" variant="h4">{this.props.user.username}</Typography>
+								<Typography className="my-profile-email" variant="h6">{this.props.user.email}</Typography>
+							</div>
+						</div>
+					</CardContent>
+				</Card>
+				<Card className="my-weekly-schedule-card" elevation={4}>
+					<CardContent>
+						<Typography className="Title" variant="h6">Weekly Schedule</Typography>
+						<div className="weekly-schedule-grid">
+							{weeklySchedule}
+						</div>
+					</CardContent>
+				</Card>
+			</>
 		);
 	}
 }
