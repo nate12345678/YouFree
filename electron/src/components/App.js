@@ -204,10 +204,16 @@ class App extends React.Component {
 			content = (
 				<Switch>
 					<Route path="/search">
-						<People token={this.state.token} addFriend={this.addFriend} deleteFriend={this.deleteFriend} handleError={this.handleError}/>
+						<People token={this.state.token}
+						        addFriend={this.addFriend}
+						        deleteFriend={this.deleteFriend}
+						        handleError={this.handleError}/>
 					</Route>
 					<Route path="/profile">
-						<MyProfilePage user={this.state.self} schedule={this.state.schedule} getSchedule={this.getSelfSchedule}/>
+						<MyProfilePage user={this.state.self}
+						               schedule={this.state.schedule}
+						               getSchedule={this.getSelfSchedule}
+						               addInterval={this.addInterval}/>
 					</Route>
 					<Route path="/about">
 						<AboutPage />

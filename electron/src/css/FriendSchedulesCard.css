@@ -12,6 +12,10 @@
 	/*grid-gap: 0.5em;*/
 }
 
+.friend-schedules-title {
+	margin-bottom: 0.75em !important;
+}
+
 .name {
 	margin-right: 0.5em;
 }

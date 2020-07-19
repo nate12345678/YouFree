@@ -3,7 +3,8 @@ import React from 'react';
 import DailySchedule from './DailySchedule';
 import {
 	Card,
-	CardContent
+	CardContent,
+	Typography
 } from '@material-ui/core';
 
 function FriendSchedulesCard(props) {
@@ -37,6 +38,7 @@ function FriendSchedulesCard(props) {
 	return (
 		<Card className="friend-schedules-card" elevation={4}>
 			<CardContent>
+				<Typography className="friend-schedules-title" variant="h6">Friends</Typography>
 				<div id="schedules-grid">
 					{combined}
 				</div>

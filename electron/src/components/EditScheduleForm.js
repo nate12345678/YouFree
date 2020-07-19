@@ -13,8 +13,8 @@ class EditScheduleForm extends React.Component {
 
 		this.state = {
 			dayOfWeek: '',
-			startMin: '',
-			endMin: ''
+			startMin: '00:00',
+			endMin: '00:00'
 		};
 	}
 
@@ -55,24 +55,24 @@ class EditScheduleForm extends React.Component {
 				</TextField>
 
 				<div id="timesDiv" className="col">
-					<TextField
-						id="startMinField"
-						label="Start Time"
-						variant="outlined"
-						size="small"
-						margin="dense"
-						type="number"
-						value={this.state.startMin}
-						onChange={(event) => this.setState({ startMin: +event.target.value })}/>
-					<TextField
-						id="endMinField"
-						label="End Time"
-						variant="outlined"
-						size="small"
-						margin="dense"
-						type="number"
-						value={this.state.endMin}
-						onChange={(event) => this.setState({ endMin: +event.target.value })}/>
+					<TextField id="startMinField"
+					           name="startMin"
+					           label="Start Time"
+					           variant="outlined"
+					           size="small"
+					           margin="dense"
+					           type="time"
+					           value={this.state.startMin}
+					           onChange={this.handleInputChange}/>
+					<TextField id="endMinField"
+					           name="endMin"
+					           label="End Time"
+					           variant="outlined"
+					           size="small"
+					           margin="dense"
+					           type="time"
+					           value={this.state.endMin}
+					           onChange={this.handleInputChange}/>
 				</div>
 
 				<Button id="submitButton" variant="contained" color="primary" onClick={this.onFormSubmit}>Add Interval</Button>
