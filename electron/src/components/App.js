@@ -3,7 +3,7 @@ import React from 'react';
 import youfree from '../api/Youfree';
 import Dashboard from './Dashboard';
 import Header from './Header';
-import Authentication from './login/Authentication';
+import AuthenticationPage from './login/AuthenticationPage';
 import People from './people/People';
 import {
 	BrowserRouter as Router,
@@ -198,8 +198,8 @@ class App extends React.Component {
 
 		let content;
 		if (this.state.token == null) {
-			content = <Authentication onLoginSubmit={this.login}
-			                          onCreateUserSubmit={this.createUser}/>;
+			content = <AuthenticationPage onLoginSubmit={this.login}
+			                              onCreateUserSubmit={this.createUser}/>;
 		} else {
 			content = (
 				<Switch>

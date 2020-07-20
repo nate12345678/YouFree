@@ -3,14 +3,11 @@ import React from 'react';
 import CreateUserForm from './CreateUserForm';
 import LoginForm from './LoginForm';
 import {
-	Card,
-	CardContent,
-	Paper,
 	Tab,
 	Tabs
 } from '@material-ui/core';
 
-class Authentication extends React.Component {
+class AuthenticationPage extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -36,8 +33,8 @@ class Authentication extends React.Component {
 			: <LoginForm onSubmit={this.props.onLoginSubmit}/>;
 
 		return (
-			<Card id="authCard" elevation={4}>
-				<Paper id="tabs" square elevation={1}>
+			<div className="card-elevation4 auth-card">
+				<div className="card-elevation1" id="tabs">
 					<Tabs value={this.state.currentTab}
 					      variant="fullWidth"
 					      indicatorColor="primary"
@@ -47,14 +44,14 @@ class Authentication extends React.Component {
 						<Tab label="Login"/>
 						<Tab label="Create User"/>
 					</Tabs>
-				</Paper>
+				</div>
 
-				<CardContent id="authCardContent">
+				<div className="card-content auth-card-content">
 					{content}
-				</CardContent>
-			</Card>
+				</div>
+			</div>
 		);
 	}
 }
 
-export default Authentication;
+export default AuthenticationPage;
