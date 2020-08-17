@@ -11,7 +11,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 
 	--background_transition: background 500ms ease-in-out;
-	--color_transition: color 1000ms ease-in-out;
+	--color_transition: color 500ms ease-in-out;
 }
 
 code {
@@ -21,12 +21,26 @@ code {
 
 :root {
 	--white: #FFFFFF;
+	--off_white: #FAFAFA;
 	--blue: #3F51B5;
-	--pink: #F50057;
-	--grey_dark: #23272A;
+	--blue_dark: #303F9F;
+	--pink: #F06292;
 	--grey: #2C2F33;
+	--grey_dark: #23272A;
 	--grey_light: #393D41;
 	--black: #000000;
+
+	--header-height: 64px;
+	--content-margin-large: 24px;
+	--content-margin-small: 16px;
+	--content-margin: var(--content-margin-small);
+}
+
+/* Adjust settings for large devices */
+@media only screen and (min-width: 720px) {
+	:root {
+		--content-margin: var(--content-margin-large);
+	}
 }
 
 .light {
@@ -34,11 +48,12 @@ code {
 	--secondary: var(--pink);
 
 	--header: var(--blue);
-	--wallpaper: #FAFAFA;
+	--wallpaper: var(--off_white);
 	--elements: var(--white);
 	--element_hover: rgba(0, 0, 0, 0.03);
 	--text: rgba(0, 0, 0, 0.87);
 	--header_text: var(--white);
+	--header_hover: var(--blue_dark);
 
 	--border-color: rgba(0, 0, 0, 0.12);
 }
@@ -52,6 +67,7 @@ code {
 	--elements: var(--grey_light);
 	--text: var(--white);
 	--header_text: var(--white);
+	--header_hover: var(--grey_light);
 
 	--border-color: rgba(255, 255, 255, 0.12);
 }

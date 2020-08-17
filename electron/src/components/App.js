@@ -10,8 +10,31 @@ import {
 	Route,
 	Switch
 } from 'react-router-dom';
+import { createMuiTheme } from '@material-ui/core';
+import { indigo, pink } from '@material-ui/core/colors';
+import { ThemeProvider } from '@material-ui/core/styles';
 import AboutPage from './AboutPage';
 import MyProfilePage from './MyProfilePage';
+
+
+const lightTheme = createMuiTheme({
+	palette: {
+		primary: {
+			main: indigo['500'],
+			dark: indigo['700']
+		},
+		secondary: {
+			main: pink['300']
+		}
+	}
+});
+
+const darkTheme = createMuiTheme({
+	palette: {
+		type: 'dark'
+	}
+});
+
 
 class App extends React.Component {
 
@@ -23,7 +46,8 @@ class App extends React.Component {
 			token: null,
 			self: null,
 			schedule: null,
-			friendSchedules: null
+			friendSchedules: null,
+			theme: 'light',
 		};
 	}
 
@@ -38,6 +62,17 @@ class App extends React.Component {
 				self: self
 			});
 		}
+	}
+
+
+	invertTheme = () => {
+		const from = this.state.theme;
+		const to = this.state.theme === 'light' ? 'dark' : 'light';
+
+		this.setState({
+			theme: to
+		});
+		document.body.classList.replace(from, to);
 	}
 
 
@@ -159,7 +194,7 @@ class App extends React.Component {
 
 	getSelfSchedule = () => {
 		return this.getSchedule(this.state.self.id);
-	}
+	};
 
 
 	getFriendSchedules = async () => {
@@ -195,7 +230,6 @@ class App extends React.Component {
 
 
 	render() {
-
 		let content;
 		if (this.state.token == null) {
 			content = <AuthenticationPage onLoginSubmit={this.login}
@@ -216,7 +250,7 @@ class App extends React.Component {
 						               addInterval={this.addInterval}/>
 					</Route>
 					<Route path="/about">
-						<AboutPage />
+						<AboutPage/>
 					</Route>
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}
@@ -230,12 +264,14 @@ class App extends React.Component {
 		}
 
 		return (
-			<Router>
-				<Header logout={this.logout}/>
-				<div id="content">
-					{content}
-				</div>
-			</Router>
+			<ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
+				<Router>
+					<Header theme={this.state.theme} logout={this.logout} invertTheme={this.invertTheme} />
+					<div id="content">
+						{content}
+					</div>
+				</Router>
+			</ThemeProvider>
 		);
 	}
 }

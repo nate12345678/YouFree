@@ -1,52 +1,120 @@
 import '../css/Header.css';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import {
+	NavLink
+} from 'react-router-dom';
 import {
 	AppBar,
 	Button,
+	Drawer,
 	Icon,
 	IconButton,
 	Toolbar,
 	Tooltip,
-	Typography
+	Typography,
+	useMediaQuery
 } from '@material-ui/core';
 
-function Header(props) {
 
-	const history = useHistory();
-	const [theme, setTheme] = useState('light');
+const routes = [
+	{ route: '/', label: 'Home' },
+	{ route: '/search', label: 'Search' },
+	{ route: '/profile', label: 'My Profile' },
+	{ route: '/about', label: 'About' }
+];
 
-	function invertTheme() {
-		const body = document.body;
+const title = <Typography id="home" variant="h5" color="inherit">Voice Tracker</Typography>;
 
-		if (theme === 'light') {
-			setTheme('dark');
-			body.classList.replace('light', 'dark')
-			return;
-		}
+export default function Header(props) {
 
-		setTheme('light');
-		body.classList.replace('dark', 'light');
-	}
+	const [open, setOpen] = React.useState();
+	const toggleDrawer = (isOpen) => () => setOpen(isOpen);
 
+	const isDesktop = useMediaQuery('(min-width: 720px)');
+
+	const themeButton = (
+		<Tooltip title="Toggle light/dark theme">
+			<IconButton className={isDesktop ? '' : 'theme-button-mobile'} color="inherit" onClick={props.invertTheme}>
+				<Icon color="inherit">{props.theme === 'light' ? 'brightness_2' : 'brightness_5'}</Icon>
+			</IconButton>
+		</Tooltip>
+	);
+
+	const toolbar = isDesktop
+		? <DesktopToolbar onLogout={props.logout} themeButton={themeButton} />
+		: <MobileToolbar onMenuClick={toggleDrawer(true)} themeButton={themeButton} />;
+
+	const drawer = isDesktop
+		? null
+		: <MyDrawer isOpen={open} onClose={toggleDrawer(false)} />;
 
 	return (
-		<AppBar id="appBar" position="sticky">
-			<Toolbar>
-				<Typography id="home" variant="h5" color="inherit">You Free</Typography>
-				<Button id="tab-home" variant="contained" color="secondary" onClick={() => history.push('/')} disableElevation>Home</Button>
-				<Button id="tab-search" variant="contained" color="secondary" onClick={() => history.push('/search')} disableElevation>Friends</Button>
-				<Button id="tab-profile" variant="contained" color="secondary" onClick={() => history.push('/profile')} disableElevation>My Profile</Button>
-				<Button id="tab-about" variant="contained" color="secondary" onClick={() => history.push('/about')} disableElevation>About</Button>
-				<Button id="logout-button" variant="text" color="inherit" onClick={props.logout} disableElevation>Logout</Button>
-				<Tooltip title="Toggle light/dark theme">
-					<IconButton id="lightModeIcon" color="inherit" onClick={invertTheme}>
-						<Icon>{theme === 'light' ? 'brightness_2' : 'brightness_5'}</Icon>
-					</IconButton>
-				</Tooltip>
-			</Toolbar>
-		</AppBar>
+		<React.Fragment>
+			<AppBar id="appBar" position="sticky">
+				<Toolbar>
+					{toolbar}
+				</Toolbar>
+			</AppBar>
+			{drawer}
+		</React.Fragment>
 	);
 }
 
-export default Header;
+
+function MyDrawer({ isOpen, onClose }) {
+	return (
+		<Drawer className="drawer" anchor="left" open={isOpen} onClose={onClose}>
+			<div className="drawer-content">
+				<div className="drawer-header">
+					{title}
+					<div>Beta Test</div>
+				</div>
+				<div className="drawer-divider" />
+				<ul className="drawer-nav">
+					{
+						routes.map(route => (
+							<NavLink key={route.route} exact to={route.route} className="drawer-nav-link" activeClassName="drawer-nav-link-active" onClick={onClose}>
+								<div className="drawer-nav-link-label">{route.label}</div>
+							</NavLink>
+						))
+					}
+				</ul>
+			</div>
+		</Drawer>
+	);
+}
+
+
+function DesktopToolbar({ onLogout, themeButton }) {
+	return (
+		<React.Fragment>
+			{title}
+			<ul className="header-nav-list">
+				{
+					routes.map(route => (
+						<li key={route.route} className="header-nav-item">
+							<NavLink exact to={route.route} className="header-nav-link" activeClassName="header-nav-link-active">
+								<span>{route.label.toUpperCase()}</span>
+							</NavLink>
+						</li>
+					))
+				}
+			</ul>
+			<Button id="logout-button" variant="text" color="inherit" onClick={onLogout} disableElevation>Logout</Button>
+			{themeButton}
+		</React.Fragment>
+	);
+}
+
+
+function MobileToolbar({ onMenuClick, themeButton }) {
+	return (
+		<React.Fragment>
+			<IconButton className="menu-button" onClick={onMenuClick}>
+				<Icon color="inherit">menu</Icon>
+			</IconButton>
+			{title}
+			{themeButton}
+		</React.Fragment>
+	);
+}
