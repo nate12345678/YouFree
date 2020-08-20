@@ -1,7 +1,5 @@
 
 .friend-schedules-card {
-	background: var(--elements) !important;
-	color: var(--text) !important;
 	width: 100%;
 	transition: var(--background_transition), var(--color_transition) !important;
 }

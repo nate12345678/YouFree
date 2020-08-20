@@ -1,8 +1,6 @@
 
 .my-daily-schedule-card {
 	margin-bottom: 0.5em;
-	background: var(--elements) !important;
-	color: var(--text) !important;
 	transition: var(--background_transition), var(--color_transition) !important;
 	width: 100%;
 }

@@ -1,12 +1,9 @@
 
 #people-card {
-	color: var(--text);
-	background-color: var(--elements);
 	transition: var(--background_transition), var(--color_transition);
 }
 
 #tabs {
-	background-color: var(--elements);
 	transition: var(--background_transition), var(--color_transition);
 }
 
