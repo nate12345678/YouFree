@@ -266,7 +266,7 @@ class App extends React.Component {
 		return (
 			<ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
 				<Router>
-					<Header theme={this.state.theme} logout={this.logout} invertTheme={this.invertTheme} />
+					<Header isLoggedIn={!!this.state.token} theme={this.state.theme} logout={this.logout} invertTheme={this.invertTheme} />
 					<div id="content">
 						{content}
 					</div>

@@ -1,5 +1,5 @@
 import '../css/Header.css';
-import React, { useState } from 'react';
+import React from 'react';
 import {
 	NavLink
 } from 'react-router-dom';
@@ -29,24 +29,23 @@ export default function Header(props) {
 
 	const [open, setOpen] = React.useState();
 	const toggleDrawer = (isOpen) => () => setOpen(isOpen);
-
 	const isDesktop = useMediaQuery('(min-width: 720px)');
+	const themeButton = <ThemeButton hasLeftMargin={!(isDesktop && props.isLoggedIn)} theme={props.theme} invertTheme={props.invertTheme} />;
 
-	const themeButton = (
-		<Tooltip title="Toggle light/dark theme">
-			<IconButton className={isDesktop ? '' : 'theme-button-mobile'} color="inherit" onClick={props.invertTheme}>
-				<Icon color="inherit">{props.theme === 'light' ? 'brightness_2' : 'brightness_5'}</Icon>
-			</IconButton>
-		</Tooltip>
-	);
+	let toolbar;
+	let drawer;
+	if (props.isLoggedIn) {
+		toolbar = isDesktop
+			? <DesktopToolbar onLogout={props.logout} themeButton={themeButton} />
+			: <MobileToolbar onMenuClick={toggleDrawer(true)} themeButton={themeButton} />;
 
-	const toolbar = isDesktop
-		? <DesktopToolbar onLogout={props.logout} themeButton={themeButton} />
-		: <MobileToolbar onMenuClick={toggleDrawer(true)} themeButton={themeButton} />;
-
-	const drawer = isDesktop
-		? null
-		: <MyDrawer isOpen={open} onClose={toggleDrawer(false)} />;
+		drawer = isDesktop
+			? null
+			: <MyDrawer isOpen={open} onClose={toggleDrawer(false)} />;
+	} else {
+		toolbar = <EmptyToolbar themeButton={themeButton} />;
+		drawer = null;
+	}
 
 	return (
 		<React.Fragment>
@@ -82,6 +81,27 @@ function MyDrawer({ isOpen, onClose }) {
 			</div>
 		</Drawer>
 	);
+}
+
+
+function ThemeButton({ hasLeftMargin, theme, invertTheme }) {
+	return (
+		<Tooltip title="Toggle light/dark theme">
+			<IconButton className={hasLeftMargin ? 'theme-button-mobile' : ''} color="inherit" onClick={invertTheme}>
+				<Icon color="inherit">{theme === 'light' ? 'brightness_2' : 'brightness_5'}</Icon>
+			</IconButton>
+		</Tooltip>
+	);
+}
+
+
+function EmptyToolbar({ themeButton }) {
+	return (
+		<React.Fragment>
+			{title}
+			{themeButton}
+		</React.Fragment>
+	)
 }
 
 
