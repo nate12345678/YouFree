@@ -20,10 +20,8 @@ class AuthenticationPage extends React.Component {
 
 
 	handleChange = (event, newValue) => {
-		this.setState(() => {
-			return {
-				currentTab: newValue
-			};
+		this.setState({
+			currentTab: newValue
 		});
 	};
 

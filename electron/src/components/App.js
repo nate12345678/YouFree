@@ -15,6 +15,7 @@ import * as Colors from '@material-ui/core/colors';
 import { ThemeProvider } from '@material-ui/core/styles';
 import AboutPage from './AboutPage';
 import MyProfilePage from './MyProfilePage';
+import ErrorSnackbar from './ErrorSnackbar';
 
 
 const lightTheme = createMuiTheme({
@@ -54,6 +55,7 @@ class App extends React.Component {
 			schedule: null,
 			friendSchedules: null,
 			theme: 'light',
+			errorMessage: null
 		};
 	}
 
@@ -82,15 +84,24 @@ class App extends React.Component {
 	}
 
 
+	resetError = () => this.setState({
+		errorMessage: null
+	});
+
+
 	handleError = (error) => {
 		if (error.response !== undefined) {
 			console.log(error.response);
-			// TODO: pop up with error message
+			this.setState({
+				errorMessage: error.response.data
+			});
 			return;
 		}
 
 		console.log('An unknown error has occurred');
-		// TODO: pop up with error message
+		this.setState({
+			errorMessage: 'An unknown error has occurred'
+		});
 	};
 
 
@@ -239,7 +250,8 @@ class App extends React.Component {
 		let content;
 		if (this.state.token == null) {
 			content = <AuthenticationPage onLoginSubmit={this.login}
-			                              onCreateUserSubmit={this.createUser}/>;
+			                              onCreateUserSubmit={this.createUser}
+			                              handleError={this.handleError}/>;
 		} else {
 			content = (
 				<Switch>
@@ -277,6 +289,7 @@ class App extends React.Component {
 						{content}
 					</div>
 				</Router>
+				<ErrorSnackbar message={this.state.errorMessage} resetError={this.resetError} />
 			</ThemeProvider>
 		);
 	}
