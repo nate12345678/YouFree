@@ -63,10 +63,9 @@ code {
 	--secondary: var(--pink);
 
 	--header: var(--grey_dark);
-	--wallpaper: var(--grey);
+	--wallpaper: #303030;
 	--elements: var(--grey_light);
 	--text: var(--white);
-	--header_text: var(--white);
 	--header_hover: var(--grey_light);
 
 	--border-color: rgba(255, 255, 255, 0.12);

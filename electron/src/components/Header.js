@@ -49,7 +49,7 @@ export default function Header(props) {
 
 	return (
 		<React.Fragment>
-			<AppBar id="appBar" position="sticky">
+			<AppBar id="appBar" position="sticky" color={props.theme === 'light' ? 'primary' : 'default'}>
 				<Toolbar>
 					{toolbar}
 				</Toolbar>

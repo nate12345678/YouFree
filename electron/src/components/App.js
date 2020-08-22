@@ -11,7 +11,7 @@ import {
 	Switch
 } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core';
-import { indigo, pink } from '@material-ui/core/colors';
+import * as Colors from '@material-ui/core/colors';
 import { ThemeProvider } from '@material-ui/core/styles';
 import AboutPage from './AboutPage';
 import MyProfilePage from './MyProfilePage';
@@ -20,18 +20,24 @@ import MyProfilePage from './MyProfilePage';
 const lightTheme = createMuiTheme({
 	palette: {
 		primary: {
-			main: indigo['500'],
-			dark: indigo['700']
+			main: Colors.indigo['500'],
+			dark: Colors.indigo['700']
 		},
 		secondary: {
-			main: pink['300']
+			main: Colors.pink['300']
 		}
 	}
 });
 
 const darkTheme = createMuiTheme({
 	palette: {
-		type: 'dark'
+		type: 'dark',
+		primary: {
+			main: Colors.indigo['200']
+		},
+		secondary: {
+			main: Colors.pink['800']
+		}
 	}
 });
 

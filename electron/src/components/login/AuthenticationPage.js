@@ -3,6 +3,7 @@ import React from 'react';
 import CreateUserForm from './CreateUserForm';
 import LoginForm from './LoginForm';
 import {
+	Paper,
 	Tab,
 	Tabs
 } from '@material-ui/core';
@@ -33,7 +34,7 @@ class AuthenticationPage extends React.Component {
 			: <LoginForm onSubmit={this.props.onLoginSubmit}/>;
 
 		return (
-			<div className="card-elevation4 auth-card">
+			<Paper className="auth-card">
 				<div className="card-elevation1" id="tabs">
 					<Tabs value={this.state.currentTab}
 					      variant="fullWidth"
@@ -49,7 +50,7 @@ class AuthenticationPage extends React.Component {
 				<div className="card-content auth-card-content">
 					{content}
 				</div>
-			</div>
+			</Paper>
 		);
 	}
 }
