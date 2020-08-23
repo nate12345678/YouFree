@@ -116,13 +116,15 @@ public class ScheduleController {
 	@PutMapping("/schedule")
 	public ResponseEntity<ArrayList<LinkedList<Interval>>> addInterval(
 			@RequestHeader("token") String token,
-			@Valid @RequestBody NewInterval interval) {
+			@RequestBody NewInterval interval) {
 		
 		logger.info("Received addInterval request");
 		authService.validateTokenString(token);
 		
 		Long userId = authService.getUserIdFromToken(token);
 		User user = userService.getUser(userId);
+		
+		interval.validate();
 		intervalService.addInterval(userId, interval);
 		
 		return ResponseEntity.ok(intervalService.getIntervals(userId));

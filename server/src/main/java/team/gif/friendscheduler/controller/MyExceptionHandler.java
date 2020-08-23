@@ -14,6 +14,7 @@ import team.gif.friendscheduler.exception.InvalidFieldException;
 import team.gif.friendscheduler.exception.ServerConfigurationException;
 import team.gif.friendscheduler.exception.UnauthorizedException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
+import team.gif.friendscheduler.exception.ValidationException;
 
 @RestControllerAdvice
 public class MyExceptionHandler {
@@ -37,6 +38,7 @@ public class MyExceptionHandler {
 	}
 	
 	
+	// Should occur when request body fails @Valid
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
 //		Map<String, String> errors = new HashMap<>();
@@ -46,6 +48,12 @@ public class MyExceptionHandler {
 //			errors.put(fieldName, errorMessage);
 //		});
 		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+	
+	
+	@ExceptionHandler(ValidationException.class)
+	public ResponseEntity<String> handleValidationException(ValidationException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 	
