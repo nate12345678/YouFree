@@ -21,7 +21,14 @@ class EditScheduleForm extends React.Component {
 
 	onFormSubmit = (event) => {
 		event.preventDefault();
-		this.props.onSubmit(this.state.dayOfWeek, this.state.startMin, this.state.endMin);
+
+		const startMinSplit = this.state.startMin.split(':');
+		const startMin = +startMinSplit[0] * 60 + +startMinSplit[1];
+
+		const endMinSplit = this.state.endMin.split(':');
+		const endMin = +endMinSplit[0] * 60 + +endMinSplit[1];
+
+		this.props.onSubmit(this.state.dayOfWeek, startMin, endMin);
 	};
 
 
