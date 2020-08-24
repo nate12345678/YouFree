@@ -32,30 +32,3 @@
 #edit-button {
 	margin-left: auto;
 }
-
-.edit-weekly-schedule-wrapper {
-	width: fit-content;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.edit-weekly-schedule-form {
-	width: fit-content;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin-bottom: 1rem;
-}
-
-.edit-weekly-schedule-start-field {
-	margin-left: 0.5em !important;
-	margin-right: 0.5em !important;
-}
-
-.edit-weekly-schedule-buttons {
-	margin-top: 0.75em;
-}
-
-.edit-weekly-schedule-cancel {
-	margin-right: 0.5em !important;
-}

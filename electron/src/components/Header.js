@@ -23,7 +23,7 @@ const routes = [
 	{ route: '/about', label: 'About' }
 ];
 
-const title = <Typography id="home" variant="h5" color="inherit">Voice Tracker</Typography>;
+const title = <Typography id="home" variant="h5" color="inherit">You Free</Typography>;
 
 export default function Header(props) {
 

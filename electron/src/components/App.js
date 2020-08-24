@@ -265,7 +265,7 @@ class App extends React.Component {
 						<MyProfilePage user={this.state.self}
 						               schedule={this.state.schedule}
 						               getSchedule={this.getSelfSchedule}
-						               addInterval={this.addInterval}/>
+						               onAddInterval={this.addInterval}/>
 					</Route>
 					<Route path="/about">
 						<AboutPage/>

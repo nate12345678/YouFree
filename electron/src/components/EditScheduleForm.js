@@ -2,7 +2,10 @@ import '../css/EditScheduleForm.css';
 import React from 'react';
 import {
 	Button,
+	FormControl,
+	InputLabel,
 	MenuItem,
+	Select,
 	TextField
 } from '@material-ui/core';
 
@@ -12,7 +15,7 @@ class EditScheduleForm extends React.Component {
 		super(props);
 
 		this.state = {
-			dayOfWeek: '',
+			dayOfWeek: 0,
 			startMin: '00:00',
 			endMin: '00:00'
 		};
@@ -41,48 +44,58 @@ class EditScheduleForm extends React.Component {
 
 	render() {
 		return (
-			<form id="EditScheduleForm">
-				<TextField
-					id="dayOfWeekSelect"
-					label="Day"
-					name="dayOfWeek"
-					value={this.state.dayOfWeek}
-					variant="outlined"
-					onChange={this.handleInputChange}
-					select
-				>
-					<MenuItem value={''}/>
-					<MenuItem value={0}>Monday</MenuItem>
-					<MenuItem value={1}>Tuesday</MenuItem>
-					<MenuItem value={2}>Wednesday</MenuItem>
-					<MenuItem value={3}>Thursday</MenuItem>
-					<MenuItem value={4}>Friday</MenuItem>
-					<MenuItem value={5}>Saturday</MenuItem>
-					<MenuItem value={6}>Sunday</MenuItem>
-				</TextField>
-
-				<div id="timesDiv" className="col">
-					<TextField id="startMinField"
+			<form className="edit-schedule-form" onSubmit={this.onFormSubmit}>
+				<div>
+					<FormControl variant="outlined" margin="normal">
+						<InputLabel id="edit-schedule-day-label">Day of Week</InputLabel>
+						<Select className="edit-schedule-day-select"
+								name="dayOfWeek"
+								value={this.state.dayOfWeek}
+								label="Day of Week"
+						        labelId="edit-schedule-day-label"
+								onChange={this.handleInputChange}
+						>
+							<MenuItem value={0}>Monday</MenuItem>
+							<MenuItem value={1}>Tuesday</MenuItem>
+							<MenuItem value={2}>Wednesday</MenuItem>
+							<MenuItem value={3}>Thursday</MenuItem>
+							<MenuItem value={4}>Friday</MenuItem>
+							<MenuItem value={5}>Saturday</MenuItem>
+							<MenuItem value={6}>Sunday</MenuItem>
+						</Select>
+					</FormControl>
+					<TextField className="edit-schedule-start-field"
 					           name="startMin"
 					           label="Start Time"
 					           variant="outlined"
-					           size="small"
-					           margin="dense"
+					           size="medium"
+					           margin="normal"
 					           type="time"
 					           value={this.state.startMin}
 					           onChange={this.handleInputChange}/>
-					<TextField id="endMinField"
+					<TextField className="edit-schedule-end-field"
 					           name="endMin"
 					           label="End Time"
 					           variant="outlined"
-					           size="small"
-					           margin="dense"
+					           size="medium"
+					           margin="normal"
 					           type="time"
 					           value={this.state.endMin}
 					           onChange={this.handleInputChange}/>
 				</div>
-
-				<Button id="submitButton" variant="contained" color="primary" onClick={this.onFormSubmit}>Add Interval</Button>
+				<div>
+					<Button className="edit-schedule-cancel-button"
+					        variant="outlined"
+					        color="primary"
+					        onClick={this.props.onCancel}
+					>Cancel</Button>
+					<Button className="edit-schedule-submit-button"
+					        variant="contained"
+					        color="primary"
+					        type="submit"
+					        disableElevation
+					>Add Interval</Button>
+				</div>
 			</form>
 		);
 	}

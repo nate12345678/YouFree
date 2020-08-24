@@ -1,21 +1,16 @@
 import '../css/MyProfilePage.css';
 import React from 'react';
 import {
-	Button,
 	Card,
 	CardActions,
 	CardContent,
 	Collapse,
-	FormControl,
 	Icon,
 	IconButton,
-	InputLabel,
-	MenuItem,
-	Select,
-	TextField,
 	Typography
 } from '@material-ui/core';
 import WeeklySchedule from './WeeklySchedule';
+import EditScheduleForm from './EditScheduleForm';
 
 class MyProfilePage extends React.Component {
 
@@ -24,11 +19,6 @@ class MyProfilePage extends React.Component {
 
 		this.state = {
 			editMode: false,
-			editForm: {
-				dayOfWeek: 0,
-				startMin: '00:00',
-				endMin: '00:00'
-			}
 		};
 	}
 
@@ -45,22 +35,10 @@ class MyProfilePage extends React.Component {
 	};
 
 
-	handleEditFormChange = (event) => {
-		const name = event.target.name;
-		const value = event.target.value;
-
-		this.setState((state) => ({
-			editForm: {
-				...state.editForm,
-				[name]: value
-			}
-		}));
-	};
-
-
-	handleEditFormSubmit = (event) => {
-		event.preventDefault();
-		// TODO: this.props.addInterval(day, time, time)
+	onEditCancel = () => {
+		this.setState({
+			editMode: false
+		});
 	}
 
 
@@ -91,59 +69,7 @@ class MyProfilePage extends React.Component {
 						</IconButton>
 					</CardActions>
 					<Collapse in={this.state.editMode} unmountOnExit>
-						<div className="edit-weekly-schedule-wrapper">
-							<form className="edit-weekly-schedule-form" onSubmit={this.handleEditFormSubmit}>
-								<div className="edit-weekly-schedule-inputs">
-									<FormControl variant="outlined" margin="normal">
-										<InputLabel id="edit-weekly-schedule-day-label">Day of Week</InputLabel>
-										<Select className="edit-weekly-schedule-day-select"
-										        name="dayOfWeek"
-										        value={this.state.editForm.dayOfWeek}
-										        labelId={'edit-weekly-schedule-day-label'}
-										        label="Day of Week"
-										        onChange={this.handleEditFormChange}>
-											<MenuItem value={0}>Monday</MenuItem>
-											<MenuItem value={1}>Tuesday</MenuItem>
-											<MenuItem value={2}>Wednesday</MenuItem>
-											<MenuItem value={3}>Thursday</MenuItem>
-											<MenuItem value={4}>Friday</MenuItem>
-											<MenuItem value={5}>Saturday</MenuItem>
-											<MenuItem value={6}>Sunday</MenuItem>
-										</Select>
-									</FormControl>
-									<TextField className="edit-weekly-schedule-start-field"
-									           name="startMin"
-									           label="Start Time"
-									           variant="outlined"
-									           size="medium"
-									           margin="normal"
-									           type="time"
-									           value={this.state.editForm.startMin}
-									           onChange={this.handleEditFormChange}/>
-									<TextField className="edit-weekly-schedule-end-field"
-									           name="endMin"
-									           label="End Time"
-									           variant="outlined"
-									           size="medium"
-									           margin="normal"
-									           type="time"
-									           value={this.state.editForm.endMin}
-									           onChange={this.handleEditFormChange}/>
-								</div>
-								<div className="edit-weekly-schedule-buttons">
-									<Button className="edit-weekly-schedule-cancel"
-									        variant="outlined"
-									        color="primary"
-									>Cancel</Button>
-									<Button className="edit-weekly-schedule-submit"
-									        variant="contained"
-									        color="primary"
-									        type="submit"
-									        disableElevation
-									>Save</Button>
-								</div>
-							</form>
-						</div>
+						<EditScheduleForm onSubmit={this.props.onAddInterval} onCancel={this.onEditCancel} />
 					</Collapse>
 				</Card>
 			</>

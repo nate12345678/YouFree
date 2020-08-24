@@ -51,7 +51,7 @@ class MyScheduleCard extends React.Component {
 				</CardActions>
 				<Collapse className="edit-daily-schedule-collapse" in={this.state.isExpanded} unmountOnExit>
 					<div className="edit-daily-schedule-form">
-						<EditScheduleForm onSubmit={this.props.onAddInterval}/>
+						<EditScheduleForm onSubmit={this.props.onAddInterval} onCancel={() => {}} />
 					</div>
 				</Collapse>
 			</Card>
