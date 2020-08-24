@@ -24,9 +24,16 @@ class MyScheduleCard extends React.Component {
 
 
 	handleExpansion = () => {
-		this.setState((prevState, props) => ({
+		this.setState((prevState) => ({
 			isExpanded: !prevState.isExpanded
 		}));
+	}
+
+
+	onEditCancel = () => {
+		this.setState({
+			isExpanded: false
+		});
 	}
 
 
@@ -51,7 +58,7 @@ class MyScheduleCard extends React.Component {
 				</CardActions>
 				<Collapse className="edit-daily-schedule-collapse" in={this.state.isExpanded} unmountOnExit>
 					<div className="edit-daily-schedule-form">
-						<EditScheduleForm onSubmit={this.props.onAddInterval} onCancel={() => {}} />
+						<EditScheduleForm onSubmit={this.props.onAddInterval} onCancel={this.onEditCancel} />
 					</div>
 				</Collapse>
 			</Card>
