@@ -6,6 +6,8 @@ import {
 	TextField
 } from '@material-ui/core';
 
+const EMAIL_REGEX = /^.+@.+\..+/;
+
 class CreateUserForm extends React.Component {
 
 	constructor(props) {
@@ -15,7 +17,9 @@ class CreateUserForm extends React.Component {
 			email: '',
 			username: '',
 			password: '',
-			remember: false
+			remember: false,
+			emailError: false,
+			passwordError: false
 		};
 	}
 
@@ -36,31 +40,69 @@ class CreateUserForm extends React.Component {
 		this.setState({
 			[input.name]: value
 		});
+
+		// Perform form validation
+		if (this.state.emailError && input.name === 'email') {
+			this.validateEmail(event);
+			return;
+		}
+
+		if (this.state.passwordError && input.name === 'password') {
+			this.validatePassword(event);
+		}
+	}
+
+
+	validateEmail = (event) => {
+		let value = event.target.value;
+
+		this.setState({
+			emailError: !EMAIL_REGEX.test(value)
+		});
+	}
+
+
+	validatePassword = (event) => {
+		let value = event.target.value;
+		this.setState({
+			passwordError: value.length < 8
+		});
 	}
 
 
 	render() {
+		const rememberMe = <Checkbox checked={this.state.remember} onChange={this.handleChange} />;
+
 		return (
-			<form id="authForm" onSubmit={this.onFormSubmit}>
-				<TextField className="AuthField"
+			<form id="auth-form" onSubmit={this.onFormSubmit}>
+				<TextField className="auth-field"
 				           name="email"
 				           label="Email"
 				           type="email"
-				           onChange={this.handleChange}/>
-				<TextField className="AuthField"
+				           error={this.state.emailError}
+				           helperText={this.state.emailError ? 'Must be a valid email' : null}
+				           onChange={this.handleChange}
+				           onBlur={this.validateEmail}
+				/>
+				<TextField className="auth-field"
 				           name="username"
 				           label="Username"
 				           type="text"
 				           onChange={this.handleChange}/>
-				<TextField className="AuthField"
+				<TextField className="auth-field"
 				           name="password"
 				           label="Password"
 				           type="password"
-				           onChange={this.handleChange}/>
+				           error={this.state.passwordError}
+				           helperText={this.state.passwordError ? 'Must be at least 8 characters' : null}
+				           onChange={this.handleChange}
+				           onBlur={this.validatePassword}
+				/>
 				<FormControlLabel name="remember"
-				                  control={<Checkbox checked={this.state.remember} onChange={this.handleChange} />}
-				                  label="Remember me"/>
-				<Button id="authSubmitButton"
+				                  control={rememberMe}
+				                  label="Remember me"
+				/>
+				<Button id="auth-submit-button"
 				        variant="contained"
 				        color="primary"
 				        type="submit"

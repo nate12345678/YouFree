@@ -39,13 +39,14 @@ class LoginForm extends React.Component {
 
 	render() {
 		return (
-			<form id="authForm" onSubmit={this.onFormSubmit}>
-				<TextField className="AuthField"
+			<form id="auth-form" onSubmit={this.onFormSubmit}>
+				<TextField className="auth-field"
 				           name="email"
 				           label="Email"
 				           type="email"
-				           onChange={this.handleChange}/>
-				<TextField className="AuthField"
+				           onChange={this.handleChange}
+				/>
+				<TextField className="auth-field"
 				           name="password"
 				           label="Password"
 				           type="password"
@@ -53,7 +54,7 @@ class LoginForm extends React.Component {
 				<FormControlLabel name="remember"
 				                  control={<Checkbox checked={this.state.remember} onChange={this.handleChange} />}
 				                  label="Remember me"/>
-				<Button id="authSubmitButton"
+				<Button id="auth-submit-button"
 				        variant="contained"
 				        color="primary"
 				        type="submit"

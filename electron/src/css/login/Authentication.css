@@ -15,16 +15,16 @@
 	padding-bottom: 2em;
 }
 
-#authForm {
+#auth-form {
 	display: flex;
 	flex-direction: column;
 }
 
-.AuthField {
+.auth-field {
 	margin-bottom: 1em !important;
 }
 
-#authSubmitButton {
+#auth-submit-button {
 	margin-top: 1em;
 }
 
