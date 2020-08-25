@@ -255,7 +255,7 @@ class App extends React.Component {
 		} else {
 			content = (
 				<Switch>
-					<Route path="/search">
+					<Route path="/friends">
 						<People token={this.state.token}
 						        addFriend={this.addFriend}
 						        deleteFriend={this.deleteFriend}

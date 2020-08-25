@@ -18,7 +18,7 @@ import {
 
 const routes = [
 	{ route: '/', label: 'Home' },
-	{ route: '/search', label: 'Search' },
+	{ route: '/friends', label: 'Friends' },
 	{ route: '/profile', label: 'My Profile' },
 	{ route: '/about', label: 'About' }
 ];
