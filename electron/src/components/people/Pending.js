@@ -1,6 +1,7 @@
 import React from 'react';
 import User from './User';
 import youfree from '../../api/Youfree';
+import { Icon } from '@material-ui/core';
 
 class Pending extends React.Component {
 
@@ -32,10 +33,26 @@ class Pending extends React.Component {
 
 
 	render() {
+		if (this.state.pending.length === 0) {
+			return (
+				<React.Fragment>
+					<div className="filler-content">
+						<Icon className="filler-icon" color="inherit">check_circle_outline</Icon>
+						<div>You have no pending friend requests!</div>
+					</div>
+				</React.Fragment>
+			);
+		}
+
+
 		const userDivs = this.state.pending.map(user => {
 			return (
 				<li className="users-li" key={user.id}>
-					<User variant="pending" username={user.username} email={user.email} addFriend={() => this.props.addFriend(user.id)} deleteFriend={() => this.props.deleteFriend(user.id)} />
+					<User variant="pending"
+					      username={user.username}
+					      email={user.email}
+					      addFriend={() => this.props.addFriend(user.id)}
+					      deleteFriend={() => this.props.deleteFriend(user.id)} />
 				</li>
 			);
 		});

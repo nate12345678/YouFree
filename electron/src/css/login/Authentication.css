@@ -27,3 +27,15 @@
 #authSubmitButton {
 	margin-top: 1em;
 }
+
+.filler-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	color: rgba(0, 0, 0, 0.54);
+}
+
+.filler-icon {
+	color: rgba(0, 0, 0, 0.36);
+	font-size: 16em !important;
+}

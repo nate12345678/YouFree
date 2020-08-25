@@ -1,6 +1,7 @@
 import React from 'react';
 import youfree from '../../api/Youfree';
 import User from './User';
+import { Icon } from '@material-ui/core';
 
 class Friends extends React.Component {
 
@@ -32,6 +33,18 @@ class Friends extends React.Component {
 
 
 	render() {
+		if (this.state.friends.length === 0) {
+			return (
+				<React.Fragment>
+					<div className="filler-content">
+						<Icon className="filler-icon" color="inherit" style={{marginLeft: '-0.25em'}}>person_add</Icon>
+						<div>Your friends list is empty.</div>
+						<div>Try searching for your friends!</div>
+					</div>
+				</React.Fragment>
+			);
+		}
+
 		const userDivs = this.state.friends.map(user => {
 			return (
 				<li className="users-li" key={user.id}>
