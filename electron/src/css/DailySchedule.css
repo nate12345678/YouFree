@@ -1,10 +1,10 @@
 
-.Intervals {
+.intervals {
 	display: flex;
 	height: 1em;
 }
 
-.Intervals .Bar {
+.intervals .bar {
 	height: 100%;
 	background-color: var(--primary);
 }

@@ -267,9 +267,9 @@ class App extends React.Component {
 						               getSchedule={this.getSelfSchedule}
 						               onAddInterval={this.addInterval}/>
 					</Route>
-					<Route path="/about">
-						<AboutPage/>
-					</Route>
+					{/*<Route path="/about">*/}
+					{/*	<AboutPage/>*/}
+					{/*</Route>*/}
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}
 						           schedule={this.state.schedule ? this.state.schedule[this.state.currentDay] : null}

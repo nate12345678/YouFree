@@ -20,7 +20,7 @@ const routes = [
 	{ route: '/', label: 'Home' },
 	{ route: '/friends', label: 'Friends' },
 	{ route: '/profile', label: 'My Profile' },
-	{ route: '/about', label: 'About' }
+	// { route: '/about', label: 'About' }
 ];
 
 const title = <Typography id="home" variant="h5" color="inherit">You Free</Typography>;
