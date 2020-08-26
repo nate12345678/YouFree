@@ -26,6 +26,12 @@ class CreateUserForm extends React.Component {
 
 	onFormSubmit = (event) => {
 		event.preventDefault();
+
+		// TODO: This should probably pop up some sort of message
+		if (this.state.emailError || this.state.passwordError) {
+			return;
+		}
+
 		let trimmedEmail = this.state.email.trim();
 		let trimmedUsername = this.state.username.trim();
 
@@ -106,6 +112,7 @@ class CreateUserForm extends React.Component {
 				        variant="contained"
 				        color="primary"
 				        type="submit"
+				        disabled={this.state.emailError || this.state.passwordError}
 				>
 					Submit
 				</Button>
