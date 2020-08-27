@@ -1,8 +1,11 @@
 import '../css/DailySchedule.css'
 import React from 'react';
-import Tooltip from '@material-ui/core/Tooltip';
+import {
+	Button,
+	Tooltip
+} from '@material-ui/core';
 
-function DailySchedule({ schedule }) {
+export default function DailySchedule({ schedule }) {
 
 	const LENGTH_OF_DAY = 1440;
 
@@ -15,11 +18,9 @@ function DailySchedule({ schedule }) {
 			? schedule[i].startMin / LENGTH_OF_DAY
 			: (schedule[i].startMin - schedule[i - 1].endMin) / LENGTH_OF_DAY;
 
-		const startTime = Math.floor(schedule[i].startMin / 60) + ':' + `${schedule[i].startMin % 60}`.padStart(2, '0');
-		const endTime = Math.floor(schedule[i].endMin / 60) + ':' + `${schedule[i].endMin % 60}`.padStart(2, '0');
-
-		let box = (
-			<Tooltip key={schedule[i].startMin} arrow title={startTime + ' - ' + endTime}>
+		const tooltip = <TooltipContent startMin={schedule[i].startMin} endMin={schedule[i].endMin} editMode={true} />
+		const box = (
+			<Tooltip key={schedule[i].startMin} title={tooltip} arrow interactive>
 				<div className="bar" style={{
 					marginLeft: 100 * leftMargin + '%',
 					width: 100 * width + '%'
@@ -37,4 +38,16 @@ function DailySchedule({ schedule }) {
 	);
 }
 
-export default DailySchedule;
+
+function TooltipContent({ startMin, endMin, editMode }) {
+	const startTime = Math.floor(startMin / 60) + ':' + `${startMin % 60}`.padStart(2, '0');
+	const endTime = Math.floor(endMin / 60) + ':' + `${endMin % 60}`.padStart(2, '0');
+
+	return (
+		<React.Fragment>
+			<div>{startTime} - {endTime}</div>
+			<Button>Edit</Button>
+			<Button>Delete</Button>
+		</React.Fragment>
+	);
+}

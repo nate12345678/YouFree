@@ -1,6 +1,6 @@
 import '../css/MyScheduleCard.css';
 import React from 'react';
-import EditScheduleForm from './EditScheduleForm';
+import EditScheduleForm from './common/EditScheduleForm';
 import DailySchedule from './DailySchedule';
 import {
 	Card,

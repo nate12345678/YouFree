@@ -1,4 +1,4 @@
-import '../css/EditScheduleForm.css';
+import './EditScheduleForm.css';
 import React from 'react';
 import {
 	Button,

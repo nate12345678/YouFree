@@ -56,6 +56,7 @@ code {
 	--header_hover: var(--blue_dark);
 
 	--border-color: rgba(0, 0, 0, 0.12);
+	--border-color-bold: rgba(0, 0, 0, 0.24);
 }
 
 .dark {
@@ -69,6 +70,7 @@ code {
 	--header_hover: var(--grey_light);
 
 	--border-color: rgba(255, 255, 255, 0.12);
+	--border-color-bold: rgba(255, 255, 255, 0.24);
 }
 
 div {

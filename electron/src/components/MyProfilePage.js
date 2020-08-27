@@ -10,7 +10,7 @@ import {
 	Typography
 } from '@material-ui/core';
 import WeeklySchedule from './WeeklySchedule';
-import EditScheduleForm from './EditScheduleForm';
+import EditScheduleForm from './common/EditScheduleForm';
 
 class MyProfilePage extends React.Component {
 
