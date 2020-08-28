@@ -1,8 +1,8 @@
 import '../css/DailySchedule.css'
 import React from 'react';
 import {
-	Button,
-	Tooltip
+	Tooltip,
+	Typography
 } from '@material-ui/core';
 
 export default function DailySchedule({ schedule }) {
@@ -20,7 +20,7 @@ export default function DailySchedule({ schedule }) {
 
 		const tooltip = <TooltipContent startMin={schedule[i].startMin} endMin={schedule[i].endMin} editMode={true} />
 		const box = (
-			<Tooltip key={schedule[i].startMin} title={tooltip} arrow interactive>
+			<Tooltip key={schedule[i].startMin} title={tooltip} arrow>
 				<div className="bar" style={{
 					marginLeft: 100 * leftMargin + '%',
 					width: 100 * width + '%'
@@ -39,15 +39,19 @@ export default function DailySchedule({ schedule }) {
 }
 
 
+// TODO: Add user preference for 12h vs 24h time
 function TooltipContent({ startMin, endMin, editMode }) {
-	const startTime = Math.floor(startMin / 60) + ':' + `${startMin % 60}`.padStart(2, '0');
-	const endTime = Math.floor(endMin / 60) + ':' + `${endMin % 60}`.padStart(2, '0');
+	const startHour = Math.floor(startMin / 60) % 12;
+	const startHalf = (Math.floor(startHour / 12) === 0) ? 'a' : 'p';
+	const startTime = startHour + ':' + `${startMin % 60}`.padStart(2, '0') + startHalf;
+
+	const endHour = Math.floor(endMin / 60) % 12;
+	const endHalf = (Math.floor(endHour / 12) === 0) ? 'a' : 'p';
+	const endTime = endHour + ':' + `${endMin % 60}`.padStart(2, '0') + endHalf;
 
 	return (
 		<React.Fragment>
-			<div>{startTime} - {endTime}</div>
-			<Button>Edit</Button>
-			<Button>Delete</Button>
+			<Typography variant="body2">{startTime} - {endTime}</Typography>
 		</React.Fragment>
 	);
 }
