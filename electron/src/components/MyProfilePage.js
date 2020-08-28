@@ -19,6 +19,7 @@ class MyProfilePage extends React.Component {
 
 		this.state = {
 			editMode: false,
+			selectedInterval: null
 		};
 	}
 
@@ -37,12 +38,25 @@ class MyProfilePage extends React.Component {
 
 	onEditCancel = () => {
 		this.setState({
-			editMode: false
+			editMode: false,
+			selectedInterval: null
+		});
+	}
+
+
+	onIntervalSelection = (interval) => {
+		if (this.state.editMode === false) return;
+
+		console.log("Selected " + interval.id);
+		this.setState({
+			selectedInterval: interval
 		});
 	}
 
 
 	render() {
+		const weeklyScheduleClasses = 'my-weekly-schedule-card' + (this.state.editMode ? ' editable' : '') + (this.state.selectedInterval ? ' faded' : '');
+
 		return (
 			<>
 				<Card className="my-profile-card" elevation={4}>
@@ -56,9 +70,12 @@ class MyProfilePage extends React.Component {
 						</div>
 					</CardContent>
 				</Card>
-				<Card className={'my-weekly-schedule-card' + (this.state.editMode ? ' editable' : '')} elevation={4}>
+				<Card className={weeklyScheduleClasses} elevation={4}>
 					<CardContent>
-						<WeeklySchedule schedule={this.props.schedule}/>
+						<WeeklySchedule schedule={this.props.schedule}
+						                onIntervalSelection={this.onIntervalSelection}
+						                selectedInterval={this.state.selectedInterval}
+						/>
 					</CardContent>
 					<CardActions>
 						<IconButton id="edit-button"

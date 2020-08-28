@@ -45,6 +45,7 @@ code {
 
 .light {
 	--primary: var(--blue);
+	--primary_dark: var(--blue_dark);
 	--secondary: var(--pink);
 
 	--header: var(--blue);

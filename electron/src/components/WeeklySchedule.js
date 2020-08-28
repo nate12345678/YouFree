@@ -16,7 +16,7 @@ const dayOfWeek = {
 };
 
 
-function WeeklySchedule({ schedule }) {
+function WeeklySchedule({ schedule, onIntervalSelection, selectedInterval }) {
 
 	let labeledSchedule = <span>Loading</span>
 	if (schedule != null) {
@@ -30,7 +30,10 @@ function WeeklySchedule({ schedule }) {
 
 			labeledSchedule.push(
 				<div key={dayOfWeek[i] + 'schedule'} className="weekly-schedule-schedules">
-					<DailySchedule schedule={schedule[i]} />
+					<DailySchedule schedule={schedule[i]}
+					               onIntervalSelection={onIntervalSelection}
+					               selectedInterval={selectedInterval}
+					/>
 				</div>
 			);
 		}

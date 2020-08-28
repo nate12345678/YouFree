@@ -12,3 +12,15 @@
 .editable .intervals .bar {
 	cursor: pointer;
 }
+
+.editable .intervals .bar:hover {
+	background-color: var(--primary_dark);
+}
+
+.editable.faded .intervals .bar {
+	opacity: 24%;
+}
+
+.editable.faded .intervals .bar.selected {
+	opacity: 100%;
+}

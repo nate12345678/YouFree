@@ -5,9 +5,13 @@ import {
 	Typography
 } from '@material-ui/core';
 
-export default function DailySchedule({ schedule }) {
+export default function DailySchedule({ schedule, onIntervalSelection, selectedInterval }) {
 
 	const LENGTH_OF_DAY = 1440;
+	const onClick = (interval) => (event) => {
+		console.log("Clicked " + interval.id);
+		onIntervalSelection(interval);
+	}
 
 	// Creating the timeline for day 0
 	let boxes = [];
@@ -19,9 +23,11 @@ export default function DailySchedule({ schedule }) {
 			: (schedule[i].startMin - schedule[i - 1].endMin) / LENGTH_OF_DAY;
 
 		const tooltip = <TooltipContent startMin={schedule[i].startMin} endMin={schedule[i].endMin} editMode={true} />
+		const isSelected = selectedInterval && selectedInterval.id === schedule[i].id;
+		console.log(`${schedule[i].id}: ${isSelected}`)
 		const box = (
-			<Tooltip key={schedule[i].startMin} title={tooltip} arrow>
-				<div className="bar" style={{
+			<Tooltip key={schedule[i].id} title={tooltip} arrow>
+				<div className={'bar' + (isSelected ? ' selected' : '')} onClick={onClick(schedule[i])} style={{
 					marginLeft: 100 * leftMargin + '%',
 					width: 100 * width + '%'
 				}} />
