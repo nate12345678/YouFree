@@ -7,6 +7,7 @@
 .intervals .bar {
 	height: 100%;
 	background-color: var(--primary);
+	transition: var(--button-transition);
 }
 
 .editable .intervals .bar {
@@ -21,6 +22,11 @@
 	opacity: 24%;
 }
 
+.editable.faded .intervals .bar:hover {
+	opacity: 36%;
+}
+
 .editable.faded .intervals .bar.selected {
 	opacity: 100%;
 }
+

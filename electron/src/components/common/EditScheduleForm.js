@@ -17,8 +17,16 @@ class EditScheduleForm extends React.Component {
 		this.state = {
 			dayOfWeek: 0,
 			startMin: '00:00',
-			endMin: '00:00'
+			endMin: '00:00',
+			intervalId: -1
 		};
+	}
+
+
+	convertTime = (minutes) => {
+		const hours = `${Math.floor(minutes / 60)}`.padStart(2, '0');
+		const min = `${minutes % 60}`.padStart(2, '0');
+		return hours + ':' + min;
 	}
 
 
@@ -39,6 +47,17 @@ class EditScheduleForm extends React.Component {
 		this.setState({
 			[event.target.name]: event.target.value
 		});
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		if (this.props.interval && this.props.interval.id !== this.state.intervalId) {
+			this.setState((state, props) => ({
+				dayOfWeek: props.interval.dayOfWeek,
+				startMin: this.convertTime(props.interval.startMin),
+				endMin: this.convertTime(props.interval.endMin),
+				intervalId: props.interval.id
+			}));
+		}
 	}
 
 

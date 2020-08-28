@@ -9,7 +9,6 @@ export default function DailySchedule({ schedule, onIntervalSelection, selectedI
 
 	const LENGTH_OF_DAY = 1440;
 	const onClick = (interval) => (event) => {
-		console.log("Clicked " + interval.id);
 		onIntervalSelection(interval);
 	}
 
@@ -24,7 +23,6 @@ export default function DailySchedule({ schedule, onIntervalSelection, selectedI
 
 		const tooltip = <TooltipContent startMin={schedule[i].startMin} endMin={schedule[i].endMin} editMode={true} />
 		const isSelected = selectedInterval && selectedInterval.id === schedule[i].id;
-		console.log(`${schedule[i].id}: ${isSelected}`)
 		const box = (
 			<Tooltip key={schedule[i].id} title={tooltip} arrow>
 				<div className={'bar' + (isSelected ? ' selected' : '')} onClick={onClick(schedule[i])} style={{

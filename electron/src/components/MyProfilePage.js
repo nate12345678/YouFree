@@ -31,7 +31,8 @@ class MyProfilePage extends React.Component {
 
 	handleEditClick = () => {
 		this.setState((state) => ({
-			editMode: !state.editMode
+			editMode: !state.editMode,
+			selectedInterval: null
 		}));
 	};
 
@@ -47,7 +48,6 @@ class MyProfilePage extends React.Component {
 	onIntervalSelection = (interval) => {
 		if (this.state.editMode === false) return;
 
-		console.log("Selected " + interval.id);
 		this.setState({
 			selectedInterval: interval
 		});
@@ -86,7 +86,10 @@ class MyProfilePage extends React.Component {
 						</IconButton>
 					</CardActions>
 					<Collapse in={this.state.editMode} unmountOnExit>
-						<EditScheduleForm onSubmit={this.props.onAddInterval} onCancel={this.onEditCancel} />
+						<EditScheduleForm interval={this.state.selectedInterval}
+						                  onSubmit={this.props.onAddInterval}
+						                  onCancel={this.onEditCancel}
+						/>
 					</Collapse>
 				</Card>
 			</>
