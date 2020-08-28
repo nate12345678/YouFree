@@ -56,7 +56,7 @@ class MyProfilePage extends React.Component {
 						</div>
 					</CardContent>
 				</Card>
-				<Card className="my-weekly-schedule-card" elevation={4}>
+				<Card className={'my-weekly-schedule-card' + (this.state.editMode ? ' editable' : '')} elevation={4}>
 					<CardContent>
 						<WeeklySchedule schedule={this.props.schedule}/>
 					</CardContent>

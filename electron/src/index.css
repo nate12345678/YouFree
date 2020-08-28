@@ -60,7 +60,7 @@ code {
 }
 
 .dark {
-	--primary: var(--blue);
+	--primary: #9FA8DA;
 	--secondary: var(--pink);
 
 	--header: var(--grey_dark);
