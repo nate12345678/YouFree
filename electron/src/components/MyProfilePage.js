@@ -54,6 +54,11 @@ class MyProfilePage extends React.Component {
 	}
 
 
+	deleteInterval = () => {
+		this.props.onDeleteInterval(this.state.selectedInterval.id);
+	}
+
+
 	render() {
 		const weeklyScheduleClasses = 'my-weekly-schedule-card' + (this.state.editMode ? ' editable' : '') + (this.state.selectedInterval ? ' faded' : '');
 
@@ -88,6 +93,7 @@ class MyProfilePage extends React.Component {
 					<Collapse in={this.state.editMode} unmountOnExit>
 						<EditScheduleForm interval={this.state.selectedInterval}
 						                  onSubmit={this.props.onAddInterval}
+						                  onDelete={this.deleteInterval}
 						                  onCancel={this.onEditCancel}
 						/>
 					</Collapse>

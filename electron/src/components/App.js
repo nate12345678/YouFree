@@ -26,6 +26,9 @@ const lightTheme = createMuiTheme({
 		},
 		secondary: {
 			main: Colors.pink['300']
+		},
+		red: {
+			main: Colors.red['400']
 		}
 	}
 });
@@ -176,12 +179,11 @@ class App extends React.Component {
 
 
 	addInterval = async (dayOfWeek, startMin, endMin) => {
-		let schedule = null;
 		try {
 			const addIntervalReq = await youfree.addInterval(this.state.token, dayOfWeek, startMin, endMin);
 
 			console.log('Added interval');
-			schedule = addIntervalReq.data;
+			const schedule = addIntervalReq.data;
 
 			this.setState({
 				schedule: schedule
@@ -190,6 +192,25 @@ class App extends React.Component {
 			this.handleError(error);
 		}
 	};
+
+
+	deleteInterval = async (intervalId) => {
+		// TODO: save old schedule and make copy of new one
+		try {
+			// TODO: locally remove interval from copy of schedule, set state to new schedule
+			const delIntervalResponse = await youfree.deleteInterval(this.state.token, intervalId);
+
+			console.log('Deleted interval');
+			const schedule = delIntervalResponse.data;
+
+			this.setState({
+				schedule: schedule
+			});
+		} catch (error) {
+			this.handleError(error);
+			// TODO: revert to old schedule
+		}
+	}
 
 
 	// TODO: Fetching someone else's schedule shouldn't affect self-schedule
@@ -265,7 +286,9 @@ class App extends React.Component {
 						<MyProfilePage user={this.state.self}
 						               schedule={this.state.schedule}
 						               getSchedule={this.getSelfSchedule}
-						               onAddInterval={this.addInterval}/>
+						               onAddInterval={this.addInterval}
+						               onDeleteInterval={this.deleteInterval}
+						/>
 					</Route>
 					{/*<Route path="/about">*/}
 					{/*	<AboutPage/>*/}

@@ -50,6 +50,15 @@ class Youfree {
 	};
 
 
+	deleteInterval = (token, intervalId) => {
+		return this.client.delete(`/schedule/${intervalId}`, {
+			headers: {
+				token: token
+			}
+		});
+	};
+
+
 	getSchedule = (token, userId) => {
 		return this.client.get(`/schedule/${userId}`, {
 			headers: {

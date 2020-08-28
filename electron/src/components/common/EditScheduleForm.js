@@ -18,7 +18,7 @@ class EditScheduleForm extends React.Component {
 			dayOfWeek: 0,
 			startMin: '00:00',
 			endMin: '00:00',
-			intervalId: -1
+			intervalId: null
 		};
 	}
 
@@ -49,6 +49,7 @@ class EditScheduleForm extends React.Component {
 		});
 	}
 
+
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		if (this.props.interval && this.props.interval.id !== this.state.intervalId) {
 			this.setState((state, props) => ({
@@ -62,6 +63,15 @@ class EditScheduleForm extends React.Component {
 
 
 	render() {
+		const deleteButton = (
+			<Button className="edit-schedule-delete-button"
+			        variant="outlined"
+			        color="secondary"
+			        onClick={this.props.onDelete}
+			        disableElevation
+			>Delete</Button>
+		);
+
 		return (
 			<form className="edit-schedule-form" onSubmit={this.onFormSubmit}>
 				<div>
@@ -107,13 +117,15 @@ class EditScheduleForm extends React.Component {
 					        variant="outlined"
 					        color="primary"
 					        onClick={this.props.onCancel}
+					        disableElevation
 					>Cancel</Button>
+					{ this.state.intervalId ? deleteButton : null }
 					<Button className="edit-schedule-submit-button"
 					        variant="contained"
 					        color="primary"
 					        type="submit"
 					        disableElevation
-					>Add Interval</Button>
+					>{ this.state.intervalId ? 'Save' : 'Add Interval' }</Button>
 				</div>
 			</form>
 		);
