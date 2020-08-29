@@ -3,6 +3,7 @@ import React from 'react'
 import {
 	Button,
 	Icon,
+	Typography
 } from '@material-ui/core';
 
 function User(props) {
@@ -11,6 +12,11 @@ function User(props) {
 	switch (props.variant) {
 		case 'none':
 			actionArea = null;
+			break;
+		case 'sent':
+			actionArea = (
+				<Typography>Request sent</Typography>
+			);
 			break;
 		case 'pending':
 			actionArea = (

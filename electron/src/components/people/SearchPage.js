@@ -15,6 +15,18 @@ class SearchPage extends React.Component {
 	}
 
 
+	searchUsers = async (query) => {
+		try {
+			const searchUsersResponse = await youfree.searchUsers(this.props.token, query);
+			this.setState({
+				users: searchUsersResponse.data
+			});
+		} catch (error) {
+			this.props.handleError(error);
+		}
+	}
+
+
 	handleOnChange = async (event) => {
 		const query = event.target.value;
 
@@ -22,17 +34,12 @@ class SearchPage extends React.Component {
 			query: query
 		});
 
-		// Make search query
-		try {
-			const searchUsersResponse = await youfree.searchUsers(this.props.token, query);
+		await this.searchUsers(query);
+	}
 
-			this.setState({
-				users: searchUsersResponse.data
-			});
 
-		} catch (error) {
-			this.props.handleError(error);
-		}
+	componentDidMount() {
+		this.searchUsers('');
 	}
 
 
