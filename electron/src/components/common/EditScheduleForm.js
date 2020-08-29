@@ -17,8 +17,7 @@ class EditScheduleForm extends React.Component {
 		this.state = {
 			dayOfWeek: 0,
 			startMin: '00:00',
-			endMin: '00:00',
-			intervalId: null
+			endMin: '00:00'
 		};
 	}
 
@@ -39,6 +38,12 @@ class EditScheduleForm extends React.Component {
 		const endMinSplit = this.state.endMin.split(':');
 		const endMin = +endMinSplit[0] * 60 + +endMinSplit[1];
 
+		// If we're updating an interval...
+		if (this.props.interval) {
+			this.props.onUpdate(this.state.dayOfWeek, startMin, endMin);
+			return;
+		}
+
 		this.props.onSubmit(this.state.dayOfWeek, startMin, endMin);
 	};
 
@@ -51,13 +56,13 @@ class EditScheduleForm extends React.Component {
 
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		if (this.props.interval && this.props.interval.id !== this.state.intervalId) {
-			this.setState((state, props) => ({
-				dayOfWeek: props.interval.dayOfWeek,
-				startMin: this.convertTime(props.interval.startMin),
-				endMin: this.convertTime(props.interval.endMin),
-				intervalId: props.interval.id
-			}));
+		// If a new interval has been selected, populate form with its values
+		if (this.props.interval && (prevProps.interval == null || this.props.interval.id !== prevProps.interval.id)) {
+			this.setState({
+				dayOfWeek: this.props.interval.dayOfWeek,
+				startMin: this.convertTime(this.props.interval.startMin),
+				endMin: this.convertTime(this.props.interval.endMin),
+			});
 		}
 	}
 
@@ -119,13 +124,13 @@ class EditScheduleForm extends React.Component {
 					        onClick={this.props.onCancel}
 					        disableElevation
 					>Cancel</Button>
-					{ this.state.intervalId ? deleteButton : null }
+					{ this.props.interval ? deleteButton : null }
 					<Button className="edit-schedule-submit-button"
 					        variant="contained"
 					        color="primary"
 					        type="submit"
 					        disableElevation
-					>{ this.state.intervalId ? 'Save' : 'Add Interval' }</Button>
+					>{ this.props.interval ? 'Save' : 'Add Interval' }</Button>
 				</div>
 			</form>
 		);

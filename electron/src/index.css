@@ -63,6 +63,7 @@ code {
 
 .dark {
 	--primary: #9FA8DA;
+	--primary_dark: #6F7598;
 	--secondary: var(--pink);
 
 	--header: var(--grey_dark);

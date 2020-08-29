@@ -54,8 +54,21 @@ class MyProfilePage extends React.Component {
 	}
 
 
+	updateInterval = (dayOfWeek, startMin, endMin) => {
+		this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin);
+
+		this.setState({
+			selectedInterval: null
+		});
+	}
+
+
 	deleteInterval = () => {
 		this.props.onDeleteInterval(this.state.selectedInterval.id);
+
+		this.setState({
+			selectedInterval: null
+		});
 	}
 
 
@@ -93,6 +106,7 @@ class MyProfilePage extends React.Component {
 					<Collapse in={this.state.editMode} unmountOnExit>
 						<EditScheduleForm interval={this.state.selectedInterval}
 						                  onSubmit={this.props.onAddInterval}
+						                  onUpdate={this.updateInterval}
 						                  onDelete={this.deleteInterval}
 						                  onCancel={this.onEditCancel}
 						/>

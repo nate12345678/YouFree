@@ -131,6 +131,32 @@ public class ScheduleController {
 	}
 	
 	
+	@PutMapping("/schedule/{intervalId}")
+	public ResponseEntity<ArrayList<LinkedList<Interval>>> updateInterval(
+			@PathVariable Long intervalId,
+			@RequestHeader("token") String token,
+			@RequestBody NewInterval interval
+	) {
+		
+		logger.info("Received updateInterval request: " + intervalId);
+		authService.validateTokenString(token);
+		interval.validate();
+		
+		Long userId = authService.getUserIdFromToken(token);
+		Interval target = intervalService.getInterval(intervalId).orElseThrow(() -> new IntervalNotFoundException(intervalId));
+		if (!userId.equals(target.getUserId())) {
+			// TODO: Should we throw a NOT_FOUND exception here instead? Why should we tell them that ID exists?
+			// TODO: Could implement this by selecting on interval ID and user ID
+			throw new AccessDeniedException(userId, target.getUserId());
+		}
+		
+		intervalService.removeInterval(userId, intervalId);
+		intervalService.addInterval(userId, interval);
+		
+		return ResponseEntity.ok(intervalService.getIntervals(userId));
+	}
+	
+	
 	@DeleteMapping("/schedule/{intervalId}")
 	public ResponseEntity<ArrayList<LinkedList<Interval>>> removeInterval(
 			@PathVariable Long intervalId,
@@ -142,6 +168,8 @@ public class ScheduleController {
 		Long userId = authService.getUserIdFromToken(token);
 		Interval target = intervalService.getInterval(intervalId).orElseThrow(() -> new IntervalNotFoundException(intervalId));
 		if (!userId.equals(target.getUserId())) {
+			// TODO: Should we throw a NOT_FOUND exception here instead? Why should we tell them that ID exists?
+			// TODO: Could implement this by selecting on interval ID and user ID
 			throw new AccessDeniedException(userId, target.getUserId());
 		}
 		

@@ -194,6 +194,22 @@ class App extends React.Component {
 	};
 
 
+	updateInterval = async (intervalId, dayOfWeek, startMin, endMin) => {
+		try {
+			const updateIntervalResponse = await youfree.updateInterval(this.state.token, intervalId, dayOfWeek, startMin, endMin);
+
+			console.log('Updated interval');
+			const schedule = updateIntervalResponse.data;
+
+			this.setState({
+				schedule: schedule
+			});
+		} catch (error) {
+			this.handleError(error);
+		}
+	};
+
+
 	deleteInterval = async (intervalId) => {
 		// TODO: save old schedule and make copy of new one
 		try {
@@ -210,7 +226,7 @@ class App extends React.Component {
 			this.handleError(error);
 			// TODO: revert to old schedule
 		}
-	}
+	};
 
 
 	// TODO: Fetching someone else's schedule shouldn't affect self-schedule
@@ -287,6 +303,7 @@ class App extends React.Component {
 						               schedule={this.state.schedule}
 						               getSchedule={this.getSelfSchedule}
 						               onAddInterval={this.addInterval}
+						               onUpdateInterval={this.updateInterval}
 						               onDeleteInterval={this.deleteInterval}
 						/>
 					</Route>

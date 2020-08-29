@@ -50,6 +50,19 @@ class Youfree {
 	};
 
 
+	updateInterval = (token, intervalId, dayOfWeek, startMin, endMin) => {
+		return this.client.put(`/schedule/${intervalId}`, {
+			dayOfWeek: dayOfWeek,
+			startMin: startMin,
+			endMin: endMin
+		}, {
+			headers: {
+				token: token
+			}
+		});
+	}
+
+
 	deleteInterval = (token, intervalId) => {
 		return this.client.delete(`/schedule/${intervalId}`, {
 			headers: {
