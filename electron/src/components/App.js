@@ -46,19 +46,24 @@ const darkTheme = createMuiTheme({
 });
 
 
+const initialState = {
+	currentDay: 0,
+	token: null,
+	self: null,
+	schedule: null,
+	friendSchedules: null,
+	theme: 'light',
+	errorMessage: null
+}
+
+
 class App extends React.Component {
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			currentDay: 0,
-			token: null,
-			self: null,
-			schedule: null,
-			friendSchedules: null,
-			theme: 'light',
-			errorMessage: null
+			...initialState
 		};
 	}
 
@@ -168,8 +173,7 @@ class App extends React.Component {
 
 			localStorage.clear();
 			this.setState({
-				token: null,
-				self: null
+				...initialState
 			});
 			console.log('Logged out');
 		} catch (error) {
