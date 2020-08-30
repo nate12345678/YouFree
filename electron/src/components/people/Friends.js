@@ -48,7 +48,7 @@ class Friends extends React.Component {
 		const userDivs = this.state.friends.map(user => {
 			return (
 				<li className="users-li" key={user.id}>
-					<User username={user.username} email={user.email} />
+					<User variant="friends" username={user.username} email={user.email} />
 				</li>
 			);
 		});

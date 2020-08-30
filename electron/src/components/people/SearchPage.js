@@ -10,7 +10,7 @@ class SearchPage extends React.Component {
 
 		this.state = {
 			query: '',
-			users: []
+			results: []
 		};
 	}
 
@@ -19,7 +19,7 @@ class SearchPage extends React.Component {
 		try {
 			const searchUsersResponse = await youfree.searchUsers(this.props.token, query);
 			this.setState({
-				users: searchUsersResponse.data
+				results: searchUsersResponse.data
 			});
 		} catch (error) {
 			this.props.handleError(error);
@@ -45,10 +45,14 @@ class SearchPage extends React.Component {
 
 	render() {
 
-		const userDivs = this.state.users.map(user => {
+		const userDivs = this.state.results.map(result => {
 			return (
-				<li className="users-li" key={user.id}>
-					<User variant="stranger" username={user.username} email={user.email} addFriend={() => this.props.addFriend(user.id)} />
+				<li className="users-li" key={result.user.id}>
+					<User variant={result.relationship}
+					      username={result.user.username}
+					      email={result.user.email}
+					      addFriend={() => this.props.addFriend(result.user.id)}
+					/>
 				</li>
 			);
 		});

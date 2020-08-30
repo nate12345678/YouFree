@@ -16,7 +16,6 @@ public class UserResponse {
 	
 	public UserResponse() {}
 	
-	
 	public UserResponse(Long id, String username, String email) {
 		this.id = id;
 		this.username = username;

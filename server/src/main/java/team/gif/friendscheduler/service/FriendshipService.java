@@ -7,6 +7,7 @@ import team.gif.friendscheduler.model.Friendship;
 import team.gif.friendscheduler.model.FriendshipKey;
 import team.gif.friendscheduler.model.FriendshipStatus;
 import team.gif.friendscheduler.model.User;
+import team.gif.friendscheduler.model.response.Relationship;
 import team.gif.friendscheduler.repository.FriendshipRepository;
 
 import javax.transaction.Transactional;
@@ -24,6 +25,38 @@ public class FriendshipService {
 	@Autowired
 	public FriendshipService(FriendshipRepository friendshipRepository) {
 		this.friendshipRepository = friendshipRepository;
+	}
+	
+	
+	public Relationship getRelationship(Long requesterId, Long targetId) {
+		long smaller = Math.min(requesterId, targetId);
+		long larger = Math.max(requesterId, targetId);
+		
+		FriendshipKey key = new FriendshipKey(smaller, larger);
+		Optional<Friendship> optional = friendshipRepository.getFriendshipByFriendshipKey(key);
+		
+		// No relation exists
+		if (optional.isEmpty()) {
+			return Relationship.NONE;
+		}
+		
+		Friendship friendship = optional.get();
+		switch (friendship.getStatus()) {
+			case FRIENDS:
+				return Relationship.FRIENDS;
+			case AWAITING_SMALLER_ID_APPROVAL:
+				return (requesterId == smaller) ? Relationship.PENDING : Relationship.SENT;
+			case AWAITING_LARGER_ID_APPROVAL:
+				return (requesterId == smaller) ? Relationship.SENT : Relationship.PENDING;
+			case BOTH_BLOCKED:
+				return Relationship.MUTUAL_BLOCK;
+			case SMALLER_BLOCKED_LARGER:
+				return (requesterId == smaller) ? Relationship.BLOCKED : Relationship.HIDDEN;
+			case LARGER_BLOCKED_SMALLER:
+				return (requesterId == smaller) ? Relationship.HIDDEN : Relationship.BLOCKED;
+		}
+		
+		return Relationship.NONE; // Should never get here as long as above switch covers every case
 	}
 	
 	

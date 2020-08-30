@@ -10,15 +10,15 @@ function User(props) {
 
 	let actionArea;
 	switch (props.variant) {
-		case 'none':
+		case 'FRIENDS':
 			actionArea = null;
 			break;
-		case 'sent':
+		case 'SENT':
 			actionArea = (
 				<Typography>Request sent</Typography>
 			);
 			break;
-		case 'pending':
+		case 'PENDING':
 			actionArea = (
 				<>
 					<Button className="UserDenyFriendButton"
@@ -40,7 +40,7 @@ function User(props) {
 				</>
 			);
 			break;
-		case 'stranger':
+		case 'NONE':
 			actionArea = (
 				<Button className="UserAddFriendButton"
 				        color="primary"

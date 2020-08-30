@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.exception.InvalidFieldException;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.model.request.NewUser;
+import team.gif.friendscheduler.model.response.Relationship;
+import team.gif.friendscheduler.model.response.UserResponse;
+import team.gif.friendscheduler.model.response.UserSearchResponse;
 import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.FieldValidator;
 import team.gif.friendscheduler.service.FriendshipService;
@@ -25,6 +28,7 @@ import team.gif.friendscheduler.service.IntervalService;
 import team.gif.friendscheduler.service.UserService;
 
 import javax.validation.Valid;
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -127,14 +131,22 @@ public class UserController {
 	
 	
 	@GetMapping(value = "/search")
-	public ResponseEntity<List<User>> searchUsers(
+	public ResponseEntity<List<UserSearchResponse>> searchUsers(
 			@RequestHeader("token") String token,
 			@RequestHeader("query") String query) {
 		
 		logger.info("Received searchUsers request");
 		authService.validateTokenString(token);
 		
-		List<User> result = userService.searchUsers(query);
+		Long requesterId = authService.getUserIdFromToken(token);
+		List<User> users = userService.searchUsers(query);
+		
+		List<UserSearchResponse> result = new LinkedList<>();
+		for (User user : users) {
+			UserResponse userResponse = UserResponse.convert(user);
+			Relationship relationship = friendshipService.getRelationship(requesterId, user.getId());
+			result.add(new UserSearchResponse(userResponse, relationship));
+		}
 		
 		return ResponseEntity.ok(result);
 	}
