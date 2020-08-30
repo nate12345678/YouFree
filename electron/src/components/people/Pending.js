@@ -32,7 +32,7 @@ class Pending extends React.Component {
 	}
 
 
-	addFriend = (userId) => {
+	addFriend = (userId) => () => {
 		const pending = this.state.pending.filter(user => user.id !== userId);
 		this.setState({
 			pending: pending
@@ -42,7 +42,7 @@ class Pending extends React.Component {
 	}
 
 
-	deleteFriend = (userId) => {
+	deleteFriend = (userId) => () => {
 		const pending = this.state.pending.filter(user => user.id !== userId);
 		this.setState({
 			pending: pending
@@ -71,8 +71,8 @@ class Pending extends React.Component {
 					<User variant="pending"
 					      username={user.username}
 					      email={user.email}
-					      addFriend={() => this.addFriend(user.id)}
-					      deleteFriend={() => this.deleteFriend(user.id)} />
+					      addFriend={this.addFriend(user.id)}
+					      deleteFriend={this.deleteFriend(user.id)} />
 				</li>
 			);
 		});

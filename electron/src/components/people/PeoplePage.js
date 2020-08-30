@@ -7,11 +7,11 @@ import {
 	Tab,
 	Tabs
 } from '@material-ui/core';
-import SearchPage from './SearchPage';
+import Search from './Search';
 import Friends from './Friends';
 import Pending from './Pending';
 
-class People extends React.Component {
+class PeoplePage extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -23,10 +23,8 @@ class People extends React.Component {
 
 
 	handleChange = (event, newValue) => {
-		this.setState(() => {
-			return {
-				currentTab: newValue
-			}
+		this.setState({
+			currentTab: newValue
 		});
 	}
 
@@ -42,7 +40,7 @@ class People extends React.Component {
 				content = <Pending token={this.props.token} addFriend={this.props.addFriend} deleteFriend={this.props.deleteFriend} handleError={this.props.handleError}/>
 				break;
 			default:
-				content = <SearchPage token={this.props.token} addFriend={this.props.addFriend} handleError={this.props.handleError}/>
+				content = <Search token={this.props.token} addFriend={this.props.addFriend} deleteFriend={this.props.deleteFriend} handleError={this.props.handleError}/>
 		}
 
 		return (
@@ -68,4 +66,4 @@ class People extends React.Component {
 	}
 }
 
-export default People;
+export default PeoplePage;

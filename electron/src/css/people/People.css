@@ -7,10 +7,18 @@
 	transition: var(--background_transition), var(--color_transition);
 }
 
+#search-card {
+	margin-top: -24px;
+}
+
 .users-ul {
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
+}
+
+#search-card .users-ul {
+	margin-top: 16px;
 }
 
 .users-li {

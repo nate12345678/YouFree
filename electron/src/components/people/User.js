@@ -2,34 +2,35 @@ import '../../css/people/User.css';
 import React from 'react'
 import {
 	Button,
-	Icon,
-	Typography
+	Icon
 } from '@material-ui/core';
 
 function User(props) {
 
 	let actionArea;
 	switch (props.variant) {
-		case 'FRIENDS':
+		case 'friends':
 			actionArea = null;
 			break;
-		case 'SENT':
+		case 'sent':
 			actionArea = (
-				<Typography>Request sent</Typography>
+				<div className='user-request-sent-text'>
+					<div>Friend request</div>
+					<div>sent</div>
+				</div>
 			);
 			break;
-		case 'PENDING':
+		case 'pending':
 			actionArea = (
 				<>
-					<Button className="UserDenyFriendButton"
-					        color="primary"
+					<Button color="primary"
 					        variant="outlined"
 					        size="small"
 					        onClick={props.deleteFriend}
 					        disableElevation>
 						<Icon>person_remove</Icon>
 					</Button>
-					<Button className="UserConfirmFriendButton"
+					<Button className="user-confirm-friend-button"
 					        color="primary"
 					        variant="outlined"
 					        size="small"
@@ -40,10 +41,9 @@ function User(props) {
 				</>
 			);
 			break;
-		case 'NONE':
+		case 'none':
 			actionArea = (
-				<Button className="UserAddFriendButton"
-				        color="primary"
+				<Button color="primary"
 				        variant="outlined"
 				        size="small"
 				        onClick={props.addFriend}
@@ -57,13 +57,15 @@ function User(props) {
 	}
 
 	return (
-		<div className="UserContent">
-			<div className="UserPic"> </div>
-			<div className="UserInfo">
-				<span className="UserUsername">{props.username}</span>
-				<span className="UserEmail">{props.email}</span>
+		<div className="user-content">
+			<div className="user-pic"> </div>
+			<div className="user-info">
+				<span className="user-username">{props.username}</span>
+				<span className="user-email">{props.email}</span>
 			</div>
-			{actionArea}
+			<div className='user-action-area'>
+				{actionArea}
+			</div>
 		</div>
 	);
 

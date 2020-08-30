@@ -1,35 +1,44 @@
 
-.UserContent {
+.user-content {
 	display: flex;
 	flex-direction: row;
 }
 
-.UserPic {
+.user-pic {
 	width: 4rem;
 	height: 4rem;
 	border-radius: 25%;
 	background-color: var(--grey_light);
 }
 
-.UserInfo {
+.user-info {
 	display: flex;
 	flex-direction: column;
 	margin-left: 1rem;
 	margin-right: 1rem;
 }
 
-.UserUsername {
+.user-username {
 	margin-top: 0.25rem;
 }
 
-.UserEmail {
+.user-email {
 	margin-top: 0.5rem;
 }
 
-.UserAddFriendButton, .UserDenyFriendButton {
-	margin-left: auto !important;
+.user-action-area {
+	margin-left: auto;
+	display: flex;
 }
 
-.UserConfirmFriendButton {
+.user-request-sent-text {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: rgba(0, 0, 0, 0.54);
+}
+
+.user-confirm-friend-button {
 	margin-left: 0.5em !important;
 }

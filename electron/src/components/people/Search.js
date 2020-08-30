@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import youfree from '../../api/Youfree';
 import User from './User';
 
-class SearchPage extends React.Component {
+class Search extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -18,6 +18,7 @@ class SearchPage extends React.Component {
 	searchUsers = async (query) => {
 		try {
 			const searchUsersResponse = await youfree.searchUsers(this.props.token, query);
+			console.log(searchUsersResponse.data);
 			this.setState({
 				results: searchUsersResponse.data
 			});
@@ -42,11 +43,14 @@ class SearchPage extends React.Component {
 		const results = [...this.state.results];
 		const result = { ...results[index] }
 		switch (result.relationship) {
-			case 'pending':
-				result.relationship = 'friends';
+			case 'PENDING':
+				result.relationship = 'FRIENDS';
 				break;
-			case 'none':
-				result.relationship = 'sent';
+			case 'NONE':
+				result.relationship = 'SENT';
+				break;
+			default:
+				console.error(`Should not be able to add friend with state ${result.relationship}`);
 				break;
 		}
 
@@ -56,6 +60,29 @@ class SearchPage extends React.Component {
 		});
 
 		this.props.addFriend(result.user.id);
+	}
+
+
+	onDeleteFriend = (index) => () => {
+		const results = [...this.state.results];
+		const result = { ...results[index] }
+		switch (result.relationship) {
+			case 'FRIENDS': // Fallthrough
+			case 'SENT': // Fallthrough
+			case 'PENDING':
+				result.relationship = 'NONE';
+				break;
+			default:
+				console.error(`Should not be able to remove friend with state ${result.relationship}`);
+				break;
+		}
+
+		results[index] = result;
+		this.setState({
+			results: results
+		});
+
+		this.props.deleteFriend(result.user.id);
 	}
 
 
@@ -69,10 +96,11 @@ class SearchPage extends React.Component {
 		const userDivs = this.state.results.map((result, index) => {
 			return (
 				<li className="users-li" key={result.user.id}>
-					<User variant={result.relationship}
+					<User variant={result.relationship.toLowerCase()}
 					      username={result.user.username}
 					      email={result.user.email}
 					      addFriend={this.onAddFriend(index)}
+					      deleteFriend={this.onDeleteFriend(index)}
 					/>
 				</li>
 			);
@@ -97,4 +125,4 @@ class SearchPage extends React.Component {
 
 }
 
-export default SearchPage;
+export default Search;

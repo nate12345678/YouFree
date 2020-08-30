@@ -4,7 +4,7 @@ import youfree from '../api/Youfree';
 import Dashboard from './Dashboard';
 import Header from './Header';
 import AuthenticationPage from './login/AuthenticationPage';
-import People from './people/People';
+import PeoplePage from './people/PeoplePage';
 import {
 	BrowserRouter as Router,
 	Route,
@@ -297,10 +297,10 @@ class App extends React.Component {
 			content = (
 				<Switch>
 					<Route path="/friends">
-						<People token={this.state.token}
-						        addFriend={this.addFriend}
-						        deleteFriend={this.deleteFriend}
-						        handleError={this.handleError}/>
+						<PeoplePage token={this.state.token}
+						            addFriend={this.addFriend}
+						            deleteFriend={this.deleteFriend}
+						            handleError={this.handleError}/>
 					</Route>
 					<Route path="/profile">
 						<MyProfilePage user={this.state.self}
