@@ -143,6 +143,10 @@ public class UserController {
 		
 		List<UserSearchResponse> result = new LinkedList<>();
 		for (User user : users) {
+			if (user.getId().equals(requesterId)) {
+				continue;
+			}
+			
 			UserResponse userResponse = UserResponse.convert(user);
 			Relationship relationship = friendshipService.getRelationship(requesterId, user.getId());
 			result.add(new UserSearchResponse(userResponse, relationship));
