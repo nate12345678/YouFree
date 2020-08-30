@@ -38,6 +38,27 @@ class SearchPage extends React.Component {
 	}
 
 
+	onAddFriend = (index) => () => {
+		const results = [...this.state.results];
+		const result = { ...results[index] }
+		switch (result.relationship) {
+			case 'pending':
+				result.relationship = 'friends';
+				break;
+			case 'none':
+				result.relationship = 'sent';
+				break;
+		}
+
+		results[index] = result;
+		this.setState({
+			results: results
+		});
+
+		this.props.addFriend(result.user.id);
+	}
+
+
 	componentDidMount() {
 		this.searchUsers('');
 	}
@@ -45,13 +66,13 @@ class SearchPage extends React.Component {
 
 	render() {
 
-		const userDivs = this.state.results.map(result => {
+		const userDivs = this.state.results.map((result, index) => {
 			return (
 				<li className="users-li" key={result.user.id}>
 					<User variant={result.relationship}
 					      username={result.user.username}
 					      email={result.user.email}
-					      addFriend={() => this.props.addFriend(result.user.id)}
+					      addFriend={this.onAddFriend(index)}
 					/>
 				</li>
 			);
