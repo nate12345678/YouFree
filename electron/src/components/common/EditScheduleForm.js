@@ -17,7 +17,8 @@ class EditScheduleForm extends React.Component {
 		this.state = {
 			dayOfWeek: 0,
 			startMin: '00:00',
-			endMin: '00:00'
+			endMin: '23:59',
+			timeError: false
 		};
 	}
 
@@ -31,6 +32,10 @@ class EditScheduleForm extends React.Component {
 
 	onFormSubmit = (event) => {
 		event.preventDefault();
+
+		if (this.state.timeError) {
+			return;
+		}
 
 		const startMinSplit = this.state.startMin.split(':');
 		const startMin = +startMinSplit[0] * 60 + +startMinSplit[1];
@@ -49,9 +54,35 @@ class EditScheduleForm extends React.Component {
 
 
 	handleInputChange = (event) => {
+		const input = event.target;
+
 		this.setState({
-			[event.target.name]: event.target.value
+			[input.name]: input.value
 		});
+
+		if (input.name === 'startMin') {
+			this.validateStartTime(event);
+		}
+
+		if (input.name === 'endMin') {
+			this.validateEndTime(event);
+		}
+	}
+
+
+	validateStartTime = (event) => {
+		const value = event.target.value;
+		this.setState(prevState => ({
+			timeError: value >= prevState.endMin
+		}));
+	}
+
+
+	validateEndTime = (event) => {
+		const value = event.target.value;
+		this.setState(prevState => ({
+			timeError: value <= prevState.startMin
+		}));
 	}
 
 
@@ -62,6 +93,7 @@ class EditScheduleForm extends React.Component {
 				dayOfWeek: this.props.interval.dayOfWeek,
 				startMin: this.convertTime(this.props.interval.startMin),
 				endMin: this.convertTime(this.props.interval.endMin),
+				timeError: false
 			});
 		}
 	}
@@ -75,6 +107,10 @@ class EditScheduleForm extends React.Component {
 			        onClick={this.props.onDelete}
 			        disableElevation
 			>Delete</Button>
+		);
+
+		const errorMessage = (
+			<div className="edit-schedule-error-message">Start time must be earlier than end time</div>
 		);
 
 		return (
@@ -106,7 +142,9 @@ class EditScheduleForm extends React.Component {
 					           margin="normal"
 					           type="time"
 					           value={this.state.startMin}
-					           onChange={this.handleInputChange}/>
+					           onChange={this.handleInputChange}
+					           error={this.state.timeError}
+					/>
 					<TextField className="edit-schedule-end-field"
 					           name="endMin"
 					           label="End Time"
@@ -115,8 +153,11 @@ class EditScheduleForm extends React.Component {
 					           margin="normal"
 					           type="time"
 					           value={this.state.endMin}
-					           onChange={this.handleInputChange}/>
+					           onChange={this.handleInputChange}
+					           error={this.state.timeError}
+					/>
 				</div>
+				{ this.state.timeError ? errorMessage : null }
 				<div>
 					<Button className="edit-schedule-cancel-button"
 					        variant="outlined"
@@ -129,6 +170,7 @@ class EditScheduleForm extends React.Component {
 					        variant="contained"
 					        color="primary"
 					        type="submit"
+					        disabled={this.state.timeError}
 					        disableElevation
 					>{ this.props.interval ? 'Save' : 'Add Interval' }</Button>
 				</div>
