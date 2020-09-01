@@ -54,6 +54,9 @@ class MyProfilePage extends React.Component {
 	}
 
 
+	onIntervalDeselection = () => this.onIntervalSelection(null);
+
+
 	updateInterval = (dayOfWeek, startMin, endMin) => {
 		this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin);
 
@@ -109,6 +112,7 @@ class MyProfilePage extends React.Component {
 						                  onUpdate={this.updateInterval}
 						                  onDelete={this.deleteInterval}
 						                  onCancel={this.onEditCancel}
+						                  onIntervalDeselection={this.onIntervalDeselection}
 						/>
 					</Collapse>
 				</Card>

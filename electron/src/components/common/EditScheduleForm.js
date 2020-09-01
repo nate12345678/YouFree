@@ -6,7 +6,8 @@ import {
 	InputLabel,
 	MenuItem,
 	Select,
-	TextField
+	TextField,
+	Typography
 } from '@material-ui/core';
 
 class EditScheduleForm extends React.Component {
@@ -51,6 +52,16 @@ class EditScheduleForm extends React.Component {
 
 		this.props.onSubmit(this.state.dayOfWeek, startMin, endMin);
 	};
+
+
+	onCancel = () => {
+		if (this.props.interval) {
+			this.props.onIntervalDeselection();
+			return;
+		}
+
+		this.props.onCancel();
+	}
 
 
 	handleInputChange = (event) => {
@@ -113,8 +124,20 @@ class EditScheduleForm extends React.Component {
 			<div className="edit-schedule-error-message">Start time must be earlier than end time</div>
 		);
 
+		const title = this.props.interval
+			? 'Edit time interval'
+			: 'Create time interval'
+		;
+
+		const subtitle = this.props.interval
+			? 'Or click "cancel" to create a new one'
+			: 'Or click an interval to edit'
+		;
+
 		return (
 			<form className="edit-schedule-form" onSubmit={this.onFormSubmit}>
+				<Typography variant="h5">{title}</Typography>
+				<Typography variant="body2">{subtitle}</Typography>
 				<div>
 					<FormControl variant="outlined" margin="normal">
 						<InputLabel id="edit-schedule-day-label">Day of Week</InputLabel>
@@ -162,7 +185,7 @@ class EditScheduleForm extends React.Component {
 					<Button className="edit-schedule-cancel-button"
 					        variant="outlined"
 					        color="primary"
-					        onClick={this.props.onCancel}
+					        onClick={this.onCancel}
 					        disableElevation
 					>Cancel</Button>
 					{ this.props.interval ? deleteButton : null }
