@@ -11,15 +11,15 @@
 }
 
 .weekly-schedule-label {
-	/*height: 1.25em;*/
+	height: 1.5em;
+	line-height: 1.5em;
 }
 
 .weekly-schedule-day-labels, .weekly-schedule-day-intervals {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
+	padding-top: 0;
+	padding-bottom: 0.25em;
 }
 
 .weekly-schedule-day-labels {

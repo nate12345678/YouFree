@@ -37,7 +37,7 @@ function WeeklySchedule({ schedule, onIntervalSelection, selectedInterval }) {
 		<>
 			<Typography className="weekly-schedule-title" variant="h6">Weekly Schedule</Typography>
 			<div className="weekly-schedule-content">
-				<div className="weekly-schedule-day-labels" style={{ height: (dayLabels.length * 1.75) + 'em' }}>
+				<div className="weekly-schedule-day-labels">
 					{dayLabels}
 				</div>
 				<div className="weekly-schedule-day-intervals">

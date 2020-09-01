@@ -1,7 +1,10 @@
 
 .daily-schedule {
 	display: flex;
-	height: 1em;
+	height: 1.25em;
+	padding-top: 0.125em;
+	padding-bottom: 0.125em;
+	box-sizing: content-box;
 }
 
 .daily-schedule-bar {
