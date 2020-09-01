@@ -4,6 +4,7 @@ import {
 	Typography
 } from '@material-ui/core';
 import DailySchedule from './DailySchedule';
+import Markers from './common/Markers';
 
 const dayOfWeek = {
 	0: 'Monday',
@@ -18,31 +19,32 @@ const dayOfWeek = {
 
 function WeeklySchedule({ schedule, onIntervalSelection, selectedInterval }) {
 
-	let labeledSchedule = <span>Loading</span>
+	// TODO: display something different when content is loading
+	let dayLabels = [];
+	let dailySchedules = [];
 	if (schedule != null) {
-		labeledSchedule = [];
-		for (let i = 0; i < schedule.length; i++) {
-			labeledSchedule.push(
-				<div key={dayOfWeek[i]} className="weekly-schedule-names">
-					{dayOfWeek[i]}
-				</div>
-			);
 
-			labeledSchedule.push(
-				<div key={dayOfWeek[i] + 'schedule'} className="weekly-schedule-schedules">
-					<DailySchedule schedule={schedule[i]}
-					               onIntervalSelection={onIntervalSelection}
-					               selectedInterval={selectedInterval}
-					/>
-				</div>
-			);
+		for (let i = 0; i < schedule.length; i++) {
+			const dayLabel = <div key={dayOfWeek[i] + 'schedule'} className="weekly-schedule-label">{dayOfWeek[i]}</div>;
+			const dailySchedule = <DailySchedule schedule={schedule[i]} onIntervalSelection={onIntervalSelection} selectedInterval={selectedInterval} />
+
+			dayLabels.push(dayLabel);
+			dailySchedules.push(dailySchedule);
 		}
 	}
 
 	return (
 		<>
 			<Typography className="weekly-schedule-title" variant="h6">Weekly Schedule</Typography>
-			<div className="weekly-schedule-grid">{labeledSchedule}</div>
+			<div className="weekly-schedule-content">
+				<div className="weekly-schedule-day-labels" style={{ height: (dayLabels.length * 1.75) + 'em' }}>
+					{dayLabels}
+				</div>
+				<div className="weekly-schedule-day-intervals">
+					{dailySchedules}
+					<Markers variant="time" direction="vertical" />
+				</div>
+			</div>
 		</>
 	);
 }
