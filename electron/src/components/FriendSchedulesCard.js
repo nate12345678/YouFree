@@ -6,6 +6,7 @@ import {
 	CardContent,
 	Typography
 } from '@material-ui/core';
+import Markers from './common/Markers';
 
 function FriendSchedulesCard(props) {
 
@@ -17,30 +18,39 @@ function FriendSchedulesCard(props) {
 		return null;
 	}
 
-	props.friends.sort((a, b) => a.user.username.localeCompare(b.user.username));
+	const friends = props.friends.slice().sort((a, b) => a.user.username.localeCompare(b.user.username));
 
-	let combined = [];
-	for (let i = 0; i < props.friends.length; i++) {
-		let nameDiv = (
-			<div className="name" key={props.friends[i].user.username}>
-				{props.friends[i].user.username}
-			</div>
-		);
-		let scheduleDiv = (
-			<div className="schedule" key={props.friends[i].user.username + 'schedule'}>
-				<DailySchedule schedule={props.friends[i].schedule[props.day]}/>
+	let names = [];
+	let schedules = [];
+	for (let i = 0; i < friends.length; i++) {
+		const name = (
+			<div key={friends[i].user.id} className="friend-schedules-name">
+				{friends[i].user.username}
 			</div>
 		);
 
-		combined.push(nameDiv, scheduleDiv);
+		const schedule = (
+			<React.Fragment key={friends[i].user.id}>
+				<DailySchedule schedule={friends[i].schedule[props.day]} />
+			</React.Fragment>
+		);
+
+		names.push(name);
+		schedules.push(schedule);
 	}
 
 	return (
 		<Card className="friend-schedules-card" elevation={4}>
 			<CardContent>
 				<Typography className="friend-schedules-title" variant="h6">Friends</Typography>
-				<div id="schedules-grid">
-					{combined}
+				<div className="friend-schedules-content">
+					<div className="friend-schedules-names">
+						{names}
+					</div>
+					<div className="friend-schedules-intervals">
+						{schedules}
+						<Markers variant="time" direction="vertical" />
+					</div>
 				</div>
 			</CardContent>
 		</Card>

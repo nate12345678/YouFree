@@ -25,8 +25,12 @@ function WeeklySchedule({ schedule, onIntervalSelection, selectedInterval }) {
 	if (schedule != null) {
 
 		for (let i = 0; i < schedule.length; i++) {
-			const dayLabel = <div key={dayOfWeek[i] + 'schedule'} className="weekly-schedule-label">{dayOfWeek[i]}</div>;
-			const dailySchedule = <DailySchedule schedule={schedule[i]} onIntervalSelection={onIntervalSelection} selectedInterval={selectedInterval} />
+			const dayLabel = <div key={dayOfWeek[i]} className="weekly-schedule-label">{dayOfWeek[i]}</div>;
+			const dailySchedule = (
+				<React.Fragment key={dayOfWeek[i]}>
+					<DailySchedule schedule={schedule[i]} onIntervalSelection={onIntervalSelection} selectedInterval={selectedInterval} />
+				</React.Fragment>
+			);
 
 			dayLabels.push(dayLabel);
 			dailySchedules.push(dailySchedule);
