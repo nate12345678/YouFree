@@ -6,7 +6,6 @@ body {
 	font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
 		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
-	transition: var(--background_transition), var(--color_transition);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
@@ -44,6 +43,10 @@ code {
 	:root {
 		--content-margin: var(--content-margin-large);
 	}
+}
+
+.body-transition {
+	transition: var(--background_transition), var(--color_transition);
 }
 
 .light {

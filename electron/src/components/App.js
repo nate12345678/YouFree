@@ -78,6 +78,14 @@ class App extends React.Component {
 				self: self
 			});
 		}
+
+		// Load theme
+		const theme = localStorage.getItem('theme');
+		if (theme) {
+			this.setState({
+				theme: theme
+			});
+		}
 	}
 
 
@@ -89,6 +97,7 @@ class App extends React.Component {
 			theme: to
 		});
 		document.body.classList.replace(from, to);
+		localStorage.setItem('theme', to);
 	}
 
 
