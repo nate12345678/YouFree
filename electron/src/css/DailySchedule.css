@@ -1,32 +1,32 @@
 
-.intervals {
+.daily-schedule {
 	display: flex;
 	height: 1em;
 }
 
-.intervals .bar {
+.daily-schedule-bar {
 	height: 100%;
 	background-color: var(--primary);
 	transition: var(--button-transition);
 }
 
-.editable .intervals .bar {
+.editable .daily-schedule-bar {
 	cursor: pointer;
 }
 
-.editable .intervals .bar:hover {
+.editable .daily-schedule-bar:hover {
 	background-color: var(--primary_dark);
 }
 
-.editable.faded .intervals .bar {
+.editable .daily-schedule-bar.faded {
 	opacity: 24%;
 }
 
-.editable.faded .intervals .bar:hover {
+.editable .daily-schedule-bar.faded:hover {
 	opacity: 36%;
 }
 
-.editable.faded .intervals .bar.selected {
+.editable .daily-schedule-bar.selected {
 	opacity: 100%;
 }
 

@@ -21,11 +21,15 @@ export default function DailySchedule({ schedule, onIntervalSelection, selectedI
 			? schedule[i].startMin / LENGTH_OF_DAY
 			: (schedule[i].startMin - schedule[i - 1].endMin) / LENGTH_OF_DAY;
 
+		let intervalClass = '';
+		if (selectedInterval) {
+			intervalClass = selectedInterval.id === schedule[i].id ? ' selected' : ' faded';
+		}
+
 		const tooltip = <TooltipContent startMin={schedule[i].startMin} endMin={schedule[i].endMin} editMode={true} />
-		const isSelected = selectedInterval && selectedInterval.id === schedule[i].id;
 		const box = (
 			<Tooltip key={schedule[i].id} title={tooltip} arrow>
-				<div className={'bar' + (isSelected ? ' selected' : '')} onClick={onClick(schedule[i])} style={{
+				<div className={'daily-schedule-bar' + intervalClass} onClick={onClick(schedule[i])} style={{
 					marginLeft: 100 * leftMargin + '%',
 					width: 100 * width + '%'
 				}} />
@@ -36,7 +40,7 @@ export default function DailySchedule({ schedule, onIntervalSelection, selectedI
 	}
 
 	return (
-		<div className="intervals">
+		<div className="daily-schedule">
 			{boxes}
 		</div>
 	);
