@@ -1,18 +1,7 @@
 
-/*.App-header {*/
-/*  background-color: #282c34;*/
-/*  min-height: 100vh;*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  align-items: center;*/
-/*  justify-content: center;*/
-/*  font-size: calc(10px + 2vmin);*/
-/*  color: white;*/
-/*}*/
-
 #content {
-	margin-left: 5%;
-	padding-right: 5%;
+	margin-left: var(--content-margin);
+	padding-right: var(--content-margin);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
