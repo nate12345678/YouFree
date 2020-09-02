@@ -76,7 +76,7 @@ class MyProfilePage extends React.Component {
 
 
 	render() {
-		const weeklyScheduleClasses = 'my-weekly-schedule-card' + (this.state.editMode ? ' editable' : '') + (this.state.selectedInterval ? ' faded' : '');
+		const weeklyScheduleClasses = 'my-weekly-schedule-card' + (this.state.editMode ? ' editable' : '');
 
 		return (
 			<>
