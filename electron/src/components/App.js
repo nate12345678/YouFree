@@ -47,7 +47,6 @@ const darkTheme = createMuiTheme({
 
 
 const initialState = {
-	currentDay: 0,
 	token: null,
 	self: null,
 	schedule: null,
@@ -325,9 +324,8 @@ class App extends React.Component {
 					{/*</Route>*/}
 					<Route path="/">
 						<Dashboard getDashboard={this.getDashboard}
-						           schedule={this.state.schedule ? this.state.schedule[this.state.currentDay] : null}
+						           schedule={this.state.schedule}
 						           friends={this.state.friendSchedules}
-						           day={this.state.currentDay}
 						           onAddInterval={this.addInterval}/>
 					</Route>
 				</Switch>

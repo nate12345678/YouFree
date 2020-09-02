@@ -3,18 +3,9 @@ import React from 'react';
 import {
 	Typography
 } from '@material-ui/core';
+import { dayOfWeek } from '../constants/DayOfWeek'
 import DailySchedule from './DailySchedule';
 import Markers from './common/Markers';
-
-const dayOfWeek = {
-	0: 'Monday',
-	1: 'Tuesday',
-	2: 'Wednesday',
-	3: 'Thursday',
-	4: 'Friday',
-	5: 'Saturday',
-	6: 'Sunday'
-};
 
 
 function WeeklySchedule({ schedule, onIntervalSelection, selectedInterval }) {
