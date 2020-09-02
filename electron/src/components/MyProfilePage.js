@@ -67,6 +67,9 @@ export default class MyProfilePage extends React.Component {
 
 	hasOverlap = (dayOfWeek, startMin, endMin) => {
 		let day = this.props.schedule[dayOfWeek];
+		if (this.state.selectedInterval) {
+			day = day.filter(interval => interval.id !== this.state.selectedInterval.id);
+		}
 
 		// Fast-forward to insertion position
 		let next = 0;
@@ -100,8 +103,21 @@ export default class MyProfilePage extends React.Component {
 
 
 	updateInterval = (dayOfWeek, startMin, endMin) => {
-		this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin);
+		if (this.hasOverlap(dayOfWeek, startMin, endMin)) {
+			this.setState({
+				dialogOpen: true,
+				dialogSuccessCallback: () => {
+					this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin);
+					this.handleDialogClose();
+					this.setState({
+						selectedInterval: null
+					});
+				}
+			});
+			return;
+		}
 
+		this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin);
 		this.setState({
 			selectedInterval: null
 		});
