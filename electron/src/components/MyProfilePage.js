@@ -1,10 +1,16 @@
 import '../css/MyProfilePage.css';
 import React from 'react';
 import {
+	Button,
 	Card,
 	CardActions,
 	CardContent,
 	Collapse,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
 	Icon,
 	IconButton,
 	Typography
@@ -12,14 +18,16 @@ import {
 import WeeklySchedule from './WeeklySchedule';
 import EditScheduleForm from './common/EditScheduleForm';
 
-class MyProfilePage extends React.Component {
+export default class MyProfilePage extends React.Component {
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			editMode: false,
-			selectedInterval: null
+			selectedInterval: null,
+			dialogOpen: false,
+			dialogSuccessCallback: null
 		};
 	}
 
@@ -57,6 +65,40 @@ class MyProfilePage extends React.Component {
 	onIntervalDeselection = () => this.onIntervalSelection(null);
 
 
+	hasOverlap = (dayOfWeek, startMin, endMin) => {
+		let day = this.props.schedule[dayOfWeek];
+
+		// Fast-forward to insertion position
+		let next = 0;
+		while (next < day.length) {
+			if (startMin <= day[next].startMin) break;
+			next++;
+		}
+
+		// Check if previous or next intervals overlap
+		return (
+			(next > 0 && day[next - 1].endMin >= startMin)
+			|| (next < day.length && day[next].startMin <= endMin)
+		);
+	}
+
+
+	addInterval = (dayOfWeek, startMin, endMin) => {
+		if (this.hasOverlap(dayOfWeek, startMin, endMin)) {
+			this.setState({
+				dialogOpen: true,
+				dialogSuccessCallback: () => {
+					this.props.onAddInterval(dayOfWeek, startMin, endMin);
+					this.handleDialogClose();
+				}
+			});
+			return;
+		}
+
+		this.props.onAddInterval(dayOfWeek, startMin, endMin);
+	}
+
+
 	updateInterval = (dayOfWeek, startMin, endMin) => {
 		this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin);
 
@@ -71,6 +113,14 @@ class MyProfilePage extends React.Component {
 
 		this.setState({
 			selectedInterval: null
+		});
+	}
+
+
+	handleDialogClose = () => {
+		this.setState({
+			dialogOpen: false,
+			dialogSuccessCallback: null
 		});
 	}
 
@@ -108,7 +158,7 @@ class MyProfilePage extends React.Component {
 					</CardActions>
 					<Collapse in={this.state.editMode} unmountOnExit>
 						<EditScheduleForm interval={this.state.selectedInterval}
-						                  onSubmit={this.props.onAddInterval}
+						                  onSubmit={this.addInterval}
 						                  onUpdate={this.updateInterval}
 						                  onDelete={this.deleteInterval}
 						                  onCancel={this.onEditCancel}
@@ -116,9 +166,24 @@ class MyProfilePage extends React.Component {
 						/>
 					</Collapse>
 				</Card>
+				<Dialog open={this.state.dialogOpen} onClose={this.handleDialogClose}>
+					<DialogTitle>Combine time intervals?</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							The time you entered overlaps with an existing interval.
+							Would you like to combine the intervals?
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button autofocus color="primary" onClick={this.handleDialogClose}>
+							Cancel
+						</Button>
+						<Button color="primary" onClick={this.state.dialogSuccessCallback}>
+							Yes
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</>
 		);
 	}
 }
-
-export default MyProfilePage;

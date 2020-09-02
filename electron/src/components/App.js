@@ -15,7 +15,7 @@ import * as Colors from '@material-ui/core/colors';
 import { ThemeProvider } from '@material-ui/core/styles';
 // import AboutPage from './AboutPage';
 import MyProfilePage from './MyProfilePage';
-import ErrorSnackbar from './ErrorSnackbar';
+import ErrorSnackbar from './common/ErrorSnackbar';
 
 
 const lightTheme = createMuiTheme({
