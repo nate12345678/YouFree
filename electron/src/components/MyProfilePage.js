@@ -11,12 +11,14 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
+	FormControlLabel,
 	Icon,
 	IconButton,
 	Typography
 } from '@material-ui/core';
 import WeeklySchedule from './WeeklySchedule';
 import EditScheduleForm from './common/EditScheduleForm';
+import Checkbox from '@material-ui/core/Checkbox';
 
 export default class MyProfilePage extends React.Component {
 
@@ -27,13 +29,18 @@ export default class MyProfilePage extends React.Component {
 			editMode: false,
 			selectedInterval: null,
 			dialogOpen: false,
-			dialogSuccessCallback: null
+			dialogSuccessCallback: null,
+			askOnOverlap: true
 		};
 	}
 
 
 	componentDidMount() {
 		this.props.getSchedule();
+		const askOnOverlap = localStorage.getItem('ask_on_overlap');
+		this.setState({
+			askOnOverlap: askOnOverlap === null || askOnOverlap === 'true'
+		});
 	}
 
 
@@ -87,13 +94,10 @@ export default class MyProfilePage extends React.Component {
 
 
 	addInterval = (dayOfWeek, startMin, endMin) => {
-		if (this.hasOverlap(dayOfWeek, startMin, endMin)) {
+		if (this.state.askOnOverlap && this.hasOverlap(dayOfWeek, startMin, endMin)) {
 			this.setState({
 				dialogOpen: true,
-				dialogSuccessCallback: () => {
-					this.props.onAddInterval(dayOfWeek, startMin, endMin);
-					this.handleDialogClose();
-				}
+				dialogSuccessCallback: () => this.props.onAddInterval(dayOfWeek, startMin, endMin)
 			});
 			return;
 		}
@@ -103,16 +107,10 @@ export default class MyProfilePage extends React.Component {
 
 
 	updateInterval = (dayOfWeek, startMin, endMin) => {
-		if (this.hasOverlap(dayOfWeek, startMin, endMin)) {
+		if (this.state.askOnOverlap && this.hasOverlap(dayOfWeek, startMin, endMin)) {
 			this.setState({
 				dialogOpen: true,
-				dialogSuccessCallback: () => {
-					this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin);
-					this.handleDialogClose();
-					this.setState({
-						selectedInterval: null
-					});
-				}
+				dialogSuccessCallback: () => this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin)
 			});
 			return;
 		}
@@ -138,6 +136,18 @@ export default class MyProfilePage extends React.Component {
 			dialogOpen: false,
 			dialogSuccessCallback: null
 		});
+	}
+
+
+	handleDialogSuccess = (askOnOverlap) => () => {
+		this.state.dialogSuccessCallback();
+		this.setState({
+			dialogOpen: false,
+			dialogSuccessCallback: null,
+			selectedInterval: null,
+			askOnOverlap: askOnOverlap
+		});
+		localStorage.setItem('ask_on_overlap', askOnOverlap);
 	}
 
 
@@ -182,24 +192,46 @@ export default class MyProfilePage extends React.Component {
 						/>
 					</Collapse>
 				</Card>
-				<Dialog open={this.state.dialogOpen} onClose={this.handleDialogClose}>
-					<DialogTitle>Combine time intervals?</DialogTitle>
-					<DialogContent>
-						<DialogContentText>
-							The time you entered overlaps with an existing interval.
-							Would you like to combine the intervals?
-						</DialogContentText>
-					</DialogContent>
-					<DialogActions>
-						<Button autofocus color="primary" onClick={this.handleDialogClose}>
-							Cancel
-						</Button>
-						<Button color="primary" onClick={this.state.dialogSuccessCallback}>
-							Yes
-						</Button>
-					</DialogActions>
-				</Dialog>
+				<OverlapDialog open={this.state.dialogOpen}
+				               onClose={this.handleDialogClose}
+				               onSuccess={this.handleDialogSuccess}
+				/>
 			</>
 		);
 	}
+}
+
+
+function OverlapDialog({ open, onClose, onSuccess }) {
+	let [askOnOverlap, setAskOnOverlap] = React.useState(true);
+	let handleCheckboxChange = (event) => setAskOnOverlap(event.target.checked);
+
+	return (
+		<Dialog open={open} onEnter={() => setAskOnOverlap(true)} onClose={onClose}>
+			<DialogTitle>Combine time intervals?</DialogTitle>
+			<DialogContent>
+				<DialogContentText>
+					The time you entered overlaps with an existing interval.
+					Would you like to combine the intervals?
+				</DialogContentText>
+				<FormControlLabel
+					name="askOnOverlap"
+					control={
+						<Checkbox checked={askOnOverlap}
+						          size="small"
+						          color="primary"
+						          onChange={handleCheckboxChange}
+						/>
+					}
+					label="Ask me this every time"
+					labelPlacement="start"
+					style={{width: '100%', paddingLeft: 'auto', color: 'rgba(0, 0, 0, 0.54)'}}
+				/>
+			</DialogContent>
+			<DialogActions>
+				<Button autoFocus color="primary" onClick={onClose}>Cancel</Button>
+				<Button color="primary" onClick={onSuccess(askOnOverlap)}>Yes</Button>
+			</DialogActions>
+		</Dialog>
+	);
 }
