@@ -4,7 +4,12 @@
 	transition: var(--background_transition), var(--color_transition) !important;
 }
 
-#home {
+.title-link {
+	text-decoration: none;
+	color: inherit;
+	height: var(--header-height);
+	display: flex;
+	align-items: center;
 	margin-right: var(--content-margin);
 }
 
@@ -56,8 +61,6 @@
 .drawer-content {
 	height: 100%;
 	min-width: 250px;
-	color: var(--text);
-	background: var(--elements);
 	transition: var(--background_transition) var(--color_transition);
 }
 
