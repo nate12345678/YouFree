@@ -23,7 +23,7 @@ const routes = [
 	// { route: '/about', label: 'About' }
 ];
 
-const title = <Typography id="home" variant="h5" color="inherit">You Free</Typography>;
+const title = <Typography variant="h5" color="inherit">You Free</Typography>;
 
 export default function Header(props) {
 
@@ -133,7 +133,9 @@ function MobileToolbar({ onMenuClick, themeButton }) {
 			<IconButton className="menu-button" onClick={onMenuClick}>
 				<Icon color="inherit">menu</Icon>
 			</IconButton>
-			{title}
+			<NavLink className="title-link" exact to="/">
+				{title}
+			</NavLink>
 			{themeButton}
 		</React.Fragment>
 	);
