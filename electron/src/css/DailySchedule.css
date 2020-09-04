@@ -11,24 +11,21 @@
 	height: 100%;
 	background-color: var(--primary);
 	transition: var(--button-transition);
-}
-
-.editable .daily-schedule-bar {
 	cursor: pointer;
 }
 
-.editable .daily-schedule-bar:hover {
+.daily-schedule-bar:hover {
 	background-color: var(--primary_dark);
 }
 
-.editable .daily-schedule-bar.faded {
+.daily-schedule-bar.faded {
 	opacity: 0.24;
 }
 
-.editable .daily-schedule-bar.faded:hover {
+.daily-schedule-bar.faded:hover {
 	opacity: 0.36;
 }
 
-.editable .daily-schedule-bar.selected {
+.daily-schedule-bar.selected {
 	opacity: 1;
 }

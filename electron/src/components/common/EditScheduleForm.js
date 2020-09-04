@@ -15,12 +15,20 @@ class EditScheduleForm extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			dayOfWeek: 0,
-			startMin: '00:00',
-			endMin: '23:59',
-			timeError: false
-		};
+		this.state = (props.interval)
+			? {
+				dayOfWeek: props.interval.dayOfWeek,
+				startMin: this.convertTime(props.interval.startMin),
+				endMin: this.convertTime(props.interval.endMin),
+				timeError: false
+			}
+			: {
+				dayOfWeek: 0,
+				startMin: '00:00',
+				endMin: '23:59',
+				timeError: false
+			}
+		;
 	}
 
 
@@ -100,6 +108,7 @@ class EditScheduleForm extends React.Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		// If a new interval has been selected, populate form with its values
 		if (this.props.interval && (prevProps.interval == null || this.props.interval.id !== prevProps.interval.id)) {
+			console.log("Running");
 			this.setState({
 				dayOfWeek: this.props.interval.dayOfWeek,
 				startMin: this.convertTime(this.props.interval.startMin),

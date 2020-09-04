@@ -61,9 +61,8 @@ export default class MyProfilePage extends React.Component {
 
 
 	onIntervalSelection = (interval) => {
-		if (this.state.editMode === false) return;
-
 		this.setState({
+			editMode: true,
 			selectedInterval: interval
 		});
 	}
@@ -152,8 +151,6 @@ export default class MyProfilePage extends React.Component {
 
 
 	render() {
-		const weeklyScheduleClasses = 'my-weekly-schedule-card' + (this.state.editMode ? ' editable' : '');
-
 		return (
 			<>
 				<Card className="my-profile-card" elevation={4}>
@@ -167,7 +164,7 @@ export default class MyProfilePage extends React.Component {
 						</div>
 					</CardContent>
 				</Card>
-				<Card className={weeklyScheduleClasses} elevation={4}>
+				<Card className="my-weekly-schedule-card" elevation={4}>
 					<CardContent>
 						<WeeklySchedule schedule={this.props.schedule}
 						                onIntervalSelection={this.onIntervalSelection}
