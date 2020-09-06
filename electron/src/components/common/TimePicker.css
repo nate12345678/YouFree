@@ -1,0 +1,61 @@
+
+.time-picker-button {
+	position: relative;
+}
+
+.time-picker-button-hack {
+	cursor: pointer;
+	position: absolute;
+	z-index: 5;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: calc(100% + 50px);
+}
+
+.time-picker-title {
+	padding-top: 16px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+	text-align: center;
+}
+
+.time-picker {
+	display: flex;
+	flex-direction: row;
+	width: 240px;
+	height: 480px;
+}
+
+.time-picker-col.MuiList-root {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.time-picker-col {
+	width: 80px;
+	line-height: 32px;
+	overflow-y: auto;
+}
+
+.time-picker-col::-webkit-scrollbar {
+	display: none;
+	/*background-color: transparent;*/
+	/*width: 8px;*/
+}
+
+/*.time-picker-col::-webkit-scrollbar-thumb {*/
+/*	background-color: rgba(0, 0, 0, 0.54);*/
+/*	border-radius: 4px;*/
+/*}*/
+
+.time-picker-col-minutes {
+	border-left: 1px solid rgba(0, 0, 0, 0.12);
+	border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+
+.time-picker-entry {
+	margin-left: auto;
+	margin-right: auto;
+}
