@@ -25,6 +25,7 @@ import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.FieldValidator;
 import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.IntervalService;
+import team.gif.friendscheduler.service.NotificationService;
 import team.gif.friendscheduler.service.UserService;
 
 import javax.validation.Valid;
@@ -39,20 +40,24 @@ public class UserController {
 	private final AuthService authService;
 	private final FriendshipService friendshipService;
 	private final IntervalService intervalService;
+	private final NotificationService notificationService;
 	private final UserService userService;
 	private static final Logger logger = LogManager.getLogger(UserController.class);
 	
 	@Autowired
-	public UserController(FieldValidator fieldValidator,
-	                      AuthService authService,
-	                      FriendshipService friendshipService,
-	                      IntervalService intervalService,
-	                      UserService userService) {
-		
+	public UserController(
+			FieldValidator fieldValidator,
+			AuthService authService,
+			FriendshipService friendshipService,
+			IntervalService intervalService,
+			NotificationService notificationService,
+			UserService userService
+	) {
 		this.fieldValidator = fieldValidator;
 		this.authService = authService;
 		this.friendshipService = friendshipService;
 		this.intervalService = intervalService;
+		this.notificationService = notificationService;
 		this.userService = userService;
 	}
 	
@@ -122,8 +127,10 @@ public class UserController {
 		authService.validateTokenString(token);
 		
 		Long id = authService.getUserIdFromToken(token);
+		authService.revokeToken(token);
 		friendshipService.removeUser(id);
 		intervalService.removeAllIntervals(id);
+		notificationService.deleteAllNotificationsForUser(id);
 		userService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();

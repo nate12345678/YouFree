@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.FriendshipService;
+import team.gif.friendscheduler.service.NotificationService;
 import team.gif.friendscheduler.service.UserService;
 
 import java.util.List;
@@ -27,16 +28,19 @@ public class FriendshipController {
 	private static final Logger logger = LogManager.getLogger(FriendshipController.class);
 	private final AuthService authService;
 	private final FriendshipService friendshipService;
+	private final NotificationService notificationService;
 	private final UserService userService;
 	
 	@Autowired
 	public FriendshipController(
 			AuthService authService,
-			UserService userService,
-			FriendshipService friendshipService
+			FriendshipService friendshipService,
+			NotificationService notificationService,
+			UserService userService
 	) {
 		this.authService = authService;
 		this.friendshipService = friendshipService;
+		this.notificationService = notificationService;
 		this.userService = userService;
 	}
 	
@@ -67,6 +71,7 @@ public class FriendshipController {
 		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
 		friendshipService.addFriendship(requesterId, userId);
+		notificationService.sendFriendRequestNotification(userId, requesterId);
 		
 		return ResponseEntity.ok().build();
 	}
