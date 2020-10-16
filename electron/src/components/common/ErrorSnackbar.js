@@ -3,6 +3,11 @@ import MuiAlert from '@material-ui/lab/Alert';
 import {
 	Snackbar
 } from '@material-ui/core';
+import { connect } from 'react-redux';
+import {
+	clearError,
+	setError
+} from '../../state/Store';
 
 
 const SNACKBAR_ORIGIN = {
@@ -10,14 +15,27 @@ const SNACKBAR_ORIGIN = {
 	horizontal: 'center'
 };
 
-export default function ErrorSnackbar({ message, resetError }) {
+function select(state) {
+	return {
+		message: state.errorMessage
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		setError: (message) => dispatch(setError(message)),
+		clearError: () => dispatch(clearError())
+	};
+}
+
+function ConnectedErrorSnackbar({ message, clearError }) {
 
 	const handleClose = (event, reason) => {
 		if (reason === 'clickaway') {
 			return;
 		}
 
-		resetError();
+		clearError();
 	}
 
 	return (
@@ -26,3 +44,6 @@ export default function ErrorSnackbar({ message, resetError }) {
 		</Snackbar>
 	);
 }
+
+const ErrorSnackbar = connect(select, mapDispatchToProps)(ConnectedErrorSnackbar);
+export default ErrorSnackbar;

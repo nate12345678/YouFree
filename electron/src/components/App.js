@@ -10,73 +10,52 @@ import {
 	Route,
 	Switch
 } from 'react-router-dom';
-import { createMuiTheme } from '@material-ui/core';
-import * as Colors from '@material-ui/core/colors';
 import { ThemeProvider } from '@material-ui/core/styles';
 // import AboutPage from './AboutPage';
 import MyProfilePage from './MyProfilePage';
 import ErrorSnackbar from './common/ErrorSnackbar';
 import { connect } from 'react-redux';
 import {
+	clearError,
 	clearSelf,
 	clearToken,
+	setError,
 	setSelf,
 	setTheme,
 	setToken
 } from '../state/Store';
-
-
-const lightTheme = createMuiTheme({
-	palette: {
-		primary: {
-			main: Colors.indigo['500'],
-			dark: Colors.indigo['700']
-		},
-		secondary: {
-			main: Colors.pink['300']
-		},
-		red: {
-			main: Colors.red['400']
-		}
-	}
-});
-
-const darkTheme = createMuiTheme({
-	palette: {
-		type: 'dark',
-		primary: {
-			main: Colors.indigo['200']
-		},
-		secondary: {
-			main: Colors.pink['800']
-		}
-	}
-});
+import {
+	darkTheme,
+	lightTheme
+} from '../models/Themes';
 
 
 const select = (state) => {
 	return {
 		token: state.token,
 		self: state.self,
-		theme: state.theme
+		theme: state.theme,
+		errorMessage: state.errorMessage
 	}
 }
 
 
 function mapDispatchToProps(dispatch) {
 	return {
-		setToken: (token) => dispatch(setToken(token)),
-		clearToken: () => dispatch(clearToken()),
+		setError: (message) => dispatch(setError(message)),
 		setSelf: (self) => dispatch(setSelf(self)),
+		setTheme: (theme) => dispatch(setTheme(theme)),
+		setToken: (token) => dispatch(setToken(token)),
+		clearError: () => dispatch(clearError()),
 		clearSelf: () => dispatch(clearSelf()),
-		setTheme: (theme) => dispatch(setTheme(theme))
+		clearToken: () => dispatch(clearToken())
 	};
 }
+
 
 const initialState = {
 	schedule: null,
 	friendSchedules: null,
-	errorMessage: null
 };
 
 
@@ -118,24 +97,15 @@ class ConnectedApp extends React.Component {
 	}
 
 
-	resetError = () => this.setState({
-		errorMessage: null
-	});
-
-
 	handleError = (error) => {
 		if (error.response !== undefined) {
 			console.log(error.response);
-			this.setState({
-				errorMessage: error.response.data
-			});
+			this.props.setError(error.response.data);
 			return;
 		}
 
 		console.log('An unknown error has occurred');
-		this.setState({
-			errorMessage: 'An unknown error has occurred'
-		});
+		this.props.setError('An unknown error has occurred');
 	};
 
 
@@ -357,7 +327,7 @@ class ConnectedApp extends React.Component {
 						{content}
 					</div>
 				</Router>
-				<ErrorSnackbar message={this.state.errorMessage} resetError={this.resetError} />
+				<ErrorSnackbar />
 			</ThemeProvider>
 		);
 	}

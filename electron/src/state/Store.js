@@ -5,7 +5,9 @@ const ACTIONS = {
 	CLEAR_TOKEN: '[AUTH] Clear token',
 	SET_SELF: '[AUTH] Set self user',
 	CLEAR_SELF: '[AUTH] Clear self user',
-	SET_THEME: '[THEME] Set theme'
+	SET_THEME: '[THEME] Set theme',
+	SET_ERROR: '[ERROR] Set error msg',
+	CLEAR_ERROR: '[ERROR] Clear error msg'
 }
 
 export function setToken(token) {
@@ -17,7 +19,7 @@ export function setToken(token) {
 
 export function clearToken() {
 	return {
-		type: ACTIONS.CLEAR_TOKEN,
+		type: ACTIONS.CLEAR_TOKEN
 	};
 }
 
@@ -41,11 +43,25 @@ export function setTheme(theme) {
 	};
 }
 
+export function setError(message) {
+	return {
+		type: ACTIONS.SET_ERROR,
+		payload: message
+	};
+}
+
+export function clearError(message) {
+	return {
+		type: ACTIONS.CLEAR_ERROR
+	};
+}
+
 
 const INITIAL_STATE = {
 	token: null,
 	self: null,
-	theme: 'light'
+	theme: 'light',
+	errorMessage: null
 };
 
 const reducer = function (state = INITIAL_STATE, action) {
@@ -74,6 +90,16 @@ const reducer = function (state = INITIAL_STATE, action) {
 			return {
 				...state,
 				theme: action.payload
+			};
+		case ACTIONS.SET_ERROR:
+			return {
+				...state,
+				errorMessage: action.payload
+			};
+		case ACTIONS.CLEAR_ERROR:
+			return {
+				...state,
+				error: null
 			};
 		default:
 			return state;
