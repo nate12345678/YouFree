@@ -23,7 +23,7 @@ import {
 	setSelf,
 	setTheme,
 	setToken
-} from '../state/Store';
+} from '../state/Actions';
 import {
 	darkTheme,
 	lightTheme

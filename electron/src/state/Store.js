@@ -1,61 +1,5 @@
 import { createStore } from 'redux';
-
-const ACTIONS = {
-	SET_TOKEN: '[AUTH] Set token',
-	CLEAR_TOKEN: '[AUTH] Clear token',
-	SET_SELF: '[AUTH] Set self user',
-	CLEAR_SELF: '[AUTH] Clear self user',
-	SET_THEME: '[THEME] Set theme',
-	SET_ERROR: '[ERROR] Set error msg',
-	CLEAR_ERROR: '[ERROR] Clear error msg'
-}
-
-export function setToken(token) {
-	return {
-		type: ACTIONS.SET_TOKEN,
-		payload: token
-	};
-}
-
-export function clearToken() {
-	return {
-		type: ACTIONS.CLEAR_TOKEN
-	};
-}
-
-export function setSelf(self) {
-	return {
-		type: ACTIONS.SET_SELF,
-		payload: self
-	};
-}
-
-export function clearSelf() {
-	return {
-		type: ACTIONS.CLEAR_SELF
-	};
-}
-
-export function setTheme(theme) {
-	return {
-		type: ACTIONS.SET_THEME,
-		payload: theme
-	};
-}
-
-export function setError(message) {
-	return {
-		type: ACTIONS.SET_ERROR,
-		payload: message
-	};
-}
-
-export function clearError(message) {
-	return {
-		type: ACTIONS.CLEAR_ERROR
-	};
-}
-
+import { Actions } from './Actions';
 
 const INITIAL_STATE = {
 	token: null,
@@ -66,37 +10,37 @@ const INITIAL_STATE = {
 
 const reducer = function (state = INITIAL_STATE, action) {
 	switch (action.type) {
-		case ACTIONS.SET_TOKEN:
+		case Actions.SET_TOKEN:
 			return {
 				...state,
 				token: action.payload
 			};
-		case ACTIONS.CLEAR_TOKEN:
+		case Actions.CLEAR_TOKEN:
 			return {
 				...state,
 				token: null
 			};
-		case ACTIONS.SET_SELF:
+		case Actions.SET_SELF:
 			return {
 				...state,
 				self: action.payload
 			};
-		case ACTIONS.CLEAR_SELF:
+		case Actions.CLEAR_SELF:
 			return {
 				...state,
 				self: null
 			};
-		case ACTIONS.SET_THEME:
+		case Actions.SET_THEME:
 			return {
 				...state,
 				theme: action.payload
 			};
-		case ACTIONS.SET_ERROR:
+		case Actions.SET_ERROR:
 			return {
 				...state,
 				errorMessage: action.payload
 			};
-		case ACTIONS.CLEAR_ERROR:
+		case Actions.CLEAR_ERROR:
 			return {
 				...state,
 				error: null

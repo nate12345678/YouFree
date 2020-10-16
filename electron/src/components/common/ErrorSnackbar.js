@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import {
 	clearError,
 	setError
-} from '../../state/Store';
+} from '../../state/Actions';
 
 
 const SNACKBAR_ORIGIN = {
