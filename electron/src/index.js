@@ -1,6 +1,8 @@
 import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { store } from './state/Store';
 import App from './components/App';
 
 // Initialize theme
@@ -18,6 +20,8 @@ ReactDOM.render(
 	// </React.StrictMode>,
 	// document.getElementById('root')
 
-	<App />,
+	<Provider store={store}>
+		<App />
+	</Provider>,
 	document.querySelector('#root')
 );

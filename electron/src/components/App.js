@@ -16,6 +16,14 @@ import { ThemeProvider } from '@material-ui/core/styles';
 // import AboutPage from './AboutPage';
 import MyProfilePage from './MyProfilePage';
 import ErrorSnackbar from './common/ErrorSnackbar';
+import { connect } from 'react-redux';
+import {
+	clearSelf,
+	clearToken,
+	setSelf,
+	setTheme,
+	setToken
+} from '../state/Store';
 
 
 const lightTheme = createMuiTheme({
@@ -46,23 +54,39 @@ const darkTheme = createMuiTheme({
 });
 
 
-const initialState = {
-	token: null,
-	self: null,
-	schedule: null,
-	friendSchedules: null,
-	theme: 'light',
-	errorMessage: null
+const select = (state) => {
+	return {
+		token: state.token,
+		self: state.self,
+		theme: state.theme
+	}
 }
 
 
-class App extends React.Component {
+function mapDispatchToProps(dispatch) {
+	return {
+		setToken: (token) => dispatch(setToken(token)),
+		clearToken: () => dispatch(clearToken()),
+		setSelf: (self) => dispatch(setSelf(self)),
+		clearSelf: () => dispatch(clearSelf()),
+		setTheme: (theme) => dispatch(setTheme(theme))
+	};
+}
+
+const initialState = {
+	schedule: null,
+	friendSchedules: null,
+	errorMessage: null
+};
+
+
+class ConnectedApp extends React.Component {
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			...initialState
+			...initialState,
 		};
 	}
 
@@ -72,29 +96,23 @@ class App extends React.Component {
 		const token = localStorage.getItem('token');
 		const self = JSON.parse(localStorage.getItem('self'));
 		if (token && self) {
-			this.setState({
-				token: token,
-				self: self
-			});
+			this.props.setToken(token);
+			this.props.setSelf(self);
 		}
 
 		// Load theme
 		const theme = localStorage.getItem('theme');
 		if (theme) {
-			this.setState({
-				theme: theme
-			});
+			this.props.setTheme(theme);
 		}
 	}
 
 
 	invertTheme = () => {
-		const from = this.state.theme;
-		const to = this.state.theme === 'light' ? 'dark' : 'light';
+		const from = this.props.theme;
+		const to = this.props.theme === 'light' ? 'dark' : 'light';
 
-		this.setState({
-			theme: to
-		});
+		this.props.setTheme(to);
 		document.body.classList.replace(from, to);
 		localStorage.setItem('theme', to);
 	}
@@ -123,7 +141,7 @@ class App extends React.Component {
 
 	getDashboard = async () => {
 		// TODO: can do these simultaneously
-		await this.getSchedule(this.state.self.id);
+		await this.getSchedule(this.props.self.id);
 		await this.getFriendSchedules();
 	};
 
@@ -140,10 +158,8 @@ class App extends React.Component {
 				localStorage.setItem('self', JSON.stringify(user));
 			}
 
-			this.setState({
-				token: token,
-				self: user
-			});
+			this.props.setToken(token);
+			this.props.setSelf(user);
 
 			console.log('Created new user');
 		} catch (error) {
@@ -163,11 +179,10 @@ class App extends React.Component {
 				localStorage.setItem('token', token);
 				localStorage.setItem('self', JSON.stringify(user));
 			}
+			console.log(token);
 
-			this.setState({
-				token: token,
-				self: user
-			});
+			this.props.setToken(token);
+			this.props.setSelf(user);
 			console.log('Logged in');
 		} catch (error) {
 			this.handleError(error);
@@ -177,9 +192,11 @@ class App extends React.Component {
 
 	logout = async () => {
 		try {
-			await youfree.logout(this.state.token);
+			await youfree.logout(this.props.token);
 
 			localStorage.clear();
+			this.props.clearToken();
+			this.props.clearSelf();
 			this.setState({
 				...initialState
 			});
@@ -192,7 +209,7 @@ class App extends React.Component {
 
 	addInterval = async (dayOfWeek, startMin, endMin) => {
 		try {
-			const addIntervalReq = await youfree.addInterval(this.state.token, dayOfWeek, startMin, endMin);
+			const addIntervalReq = await youfree.addInterval(this.props.token, dayOfWeek, startMin, endMin);
 
 			console.log('Added interval');
 			const schedule = addIntervalReq.data;
@@ -208,7 +225,7 @@ class App extends React.Component {
 
 	updateInterval = async (intervalId, dayOfWeek, startMin, endMin) => {
 		try {
-			const updateIntervalResponse = await youfree.updateInterval(this.state.token, intervalId, dayOfWeek, startMin, endMin);
+			const updateIntervalResponse = await youfree.updateInterval(this.props.token, intervalId, dayOfWeek, startMin, endMin);
 
 			console.log('Updated interval');
 			const schedule = updateIntervalResponse.data;
@@ -226,7 +243,7 @@ class App extends React.Component {
 		// TODO: save old schedule and make copy of new one
 		try {
 			// TODO: locally remove interval from copy of schedule, set state to new schedule
-			const delIntervalResponse = await youfree.deleteInterval(this.state.token, intervalId);
+			const delIntervalResponse = await youfree.deleteInterval(this.props.token, intervalId);
 
 			console.log('Deleted interval');
 			const schedule = delIntervalResponse.data;
@@ -245,7 +262,7 @@ class App extends React.Component {
 	getSchedule = async (userId) => {
 		let schedule = null;
 		try {
-			const getScheduleResponse = await youfree.getSchedule(this.state.token, userId);
+			const getScheduleResponse = await youfree.getSchedule(this.props.token, userId);
 			schedule = getScheduleResponse.data;
 
 			this.setState({
@@ -259,13 +276,13 @@ class App extends React.Component {
 
 
 	getSelfSchedule = () => {
-		return this.getSchedule(this.state.self.id);
+		return this.getSchedule(this.props.self.id);
 	};
 
 
 	getFriendSchedules = async () => {
 		try {
-			const getFriendSchedulesResponse = await youfree.getFriendSchedules(this.state.token);
+			const getFriendSchedulesResponse = await youfree.getFriendSchedules(this.props.token);
 
 			this.setState({
 				friendSchedules: getFriendSchedulesResponse.data
@@ -278,7 +295,7 @@ class App extends React.Component {
 
 	addFriend = async (userId) => {
 		try {
-			await youfree.addFriend(this.state.token, userId);
+			await youfree.addFriend(this.props.token, userId);
 
 		} catch (error) {
 			this.handleError(error);
@@ -288,7 +305,7 @@ class App extends React.Component {
 
 	deleteFriend = async (userId) => {
 		try {
-			await youfree.deleteFriend(this.state.token, userId);
+			await youfree.deleteFriend(this.props.token, userId);
 		} catch (error) {
 			this.handleError(error);
 		}
@@ -297,7 +314,7 @@ class App extends React.Component {
 
 	render() {
 		let content;
-		if (this.state.token == null) {
+		if (this.props.token == null || this.props.self == null) {
 			content = <AuthenticationPage onLoginSubmit={this.login}
 			                              onCreateUserSubmit={this.createUser}
 			                              handleError={this.handleError}/>;
@@ -305,13 +322,13 @@ class App extends React.Component {
 			content = (
 				<Switch>
 					<Route path="/friends">
-						<PeoplePage token={this.state.token}
+						<PeoplePage token={this.props.token}
 						            addFriend={this.addFriend}
 						            deleteFriend={this.deleteFriend}
 						            handleError={this.handleError}/>
 					</Route>
 					<Route path="/profile">
-						<MyProfilePage user={this.state.self}
+						<MyProfilePage user={this.props.self}
 						               schedule={this.state.schedule}
 						               getSchedule={this.getSelfSchedule}
 						               onAddInterval={this.addInterval}
@@ -333,9 +350,9 @@ class App extends React.Component {
 		}
 
 		return (
-			<ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
+			<ThemeProvider theme={this.props.theme === 'light' ? lightTheme : darkTheme}>
 				<Router>
-					<Header isLoggedIn={!!this.state.token} theme={this.state.theme} logout={this.logout} invertTheme={this.invertTheme} />
+					<Header isLoggedIn={!!this.props.token} theme={this.props.theme} logout={this.logout} invertTheme={this.invertTheme} />
 					<div id="content">
 						{content}
 					</div>
@@ -346,4 +363,5 @@ class App extends React.Component {
 	}
 }
 
+const App = connect(select, mapDispatchToProps)(ConnectedApp)
 export default App;

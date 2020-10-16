@@ -29,7 +29,7 @@ class Friends extends React.Component {
 		} catch (error) {
 			this.props.handleError(error);
 		}
-	}
+	};
 
 
 	render() {
@@ -37,7 +37,7 @@ class Friends extends React.Component {
 			return (
 				<React.Fragment>
 					<div className="filler-content">
-						<Icon className="filler-icon" color="inherit" style={{marginLeft: '-0.25em'}}>person_add</Icon>
+						<Icon className="filler-icon" color="inherit" style={{ marginLeft: '-0.25em' }}>person_add</Icon>
 						<div>Your friends list is empty.</div>
 						<div>Try searching for your friends!</div>
 					</div>
@@ -48,7 +48,7 @@ class Friends extends React.Component {
 		const userDivs = this.state.friends.map(user => {
 			return (
 				<li className="users-li" key={user.id}>
-					<User variant="friends" username={user.username} email={user.email} />
+					<User variant="friends" username={user.username} email={user.email}/>
 				</li>
 			);
 		});
