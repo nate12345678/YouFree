@@ -8,6 +8,8 @@ export const Actions = {
 	SET_ERROR: '[ERROR] Set error msg',
 	CLEAR_ERROR: '[ERROR] Clear error msg',
 
+	CREATE_USER_BEGIN: '[AUTH] Begin create user',
+	CREATE_USER_SUCCESS: '[AUTH] Successful create user',
 	LOGIN_BEGIN: '[AUTH] Begin login',
 	LOGIN_SUCCESS: '[AUTH] Successful login',
 	LOGOUT_BEGIN: '[AUTH] Begin logout',
@@ -63,6 +65,22 @@ export function setError(message) {
 export function clearError() {
 	return {
 		type: Actions.CLEAR_ERROR
+	};
+}
+
+export function createUserBegin() {
+	return {
+		type: Actions.CREATE_USER_BEGIN
+	};
+}
+
+export function createUserSuccess(token, self) {
+	return {
+		type: Actions.CREATE_USER_SUCCESS,
+		payload: {
+			token: token,
+			self: self
+		}
 	};
 }
 

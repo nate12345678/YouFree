@@ -27,6 +27,7 @@ import {
 	lightTheme
 } from '../models/Themes';
 import {
+	createUser,
 	login,
 	logout
 } from '../state/Effects';
@@ -49,6 +50,7 @@ function mapDispatchToProps(dispatch) {
 		setTheme: (theme) => dispatch(setTheme(theme)),
 		setToken: (token) => dispatch(setToken(token)),
 		clearError: () => dispatch(clearError()),
+		createUser: (email, username, password, remember) => dispatch(createUser(email, username, password, remember)),
 		login: (email, password, remember) => dispatch(login(email, password, remember)),
 		logout: () => dispatch(logout())
 	};
@@ -115,28 +117,6 @@ class ConnectedApp extends React.Component {
 		// TODO: can do these simultaneously
 		await this.getSchedule(this.props.self.id);
 		await this.getFriendSchedules();
-	};
-
-
-	createUser = async (email, username, password, remember) => {
-		try {
-			const createUserResponse = await youfree.createUser(email, username, password);
-
-			const token = createUserResponse.headers.token;
-			const user = createUserResponse.data;
-
-			if (remember) {
-				localStorage.setItem('token', token);
-				localStorage.setItem('self', JSON.stringify(user));
-			}
-
-			this.props.setToken(token);
-			this.props.setSelf(user);
-
-			console.log('Created new user');
-		} catch (error) {
-			this.handleError(error);
-		}
 	};
 
 
@@ -249,7 +229,7 @@ class ConnectedApp extends React.Component {
 		let content;
 		if (this.props.token == null || this.props.self == null) {
 			content = <AuthenticationPage onLoginSubmit={this.props.login}
-			                              onCreateUserSubmit={this.createUser}
+			                              onCreateUserSubmit={this.props.createUser}
 			                              handleError={this.handleError}/>;
 		} else {
 			content = (

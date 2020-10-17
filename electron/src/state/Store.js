@@ -48,6 +48,8 @@ const reducer = function (state = INITIAL_STATE, action) {
 				...state,
 				error: null
 			};
+		case Actions.CREATE_USER_SUCCESS:
+			// Fallthrough
 		case Actions.LOGIN_SUCCESS:
 			return {
 				...state,

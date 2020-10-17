@@ -1,5 +1,7 @@
 import youfree from '../api/Youfree';
 import {
+	createUserBegin,
+	createUserSuccess,
 	fetchFriendSchedulesBegin,
 	fetchFriendSchedulesSuccess,
 	fetchMyScheduleBegin,
@@ -20,6 +22,25 @@ const handleError = (dispatch, error) => {
 
 	console.log('An unknown error has occurred');
 	dispatch(setError('An unknown error has occurred'));
+};
+
+export const createUser = (email, username, password, remember) => async (dispatch) => {
+	dispatch(createUserBegin());
+
+	try {
+		const response = await youfree.createUser(email, username, password);
+		const token = response.headers.token;
+		const self = response.data;
+
+		if (remember) {
+			localStorage.setItem('token', token);
+			localStorage.setItem('self', JSON.stringify(self));
+		}
+
+		dispatch(createUserSuccess(token, self));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
 };
 
 export const login = (email, password, remember) => async (dispatch) => {
