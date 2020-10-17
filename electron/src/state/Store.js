@@ -54,6 +54,8 @@ const reducer = function (state = INITIAL_STATE, action) {
 				token: action.payload.token,
 				self: action.payload.self
 			};
+		case Actions.LOGOUT_SUCCESS:
+			return INITIAL_STATE;
 		case Actions.FETCH_MY_SCHEDULE_SUCCESS:
 			return {
 				...state,

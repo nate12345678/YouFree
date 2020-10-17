@@ -17,8 +17,6 @@ import ErrorSnackbar from './common/ErrorSnackbar';
 import { connect } from 'react-redux';
 import {
 	clearError,
-	clearSelf,
-	clearToken,
 	setError,
 	setSelf,
 	setTheme,
@@ -28,7 +26,10 @@ import {
 	darkTheme,
 	lightTheme
 } from '../models/Themes';
-import { login } from '../state/Effects';
+import {
+	login,
+	logout
+} from '../state/Effects';
 
 
 const select = (state) => {
@@ -48,9 +49,8 @@ function mapDispatchToProps(dispatch) {
 		setTheme: (theme) => dispatch(setTheme(theme)),
 		setToken: (token) => dispatch(setToken(token)),
 		clearError: () => dispatch(clearError()),
-		clearSelf: () => dispatch(clearSelf()),
-		clearToken: () => dispatch(clearToken()),
-		login: (email, password, remember) => dispatch(login(email, password, remember))
+		login: (email, password, remember) => dispatch(login(email, password, remember)),
+		logout: () => dispatch(logout())
 	};
 }
 
@@ -134,23 +134,6 @@ class ConnectedApp extends React.Component {
 			this.props.setSelf(user);
 
 			console.log('Created new user');
-		} catch (error) {
-			this.handleError(error);
-		}
-	};
-
-
-	logout = async () => {
-		try {
-			await youfree.logout(this.props.token);
-
-			localStorage.clear();
-			this.props.clearToken();
-			this.props.clearSelf();
-			this.setState({
-				...initialState
-			});
-			console.log('Logged out');
 		} catch (error) {
 			this.handleError(error);
 		}
@@ -299,7 +282,7 @@ class ConnectedApp extends React.Component {
 		return (
 			<ThemeProvider theme={this.props.theme === 'light' ? lightTheme : darkTheme}>
 				<Router>
-					<Header isLoggedIn={!!this.props.token} theme={this.props.theme} logout={this.logout} invertTheme={this.invertTheme} />
+					<Header isLoggedIn={!!this.props.token} theme={this.props.theme} logout={this.props.logout} invertTheme={this.invertTheme} />
 					<div id="content">
 						{content}
 					</div>

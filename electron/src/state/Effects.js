@@ -6,7 +6,9 @@ import {
 	fetchMyScheduleSuccess,
 	loginBegin,
 	loginSuccess,
-	setError,
+	logoutBegin,
+	logoutSuccess,
+	setError
 } from './Actions';
 
 const handleError = (dispatch, error) => {
@@ -35,6 +37,20 @@ export function login(email, password, remember) {
 				}
 
 				dispatch(loginSuccess(token, user));
+			},
+			(error) => handleError(dispatch, error)
+		);
+	};
+}
+
+export function logout() {
+	return (dispatch, getState) => {
+		dispatch(logoutBegin());
+
+		return youfree.logout(getState().token).then(
+			(response) => {
+				localStorage.clear();
+				dispatch(logoutSuccess());
 			},
 			(error) => handleError(dispatch, error)
 		);

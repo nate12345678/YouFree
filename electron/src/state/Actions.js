@@ -10,6 +10,8 @@ export const Actions = {
 
 	LOGIN_BEGIN: '[AUTH] Begin login',
 	LOGIN_SUCCESS: '[AUTH] Successful login',
+	LOGOUT_BEGIN: '[AUTH] Begin logout',
+	LOGOUT_SUCCESS: '[AUTH] Successful logout',
 
 	FETCH_MY_SCHEDULE_BEGIN: '[SCHEDULE] Begin fetching schedule',
 	FETCH_MY_SCHEDULE_SUCCESS: '[SCHEDULE] Successfully got schedule',
@@ -77,6 +79,18 @@ export function loginSuccess(token, self) {
 			token: token,
 			self: self
 		}
+	};
+}
+
+export function logoutBegin() {
+	return {
+		type: Actions.LOGOUT_BEGIN
+	};
+}
+
+export function logoutSuccess() {
+	return {
+		type: Actions.LOGOUT_SUCCESS
 	};
 }
 
