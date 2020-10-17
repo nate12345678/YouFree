@@ -1,39 +1,16 @@
 import React from 'react';
-import youfree from '../../api/Youfree';
 import User from './User';
 import { Icon } from '@material-ui/core';
 
 class Friends extends React.Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			friends: []
-		};
-	}
-
-
 	componentDidMount() {
-		this.getFriends();
+		this.props.getFriends();
 	}
-
-
-	getFriends = async () => {
-		try {
-			const getFriendsResponse = await youfree.getFriends(this.props.token);
-
-			this.setState({
-				friends: getFriendsResponse.data
-			});
-		} catch (error) {
-			this.props.handleError(error);
-		}
-	};
 
 
 	render() {
-		if (this.state.friends.length === 0) {
+		if (this.props.friends.length === 0) {
 			return (
 				<React.Fragment>
 					<div className="filler-content">
@@ -45,7 +22,7 @@ class Friends extends React.Component {
 			);
 		}
 
-		const userDivs = this.state.friends.map(user => {
+		const userDivs = this.props.friends.map(user => {
 			return (
 				<li className="users-li" key={user.id}>
 					<User variant="friends" username={user.username} email={user.email}/>

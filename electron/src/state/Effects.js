@@ -6,6 +6,10 @@ import {
 	fetchFriendSchedulesSuccess,
 	fetchMyScheduleBegin,
 	fetchMyScheduleSuccess,
+	getFriendsBegin,
+	getFriendsSuccess,
+	getPendingRequestsBegin,
+	getPendingRequestsSuccess,
 	loginBegin,
 	loginSuccess,
 	logoutBegin,
@@ -92,6 +96,28 @@ export const fetchFriendSchedules = () => async (dispatch, getState) => {
 	try {
 		const response = await youfree.getFriendSchedules(getState().token);
 		dispatch(fetchFriendSchedulesSuccess(response.data));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+};
+
+export const getFriends = () => async (dispatch, getState) => {
+	dispatch(getFriendsBegin());
+
+	try {
+		const response = await youfree.getFriends(getState().token);
+		dispatch(getFriendsSuccess(response.data));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+};
+
+export const getPendingRequests = () => async (dispatch, getState) => {
+	dispatch(getPendingRequestsBegin());
+
+	try {
+		const response = await youfree.getPending(getState().token);
+		dispatch(getPendingRequestsSuccess(response.data));
 	} catch (error) {
 		handleError(dispatch, error);
 	}

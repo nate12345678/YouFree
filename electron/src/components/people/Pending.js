@@ -29,7 +29,7 @@ class Pending extends React.Component {
 		} catch (error) {
 			this.props.handleError(error);
 		}
-	}
+	};
 
 
 	addFriend = (userId) => () => {
@@ -39,7 +39,7 @@ class Pending extends React.Component {
 		});
 		this.props.addFriend(userId);
 		// TODO: Should show loading until this succeeds
-	}
+	};
 
 
 	deleteFriend = (userId) => () => {
@@ -49,7 +49,7 @@ class Pending extends React.Component {
 		});
 		this.props.deleteFriend(userId);
 		// TODO: Should show loading until this succeeds
-	}
+	};
 
 
 	render() {
@@ -72,7 +72,7 @@ class Pending extends React.Component {
 					      username={user.username}
 					      email={user.email}
 					      addFriend={this.addFriend(user.id)}
-					      deleteFriend={this.deleteFriend(user.id)} />
+					      deleteFriend={this.deleteFriend(user.id)}/>
 				</li>
 			);
 		});

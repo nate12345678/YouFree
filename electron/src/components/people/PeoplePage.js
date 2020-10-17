@@ -10,8 +10,30 @@ import {
 import Search from './Search';
 import Friends from './Friends';
 import Pending from './Pending';
+import { connect } from 'react-redux';
+import {
+	getFriends,
+	getPendingRequests
+} from '../../state/Effects';
 
-class PeoplePage extends React.Component {
+
+function select(state) {
+	return {
+		friends: state.friends,
+		pendingRequests: state.pendingRequests
+	};
+}
+
+
+function mapDispatchToProps(dispatch) {
+	return {
+		getFriends: () => dispatch(getFriends()),
+		getPending: () => dispatch(getPendingRequests())
+	};
+}
+
+
+class ConnectedPeoplePage extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -30,11 +52,10 @@ class PeoplePage extends React.Component {
 
 
 	render() {
-
 		let content;
 		switch (this.state.currentTab) {
 			case 0:
-				content = <Friends token={this.props.token} handleError={this.props.handleError}/>;
+				content = <Friends getFriends={this.props.getFriends} friends={this.props.friends} />;
 				break;
 			case 1:
 				content = <Pending token={this.props.token} addFriend={this.props.addFriend} deleteFriend={this.props.deleteFriend} handleError={this.props.handleError}/>
@@ -66,4 +87,5 @@ class PeoplePage extends React.Component {
 	}
 }
 
+const PeoplePage = connect(select, mapDispatchToProps)(ConnectedPeoplePage);
 export default PeoplePage;

@@ -1,4 +1,7 @@
-import { createStore, applyMiddleware } from 'redux';
+import {
+	createStore,
+	applyMiddleware
+} from 'redux';
 import thunk from 'redux-thunk';
 import { Actions } from './Actions';
 
@@ -8,6 +11,8 @@ const INITIAL_STATE = {
 	theme: 'light',
 	mySchedule: null,
 	friendSchedules: null,
+	friends: [],
+	pendingRequests: [],
 	errorMessage: null
 };
 
@@ -67,6 +72,16 @@ const reducer = function (state = INITIAL_STATE, action) {
 			return {
 				...state,
 				friendSchedules: action.payload
+			};
+		case Actions.GET_FRIENDS_SUCCESS:
+			return {
+				...state,
+				friends: action.payload
+			};
+		case Actions.GET_PENDING_REQUESTS_SUCCESS:
+			return {
+				...state,
+				pendingRequests: action.payload
 			};
 		default:
 			return state;

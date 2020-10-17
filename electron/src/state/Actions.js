@@ -19,7 +19,12 @@ export const Actions = {
 	FETCH_MY_SCHEDULE_SUCCESS: '[SCHEDULE] Successfully got schedule',
 
 	FETCH_FRIEND_SCHEDULES_BEGIN: '[DASHBOARD] Begin fetching friend schedules',
-	FETCH_FRIEND_SCHEDULES_SUCCESS: '[DASHBOARD] Successfully got friend schedules'
+	FETCH_FRIEND_SCHEDULES_SUCCESS: '[DASHBOARD] Successfully got friend schedules',
+
+	GET_FRIENDS_BEGIN: '[PEOPLE] Begin getting friends',
+	GET_FRIENDS_SUCCESS: '[PEOPLE] Successfully got friends',
+	GET_PENDING_REQUESTS_BEGIN: '[PEOPLE] Begin getting pending requests',
+	GET_PENDING_REQUESTS_SUCCESS: '[PEOPLE] Successfully got pending requests'
 };
 
 export function setToken(token) {
@@ -135,5 +140,30 @@ export function fetchFriendSchedulesSuccess(schedules) {
 	return {
 		type: Actions.FETCH_FRIEND_SCHEDULES_SUCCESS,
 		payload: schedules
+	};
+}
+
+export function getFriendsBegin() {
+	return {
+		type: Actions.GET_FRIENDS_BEGIN
+	};
+}
+
+export function getFriendsSuccess(friends) {
+	return {
+		type: Actions.GET_FRIENDS_SUCCESS,
+		payload: friends
+	};
+}
+
+export function getPendingRequestsBegin() {
+	return {
+		type: Actions.GET_PENDING_REQUESTS_BEGIN
+	};
+}
+
+export function getPendingRequestsSuccess() {
+	return {
+		type: Actions.GET_PENDING_REQUESTS_SUCCESS
 	};
 }
