@@ -19,8 +19,26 @@ import {
 import WeeklySchedule from './WeeklySchedule';
 import EditScheduleForm from './common/EditScheduleForm';
 import Checkbox from '@material-ui/core/Checkbox';
+import { fetchMySchedule } from '../state/Effects';
+import { connect } from 'react-redux';
 
-export default class MyProfilePage extends React.Component {
+
+const select = (state) => {
+	return {
+		user: state.self,
+		schedule: state.mySchedule
+	};
+};
+
+
+function mapDispatchToProps(dispatch) {
+	return {
+		getSchedule: () => dispatch(fetchMySchedule())
+	};
+}
+
+
+class ConnectedMyProfilePage extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -232,3 +250,6 @@ function OverlapDialog({ open, onClose, onSuccess }) {
 		</Dialog>
 	);
 }
+
+const MyProfilePage = connect(select, mapDispatchToProps)(ConnectedMyProfilePage);
+export default MyProfilePage;

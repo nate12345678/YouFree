@@ -6,8 +6,17 @@ export const Actions = {
 	CLEAR_SELF: '[AUTH] Clear self user',
 	SET_THEME: '[THEME] Set theme',
 	SET_ERROR: '[ERROR] Set error msg',
-	CLEAR_ERROR: '[ERROR] Clear error msg'
-}
+	CLEAR_ERROR: '[ERROR] Clear error msg',
+
+	LOGIN_BEGIN: '[AUTH] Begin login',
+	LOGIN_SUCCESS: '[AUTH] Successful login',
+
+	FETCH_MY_SCHEDULE_BEGIN: '[SCHEDULE] Begin fetching schedule',
+	FETCH_MY_SCHEDULE_SUCCESS: '[SCHEDULE] Successfully got schedule',
+
+	FETCH_FRIEND_SCHEDULES_BEGIN: '[DASHBOARD] Begin fetching friend schedules',
+	FETCH_FRIEND_SCHEDULES_SUCCESS: '[DASHBOARD] Successfully got friend schedules'
+};
 
 export function setToken(token) {
 	return {
@@ -52,5 +61,47 @@ export function setError(message) {
 export function clearError() {
 	return {
 		type: Actions.CLEAR_ERROR
+	};
+}
+
+export function loginBegin() {
+	return {
+		type: Actions.LOGIN_BEGIN
+	};
+}
+
+export function loginSuccess(token, self) {
+	return {
+		type: Actions.LOGIN_SUCCESS,
+		payload: {
+			token: token,
+			self: self
+		}
+	};
+}
+
+export function fetchMyScheduleBegin() {
+	return {
+		type: Actions.FETCH_MY_SCHEDULE_BEGIN
+	};
+}
+
+export function fetchMyScheduleSuccess(schedule) {
+	return {
+		type: Actions.FETCH_MY_SCHEDULE_SUCCESS,
+		payload: schedule
+	};
+}
+
+export function fetchFriendSchedulesBegin() {
+	return {
+		type: Actions.FETCH_FRIEND_SCHEDULES_BEGIN
+	};
+}
+
+export function fetchFriendSchedulesSuccess(schedules) {
+	return {
+		type: Actions.FETCH_FRIEND_SCHEDULES_SUCCESS,
+		payload: schedules
 	};
 }

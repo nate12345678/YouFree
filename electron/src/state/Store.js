@@ -1,10 +1,13 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { Actions } from './Actions';
 
 const INITIAL_STATE = {
 	token: null,
 	self: null,
 	theme: 'light',
+	mySchedule: null,
+	friendSchedules: null,
 	errorMessage: null
 };
 
@@ -45,9 +48,25 @@ const reducer = function (state = INITIAL_STATE, action) {
 				...state,
 				error: null
 			};
+		case Actions.LOGIN_SUCCESS:
+			return {
+				...state,
+				token: action.payload.token,
+				self: action.payload.self
+			};
+		case Actions.FETCH_MY_SCHEDULE_SUCCESS:
+			return {
+				...state,
+				mySchedule: action.payload
+			};
+		case Actions.FETCH_FRIEND_SCHEDULES_SUCCESS:
+			return {
+				...state,
+				friendSchedules: action.payload
+			};
 		default:
 			return state;
 	}
 };
 
-export const store = createStore(reducer);
+export const store = createStore(reducer, applyMiddleware(thunk));

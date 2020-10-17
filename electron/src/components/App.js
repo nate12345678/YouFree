@@ -28,6 +28,7 @@ import {
 	darkTheme,
 	lightTheme
 } from '../models/Themes';
+import { login } from '../state/Effects';
 
 
 const select = (state) => {
@@ -48,7 +49,8 @@ function mapDispatchToProps(dispatch) {
 		setToken: (token) => dispatch(setToken(token)),
 		clearError: () => dispatch(clearError()),
 		clearSelf: () => dispatch(clearSelf()),
-		clearToken: () => dispatch(clearToken())
+		clearToken: () => dispatch(clearToken()),
+		login: (email, password, remember) => dispatch(login(email, password, remember))
 	};
 }
 
@@ -132,28 +134,6 @@ class ConnectedApp extends React.Component {
 			this.props.setSelf(user);
 
 			console.log('Created new user');
-		} catch (error) {
-			this.handleError(error);
-		}
-	};
-
-
-	login = async (email, password, remember) => {
-		try {
-			const loginReq = await youfree.login(email, password);
-
-			const user = loginReq.data;
-			const token = loginReq.headers.token;
-
-			if (remember) {
-				localStorage.setItem('token', token);
-				localStorage.setItem('self', JSON.stringify(user));
-			}
-			console.log(token);
-
-			this.props.setToken(token);
-			this.props.setSelf(user);
-			console.log('Logged in');
 		} catch (error) {
 			this.handleError(error);
 		}
@@ -285,7 +265,7 @@ class ConnectedApp extends React.Component {
 	render() {
 		let content;
 		if (this.props.token == null || this.props.self == null) {
-			content = <AuthenticationPage onLoginSubmit={this.login}
+			content = <AuthenticationPage onLoginSubmit={this.props.login}
 			                              onCreateUserSubmit={this.createUser}
 			                              handleError={this.handleError}/>;
 		} else {
@@ -298,10 +278,7 @@ class ConnectedApp extends React.Component {
 						            handleError={this.handleError}/>
 					</Route>
 					<Route path="/profile">
-						<MyProfilePage user={this.props.self}
-						               schedule={this.state.schedule}
-						               getSchedule={this.getSelfSchedule}
-						               onAddInterval={this.addInterval}
+						<MyProfilePage onAddInterval={this.addInterval}
 						               onUpdateInterval={this.updateInterval}
 						               onDeleteInterval={this.deleteInterval}
 						/>
@@ -333,5 +310,5 @@ class ConnectedApp extends React.Component {
 	}
 }
 
-const App = connect(select, mapDispatchToProps)(ConnectedApp)
+const App = connect(select, mapDispatchToProps)(ConnectedApp);
 export default App;
