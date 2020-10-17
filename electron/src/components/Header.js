@@ -18,7 +18,7 @@ import { logout } from '../state/Effects';
 import { connect } from 'react-redux';
 
 
-const select = (state) => {
+function select(state) {
 	return {
 		isLoggedIn: !!state.token,
 		theme: state.theme

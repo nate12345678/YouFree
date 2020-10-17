@@ -23,12 +23,12 @@ import { fetchMySchedule } from '../state/Effects';
 import { connect } from 'react-redux';
 
 
-const select = (state) => {
+function select(state) {
 	return {
 		user: state.self,
 		schedule: state.mySchedule
 	};
-};
+}
 
 
 function mapDispatchToProps(dispatch) {

@@ -22,61 +22,56 @@ const handleError = (dispatch, error) => {
 	dispatch(setError('An unknown error has occurred'));
 };
 
-export function login(email, password, remember) {
-	return (dispatch) => {
-		dispatch(loginBegin());
+export const login = (email, password, remember) => async (dispatch) => {
+	dispatch(loginBegin());
 
-		return youfree.login(email, password).then(
-			(response) => {
-				const token = response.headers.token;
-				const user = response.data;
+	try {
+		const response = await youfree.login(email, password);
+		const token = response.headers.token;
+		const self = response.data;
 
-				if (remember) {
-					localStorage.setItem('token', token);
-					localStorage.setItem('self', JSON.stringify(user));
-				}
+		if (remember) {
+			localStorage.setItem('token', token);
+			localStorage.setItem('self', JSON.stringify(self));
+		}
 
-				dispatch(loginSuccess(token, user));
-			},
-			(error) => handleError(dispatch, error)
-		);
-	};
-}
+		dispatch(loginSuccess(token, self));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+};
 
-export function logout() {
-	return (dispatch, getState) => {
-		dispatch(logoutBegin());
+export const logout = () => async (dispatch, getState) => {
+	dispatch(logoutBegin());
 
-		return youfree.logout(getState().token).then(
-			(response) => {
-				localStorage.clear();
-				dispatch(logoutSuccess());
-			},
-			(error) => handleError(dispatch, error)
-		);
-	};
-}
+	try {
+		await youfree.logout(getState().token);
+		localStorage.clear();
 
-export function fetchMySchedule() {
-	return (dispatch, getState) => {
-		// Dispatch START action
-		dispatch(fetchMyScheduleBegin());
+		dispatch(logoutSuccess());
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+};
 
-		// Use API to get schedule
-		return youfree.getSchedule(getState().token, getState().self.id).then(
-			(response) => dispatch(fetchMyScheduleSuccess(response.data)),
-			(error) => handleError(dispatch, error)
-		);
-	};
-}
+export const fetchMySchedule = () => async (dispatch, getState) => {
+	dispatch(fetchMyScheduleBegin());
 
-export function fetchFriendSchedules() {
-	return (dispatch, getState) => {
-		dispatch(fetchFriendSchedulesBegin());
+	try {
+		const response = await youfree.getSchedule(getState().token, getState().self.id);
+		dispatch(fetchMyScheduleSuccess(response.data));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+};
 
-		return youfree.getFriendSchedules(getState().token).then(
-			(response) => dispatch(fetchFriendSchedulesSuccess(response.data)),
-			(error) => handleError(dispatch, error)
-		);
-	};
-}
+export const fetchFriendSchedules = () => async (dispatch, getState) => {
+	dispatch(fetchFriendSchedulesBegin());
+
+	try {
+		const response = await youfree.getFriendSchedules(getState().token);
+		dispatch(fetchFriendSchedulesSuccess(response.data));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+};

@@ -32,7 +32,7 @@ import {
 } from '../state/Effects';
 
 
-const select = (state) => {
+function select(state) {
 	return {
 		token: state.token,
 		self: state.self,
