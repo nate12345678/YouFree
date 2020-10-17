@@ -14,6 +14,23 @@ import {
 	Typography,
 	useMediaQuery
 } from '@material-ui/core';
+import { logout } from '../state/Effects';
+import { connect } from 'react-redux';
+
+
+const select = (state) => {
+	return {
+		isLoggedIn: !!state.token,
+		theme: state.theme
+	};
+}
+
+
+function mapDispatchToProps(dispatch) {
+	return {
+		logout: () => dispatch(logout())
+	};
+}
 
 
 const routes = [
@@ -25,7 +42,7 @@ const routes = [
 
 const title = <Typography variant="h5" color="inherit">You Free</Typography>;
 
-export default function Header(props) {
+function ConnectedHeader(props) {
 
 	const [open, setOpen] = React.useState();
 	const toggleDrawer = (isOpen) => () => setOpen(isOpen);
@@ -140,3 +157,6 @@ function MobileToolbar({ onMenuClick, themeButton }) {
 		</React.Fragment>
 	);
 }
+
+const Header = connect(select, mapDispatchToProps)(ConnectedHeader);
+export default Header;

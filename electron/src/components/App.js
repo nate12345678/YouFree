@@ -282,7 +282,7 @@ class ConnectedApp extends React.Component {
 		return (
 			<ThemeProvider theme={this.props.theme === 'light' ? lightTheme : darkTheme}>
 				<Router>
-					<Header isLoggedIn={!!this.props.token} theme={this.props.theme} logout={this.props.logout} invertTheme={this.invertTheme} />
+					<Header invertTheme={this.invertTheme} />
 					<div id="content">
 						{content}
 					</div>
