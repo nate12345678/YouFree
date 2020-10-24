@@ -10,8 +10,32 @@ import {
 } from '@material-ui/core';
 import { dayOfWeek } from '../constants/DayOfWeek';
 import Markers from './common/Markers';
+import { connect } from 'react-redux';
+import {
+	fetchMySchedule,
+	getFriendSchedules
+} from '../state/Effects';
 
-class Dashboard extends React.Component {
+
+function select(state) {
+	return {
+		friends: state.friendSchedules,
+		mySchedule: state.mySchedule
+	};
+}
+
+
+function mapDispatchToProps(dispatch) {
+	return {
+		getDashboard: () => {
+			dispatch(getFriendSchedules());
+			dispatch(fetchMySchedule());
+		}
+	};
+}
+
+
+class ConnectedDashboard extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -93,7 +117,7 @@ class Dashboard extends React.Component {
 							{names}
 						</div>
 						<div className="friend-schedules-intervals">
-							<DailySchedule schedule={this.props.schedule[this.state.day]} />
+							<DailySchedule schedule={this.props.mySchedule[this.state.day]} />
 							{schedules}
 							<Markers variant="time" direction="vertical" />
 						</div>
@@ -102,7 +126,7 @@ class Dashboard extends React.Component {
 			</Card>
 		);
 	}
-
 }
 
+const Dashboard = connect(select, mapDispatchToProps)(ConnectedDashboard);
 export default Dashboard;

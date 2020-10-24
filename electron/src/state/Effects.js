@@ -118,7 +118,7 @@ export const fetchMySchedule = () => async (dispatch, getState) => {
 	}
 };
 
-export const fetchFriendSchedules = () => async (dispatch, getState) => {
+export const getFriendSchedules = () => async (dispatch, getState) => {
 	dispatch(fetchFriendSchedulesBegin());
 
 	try {

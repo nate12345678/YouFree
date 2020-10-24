@@ -18,8 +18,6 @@ import { connect } from 'react-redux';
 import {
 	clearError,
 	setError,
-	setSelf,
-	setToken
 } from '../state/Actions';
 import {
 	darkTheme,
@@ -48,20 +46,17 @@ function mapDispatchToProps(dispatch) {
 	return {
 		initApp: () => dispatch(initApp()),
 		setError: (message) => dispatch(setError(message)),
-		setSelf: (self) => dispatch(setSelf(self)),
 		setTheme: (theme) => dispatch(setTheme(theme)),
-		setToken: (token) => dispatch(setToken(token)),
 		clearError: () => dispatch(clearError()),
 		createUser: (email, username, password, remember) => dispatch(createUser(email, username, password, remember)),
 		login: (email, password, remember) => dispatch(login(email, password, remember)),
-		logout: () => dispatch(logout())
+		logout: () => dispatch(logout()),
 	};
 }
 
 
 const initialState = {
-	schedule: null,
-	friendSchedules: null,
+	schedule: null
 };
 
 
@@ -95,13 +90,6 @@ class ConnectedApp extends React.Component {
 
 		console.log('An unknown error has occurred');
 		this.props.setError('An unknown error has occurred');
-	};
-
-
-	getDashboard = async () => {
-		// TODO: can do these simultaneously
-		await this.getSchedule(this.props.self.id);
-		await this.getFriendSchedules();
 	};
 
 
@@ -156,41 +144,6 @@ class ConnectedApp extends React.Component {
 	};
 
 
-	// TODO: Fetching someone else's schedule shouldn't affect self-schedule
-	getSchedule = async (userId) => {
-		let schedule = null;
-		try {
-			const getScheduleResponse = await youfree.getSchedule(this.props.token, userId);
-			schedule = getScheduleResponse.data;
-
-			this.setState({
-				schedule: schedule
-			});
-
-		} catch (error) {
-			this.handleError(error);
-		}
-	};
-
-
-	getSelfSchedule = () => {
-		return this.getSchedule(this.props.self.id);
-	};
-
-
-	getFriendSchedules = async () => {
-		try {
-			const getFriendSchedulesResponse = await youfree.getFriendSchedules(this.props.token);
-
-			this.setState({
-				friendSchedules: getFriendSchedulesResponse.data
-			});
-		} catch (error) {
-			this.handleError(error);
-		}
-	};
-
-
 	addFriend = async (userId) => {
 		try {
 			await youfree.addFriend(this.props.token, userId);
@@ -201,6 +154,7 @@ class ConnectedApp extends React.Component {
 	};
 
 
+	// TODO: deleting a friend should remove them from the friends' schedules
 	deleteFriend = async (userId) => {
 		try {
 			await youfree.deleteFriend(this.props.token, userId);
@@ -235,10 +189,7 @@ class ConnectedApp extends React.Component {
 					{/*	<AboutPage/>*/}
 					{/*</Route>*/}
 					<Route path="/">
-						<Dashboard getDashboard={this.getDashboard}
-						           schedule={this.state.schedule}
-						           friends={this.state.friendSchedules}
-						           onAddInterval={this.addInterval}/>
+						<Dashboard onAddInterval={this.addInterval}/>
 					</Route>
 				</Switch>
 			);
