@@ -14,7 +14,10 @@ import {
 	loginSuccess,
 	logoutBegin,
 	logoutSuccess,
-	setError
+	setError,
+	setSelf,
+	setThemeSuccess,
+	setToken
 } from './Actions';
 
 const handleError = (dispatch, error) => {
@@ -26,6 +29,31 @@ const handleError = (dispatch, error) => {
 
 	console.log('An unknown error has occurred');
 	dispatch(setError('An unknown error has occurred'));
+};
+
+export const initApp = () => async (dispatch) => {
+	// Auto-login
+	const token = localStorage.getItem('token');
+	const self = JSON.parse(localStorage.getItem('self'));
+	if (token && self) {
+		dispatch(setToken(token));
+		dispatch(setSelf(self));
+	}
+
+	// Load theme
+	const theme = localStorage.getItem('theme');
+	if (theme) {
+		dispatch(setThemeSuccess(theme));
+	}
+};
+
+export const setTheme = (theme) => async (dispatch, getState) => {
+	const from = getState().theme;
+	const to = theme;
+
+	document.body.classList.replace(from, to);
+	localStorage.setItem('theme', to);
+	dispatch(setThemeSuccess(to));
 };
 
 export const createUser = (email, username, password, remember) => async (dispatch) => {

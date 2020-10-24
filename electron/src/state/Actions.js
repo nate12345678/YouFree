@@ -4,9 +4,10 @@ export const Actions = {
 	CLEAR_TOKEN: '[AUTH] Clear token',
 	SET_SELF: '[AUTH] Set self user',
 	CLEAR_SELF: '[AUTH] Clear self user',
-	SET_THEME: '[THEME] Set theme',
 	SET_ERROR: '[ERROR] Set error msg',
 	CLEAR_ERROR: '[ERROR] Clear error msg',
+
+	SET_THEME_SUCCESS: '[THEME] Set theme',
 
 	CREATE_USER_BEGIN: '[AUTH] Begin create user',
 	CREATE_USER_SUCCESS: '[AUTH] Successful create user',
@@ -53,9 +54,9 @@ export function clearSelf() {
 	};
 }
 
-export function setTheme(theme) {
+export function setThemeSuccess(theme) {
 	return {
-		type: Actions.SET_THEME,
+		type: Actions.SET_THEME_SUCCESS,
 		payload: theme
 	};
 }

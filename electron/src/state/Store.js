@@ -38,7 +38,7 @@ const reducer = function (state = INITIAL_STATE, action) {
 				...state,
 				self: null
 			};
-		case Actions.SET_THEME:
+		case Actions.SET_THEME_SUCCESS:
 			return {
 				...state,
 				theme: action.payload

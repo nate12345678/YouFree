@@ -19,7 +19,6 @@ import {
 	clearError,
 	setError,
 	setSelf,
-	setTheme,
 	setToken
 } from '../state/Actions';
 import {
@@ -28,8 +27,10 @@ import {
 } from '../models/Themes';
 import {
 	createUser,
+	initApp,
 	login,
-	logout
+	logout,
+	setTheme
 } from '../state/Effects';
 
 
@@ -45,6 +46,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
+		initApp: () => dispatch(initApp()),
 		setError: (message) => dispatch(setError(message)),
 		setSelf: (self) => dispatch(setSelf(self)),
 		setTheme: (theme) => dispatch(setTheme(theme)),
@@ -75,29 +77,12 @@ class ConnectedApp extends React.Component {
 
 
 	componentDidMount() {
-		// Auto-login
-		const token = localStorage.getItem('token');
-		const self = JSON.parse(localStorage.getItem('self'));
-		if (token && self) {
-			this.props.setToken(token);
-			this.props.setSelf(self);
-		}
-
-		// Load theme
-		const theme = localStorage.getItem('theme');
-		if (theme) {
-			this.props.setTheme(theme);
-		}
+		this.props.initApp();
 	}
 
 
 	invertTheme = () => {
-		const from = this.props.theme;
-		const to = this.props.theme === 'light' ? 'dark' : 'light';
-
-		this.props.setTheme(to);
-		document.body.classList.replace(from, to);
-		localStorage.setItem('theme', to);
+		this.props.setTheme(this.props.theme === 'light' ? 'dark' : 'light');
 	}
 
 
