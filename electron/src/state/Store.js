@@ -1,6 +1,6 @@
 import {
-	createStore,
-	applyMiddleware
+	applyMiddleware,
+	createStore
 } from 'redux';
 import thunk from 'redux-thunk';
 import { Actions } from './Actions';
@@ -11,7 +11,9 @@ const INITIAL_STATE = {
 	theme: 'light',
 	mySchedule: null,
 	friendSchedules: null,
-	friends: [],
+	friends: {
+		items: []
+	},
 	pendingRequests: [],
 	errorMessage: null
 };
@@ -76,7 +78,7 @@ const reducer = function (state = INITIAL_STATE, action) {
 		case Actions.GET_FRIENDS_SUCCESS:
 			return {
 				...state,
-				friends: action.payload
+				friends: createEntityState(action.payload, 'id')
 			};
 		case Actions.GET_PENDING_REQUESTS_SUCCESS:
 			return {
@@ -89,3 +91,31 @@ const reducer = function (state = INITIAL_STATE, action) {
 };
 
 export const store = createStore(reducer, applyMiddleware(thunk));
+
+
+function createEntityState(entities, idName) {
+	const entityState = { items: entities }
+	for (let [entity, index] of entities.entries()) {
+		entity[idName] = index;
+	}
+
+	return entityState;
+}
+
+
+function addToEntityState(lastEntityState, entity, idName) {
+	return {
+		...lastEntityState,
+		[entity[idName]]: lastEntityState.items.length,
+		items: lastEntityState.items.concat(entity)
+	};
+}
+
+
+function removeFromEntityState(lastEntityState, id) {
+	const nextEntityState = {
+		...lastEntityState,
+		items: lastEntityState.splice(lastEntityState[id], 1) // TODO: double-check this
+	};
+	delete nextEntityState[id];
+}
