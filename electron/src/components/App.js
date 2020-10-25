@@ -24,9 +24,7 @@ import {
 	lightTheme
 } from '../models/Themes';
 import {
-	createUser,
 	initApp,
-	login,
 	logout,
 	setTheme
 } from '../state/Effects';
@@ -48,8 +46,6 @@ function mapDispatchToProps(dispatch) {
 		setError: (message) => dispatch(setError(message)),
 		setTheme: (theme) => dispatch(setTheme(theme)),
 		clearError: () => dispatch(clearError()),
-		createUser: (email, username, password, remember) => dispatch(createUser(email, username, password, remember)),
-		login: (email, password, remember) => dispatch(login(email, password, remember)),
 		logout: () => dispatch(logout()),
 	};
 }
@@ -167,9 +163,7 @@ class ConnectedApp extends React.Component {
 	render() {
 		let content;
 		if (this.props.token == null || this.props.self == null) {
-			content = <AuthenticationPage onLoginSubmit={this.props.login}
-			                              onCreateUserSubmit={this.props.createUser}
-			                              handleError={this.handleError}/>;
+			content = <AuthenticationPage handleError={this.handleError}/>;
 		} else {
 			content = (
 				<Switch>

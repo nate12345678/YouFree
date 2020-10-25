@@ -7,8 +7,22 @@ import {
 	Tab,
 	Tabs
 } from '@material-ui/core';
+import { connect } from 'react-redux';
+import {
+	createUser,
+	login
+} from '../../state/Effects';
 
-class AuthenticationPage extends React.Component {
+
+function mapDispatchToProps(dispatch) {
+	return {
+		onCreateUserSubmit: (email, username, password, remember) => dispatch(createUser(email, username, password, remember)),
+		onLoginSubmit: (email, password, remember) => dispatch(login(email, password, remember))
+	};
+}
+
+
+class ConnectedAuthenticationPage extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -53,4 +67,5 @@ class AuthenticationPage extends React.Component {
 	}
 }
 
+const AuthenticationPage = connect(null, mapDispatchToProps)(ConnectedAuthenticationPage);
 export default AuthenticationPage;

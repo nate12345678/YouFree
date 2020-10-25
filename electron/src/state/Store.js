@@ -113,6 +113,7 @@ function addToEntityState(lastEntityState, entity, idName) {
 
 
 function removeFromEntityState(lastEntityState, id) {
+	// TODO: only perform removal if entity exists in entitystate
 	const nextEntityState = {
 		...lastEntityState,
 		items: lastEntityState.splice(lastEntityState[id], 1) // TODO: double-check this
