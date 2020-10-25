@@ -25,7 +25,8 @@ export const Actions = {
 	GET_FRIENDS_BEGIN: '[PEOPLE] Begin getting friends',
 	GET_FRIENDS_SUCCESS: '[PEOPLE] Successfully got friends',
 	GET_PENDING_REQUESTS_BEGIN: '[PEOPLE] Begin getting pending requests',
-	GET_PENDING_REQUESTS_SUCCESS: '[PEOPLE] Successfully got pending requests'
+	GET_PENDING_REQUESTS_SUCCESS: '[PEOPLE] Successfully got pending requests',
+	ADD_FRIEND_SUCCESS: '[PEOPLE] Successfully sent friend request'
 };
 
 export function setToken(token) {
@@ -166,5 +167,12 @@ export function getPendingRequestsBegin() {
 export function getPendingRequestsSuccess() {
 	return {
 		type: Actions.GET_PENDING_REQUESTS_SUCCESS
+	};
+}
+
+export function addFriendSuccess(user) {
+	return {
+		type: Actions.ADD_FRIEND_SUCCESS,
+		payload: user
 	};
 }

@@ -85,6 +85,11 @@ const reducer = function (state = INITIAL_STATE, action) {
 				...state,
 				pendingRequests: action.payload
 			};
+		case Actions.ADD_FRIEND_SUCCESS:
+			return {
+				...state,
+				friends: addToEntityState(state.friends, action.payload, 'id')
+			};
 		default:
 			return state;
 	}

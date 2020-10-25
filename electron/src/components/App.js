@@ -163,7 +163,7 @@ class ConnectedApp extends React.Component {
 	render() {
 		let content;
 		if (this.props.token == null || this.props.self == null) {
-			content = <AuthenticationPage handleError={this.handleError}/>;
+			content = <AuthenticationPage/>;
 		} else {
 			content = (
 				<Switch>

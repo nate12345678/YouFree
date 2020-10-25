@@ -59,7 +59,7 @@ class Search extends React.Component {
 			results: results
 		});
 
-		this.props.addFriend(result.user.id);
+		this.props.addFriend(result.user);
 	}
 
 

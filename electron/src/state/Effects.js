@@ -1,5 +1,6 @@
 import youfree from '../api/Youfree';
 import {
+	addFriendSuccess,
 	createUserBegin,
 	createUserSuccess,
 	fetchFriendSchedulesBegin,
@@ -139,6 +140,15 @@ export const getFriends = () => async (dispatch, getState) => {
 		handleError(dispatch, error);
 	}
 };
+
+export const addFriend = (user) => async (dispatch, getState) => {
+	try {
+		const response = await youfree.addFriend(getState().token, user.id);
+		dispatch(addFriendSuccess(user));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+}
 
 export const getPendingRequests = () => async (dispatch, getState) => {
 	dispatch(getPendingRequestsBegin());

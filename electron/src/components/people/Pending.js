@@ -1,59 +1,36 @@
 import React from 'react';
 import User from './User';
-import youfree from '../../api/Youfree';
 import { Icon } from '@material-ui/core';
 
 class Pending extends React.Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			pending: []
-		};
-	}
-
-
 	componentDidMount() {
-		this.getPending();
+		this.props.getPending();
 	}
 
 
-	getPending = async () => {
-		try {
-			const getPendingResponse = await youfree.getPending(this.props.token);
-
-			this.setState({
-				pending: getPendingResponse.data
-			});
-		} catch (error) {
-			this.props.handleError(error);
-		}
-	};
+	// addFriend = (userId) => () => {
+	// 	const pending = this.state.pending.filter(user => user.id !== userId);
+	// 	this.setState({
+	// 		pending: pending
+	// 	});
+	// 	this.props.addFriend(userId);
+	// 	// TODO: Should show loading until this succeeds
+	// };
 
 
-	addFriend = (userId) => () => {
-		const pending = this.state.pending.filter(user => user.id !== userId);
-		this.setState({
-			pending: pending
-		});
-		this.props.addFriend(userId);
-		// TODO: Should show loading until this succeeds
-	};
-
-
-	deleteFriend = (userId) => () => {
-		const pending = this.state.pending.filter(user => user.id !== userId);
-		this.setState({
-			pending: pending
-		});
-		this.props.deleteFriend(userId);
-		// TODO: Should show loading until this succeeds
-	};
+	// deleteFriend = (userId) => () => {
+	// 	const pending = this.state.pending.filter(user => user.id !== userId);
+	// 	this.setState({
+	// 		pending: pending
+	// 	});
+	// 	this.props.deleteFriend(userId);
+	// 	// TODO: Should show loading until this succeeds
+	// };
 
 
 	render() {
-		if (this.state.pending.length === 0) {
+		if (this.props.pending.length === 0) {
 			return (
 				<React.Fragment>
 					<div className="filler-content">
@@ -65,13 +42,13 @@ class Pending extends React.Component {
 		}
 
 
-		const userDivs = this.state.pending.map(user => {
+		const userDivs = this.props.pending.map(user => {
 			return (
 				<li className="users-li" key={user.id}>
 					<User variant="pending"
 					      username={user.username}
 					      email={user.email}
-					      addFriend={this.addFriend(user.id)}
+					      addFriend={this.addFriend(user)}
 					      deleteFriend={this.deleteFriend(user.id)}/>
 				</li>
 			);

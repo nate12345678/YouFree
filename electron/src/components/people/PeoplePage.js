@@ -12,6 +12,7 @@ import Friends from './Friends';
 import Pending from './Pending';
 import { connect } from 'react-redux';
 import {
+	addFriend,
 	getFriends,
 	getPendingRequests
 } from '../../state/Effects';
@@ -19,7 +20,7 @@ import {
 
 function select(state) {
 	return {
-		friends: state.friends,
+		friends: state.friends.items,
 		pendingRequests: state.pendingRequests
 	};
 }
@@ -28,6 +29,7 @@ function select(state) {
 function mapDispatchToProps(dispatch) {
 	return {
 		getFriends: () => dispatch(getFriends()),
+		addFriend: (user) => dispatch(addFriend(user)),
 		getPending: () => dispatch(getPendingRequests())
 	};
 }
@@ -58,10 +60,19 @@ class ConnectedPeoplePage extends React.Component {
 				content = <Friends getFriends={this.props.getFriends} friends={this.props.friends} />;
 				break;
 			case 1:
-				content = <Pending token={this.props.token} addFriend={this.props.addFriend} deleteFriend={this.props.deleteFriend} handleError={this.props.handleError}/>
+				content = <Pending getPending={this.props.getPending}
+				                   pending={this.props.pendingRequests}
+				                   addFriend={this.props.addFriend}
+				                   deleteFriend={this.props.deleteFriend}
+				/>
 				break;
 			default:
-				content = <Search token={this.props.token} addFriend={this.props.addFriend} deleteFriend={this.props.deleteFriend} handleError={this.props.handleError}/>
+				content = <Search token={this.props.token}
+				                  addFriend={this.props.addFriend}
+				                  deleteFriend={this.props.deleteFriend}
+				                  handleError={this.props.handleError}
+				/>
+				break;
 		}
 
 		return (
