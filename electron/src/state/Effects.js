@@ -3,6 +3,7 @@ import {
 	addFriendSuccess,
 	createUserBegin,
 	createUserSuccess,
+	deleteFriendSuccess,
 	fetchFriendSchedulesBegin,
 	fetchFriendSchedulesSuccess,
 	fetchMyScheduleBegin,
@@ -145,6 +146,15 @@ export const addFriend = (user) => async (dispatch, getState) => {
 	try {
 		const response = await youfree.addFriend(getState().token, user.id);
 		dispatch(addFriendSuccess(user));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+}
+
+export const deleteFriend = (user) => async (dispatch, getState) => {
+	try {
+		const response = await youfree.deleteFriend(getState().token, user.id);
+		dispatch(deleteFriendSuccess(user));
 	} catch (error) {
 		handleError(dispatch, error);
 	}

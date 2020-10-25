@@ -13,6 +13,7 @@ import Pending from './Pending';
 import { connect } from 'react-redux';
 import {
 	addFriend,
+	deleteFriend,
 	getFriends,
 	getPendingRequests
 } from '../../state/Effects';
@@ -21,7 +22,8 @@ import {
 function select(state) {
 	return {
 		friends: state.friends.items,
-		pendingRequests: state.pendingRequests
+		pendingRequests: state.pendingRequests,
+		token: state.token // TODO: remove when possible
 	};
 }
 
@@ -30,6 +32,7 @@ function mapDispatchToProps(dispatch) {
 	return {
 		getFriends: () => dispatch(getFriends()),
 		addFriend: (user) => dispatch(addFriend(user)),
+		deleteFriend: (user) => dispatch(deleteFriend(user)),
 		getPending: () => dispatch(getPendingRequests())
 	};
 }

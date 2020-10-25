@@ -14,7 +14,9 @@ const INITIAL_STATE = {
 	friends: {
 		items: []
 	},
-	pendingRequests: [],
+	pendingRequests: {
+		items: []
+	},
 	errorMessage: null
 };
 
@@ -86,10 +88,22 @@ const reducer = function (state = INITIAL_STATE, action) {
 				pendingRequests: action.payload
 			};
 		case Actions.ADD_FRIEND_SUCCESS:
+			// We don't actually add the friend to the 'friends list' entity state
+			// We reload the friends list on the friends page, so it gets overwritten
+			// And I don't want to deal with inserting the user into proper alphabetical order in list
 			return {
 				...state,
-				friends: addToEntityState(state.friends, action.payload, 'id')
+				// TODO: if in search, update
+				pendingRequests: removeFromEntityState(state.pendingRequests, action.payload.id),
+				// friends: addToEntityState(state.friends, action.payload, 'id')
 			};
+		case Actions.DELETE_FRIEND_SUCCESS:
+			return {
+				...state,
+				pendingRequests: removeFromEntityState(state.pendingRequests, action.payload.id),
+				friends: removeFromEntityState(state.friends, action.payload.id)
+				// TODO: remove from friendSchedules
+			}
 		default:
 			return state;
 	}
@@ -118,10 +132,13 @@ function addToEntityState(lastEntityState, entity, idName) {
 
 
 function removeFromEntityState(lastEntityState, id) {
-	// TODO: only perform removal if entity exists in entitystate
-	const nextEntityState = {
-		...lastEntityState,
-		items: lastEntityState.splice(lastEntityState[id], 1) // TODO: double-check this
-	};
-	delete nextEntityState[id];
+	let nextEntityState = { ...lastEntityState };
+
+	// Only remove if ID exists in entity state
+	if (lastEntityState.hasOwnProperty(id)) {
+		nextEntityState.items = lastEntityState.items.filter((user, index) => index !== lastEntityState[id]);
+		delete nextEntityState[id];
+	}
+
+	return nextEntityState;
 }

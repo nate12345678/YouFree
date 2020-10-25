@@ -26,7 +26,8 @@ export const Actions = {
 	GET_FRIENDS_SUCCESS: '[PEOPLE] Successfully got friends',
 	GET_PENDING_REQUESTS_BEGIN: '[PEOPLE] Begin getting pending requests',
 	GET_PENDING_REQUESTS_SUCCESS: '[PEOPLE] Successfully got pending requests',
-	ADD_FRIEND_SUCCESS: '[PEOPLE] Successfully sent friend request'
+	ADD_FRIEND_SUCCESS: '[PEOPLE] Successfully sent friend request',
+	DELETE_FRIEND_SUCCESS: '[PEOPLE] Successfully deleted friend'
 };
 
 export function setToken(token) {
@@ -173,6 +174,13 @@ export function getPendingRequestsSuccess() {
 export function addFriendSuccess(user) {
 	return {
 		type: Actions.ADD_FRIEND_SUCCESS,
+		payload: user
+	};
+}
+
+export function deleteFriendSuccess(user) {
+	return {
+		type: Actions.DELETE_FRIEND_SUCCESS,
 		payload: user
 	};
 }

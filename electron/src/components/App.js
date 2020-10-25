@@ -140,26 +140,6 @@ class ConnectedApp extends React.Component {
 	};
 
 
-	addFriend = async (userId) => {
-		try {
-			await youfree.addFriend(this.props.token, userId);
-
-		} catch (error) {
-			this.handleError(error);
-		}
-	};
-
-
-	// TODO: deleting a friend should remove them from the friends' schedules
-	deleteFriend = async (userId) => {
-		try {
-			await youfree.deleteFriend(this.props.token, userId);
-		} catch (error) {
-			this.handleError(error);
-		}
-	};
-
-
 	render() {
 		let content;
 		if (this.props.token == null || this.props.self == null) {
@@ -168,10 +148,7 @@ class ConnectedApp extends React.Component {
 			content = (
 				<Switch>
 					<Route path="/friends">
-						<PeoplePage token={this.props.token}
-						            addFriend={this.addFriend}
-						            deleteFriend={this.deleteFriend}
-						            handleError={this.handleError}/>
+						<PeoplePage handleError={this.handleError} />
 					</Route>
 					<Route path="/profile">
 						<MyProfilePage onAddInterval={this.addInterval}
