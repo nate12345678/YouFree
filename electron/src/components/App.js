@@ -25,7 +25,6 @@ import {
 import {
 	initApp,
 	logout,
-	setTheme,
 } from '../state/Effects';
 
 
@@ -43,7 +42,6 @@ function mapDispatchToProps(dispatch) {
 	return {
 		initApp: () => dispatch(initApp()),
 		setError: (message) => dispatch(setError(message)),
-		setTheme: (theme) => dispatch(setTheme(theme)),
 		clearError: () => dispatch(clearError()),
 		logout: () => dispatch(logout()),
 	};
@@ -68,11 +66,6 @@ class ConnectedApp extends React.Component {
 
 	componentDidMount() {
 		this.props.initApp();
-	}
-
-
-	invertTheme = () => {
-		this.props.setTheme(this.props.theme === 'light' ? 'dark' : 'light');
 	}
 
 
@@ -102,7 +95,7 @@ class ConnectedApp extends React.Component {
 		return (
 			<ThemeProvider theme={this.props.theme === 'light' ? lightTheme : darkTheme}>
 				<Router>
-					<Header invertTheme={this.invertTheme} />
+					<Header/>
 					<div id="content">
 						{content}
 					</div>

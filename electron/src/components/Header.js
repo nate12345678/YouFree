@@ -1,8 +1,6 @@
 import '../css/Header.css';
 import React from 'react';
-import {
-	NavLink
-} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
 	AppBar,
 	Button,
@@ -14,7 +12,10 @@ import {
 	Typography,
 	useMediaQuery
 } from '@material-ui/core';
-import { logout } from '../state/Effects';
+import {
+	logout,
+	setTheme
+} from '../state/Effects';
 import { connect } from 'react-redux';
 
 
@@ -28,7 +29,8 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		logout: () => dispatch(logout())
+		logout: () => dispatch(logout()),
+		setTheme: (theme) => dispatch(setTheme(theme))
 	};
 }
 
@@ -44,10 +46,14 @@ const title = <Typography variant="h5" color="inherit">You Free</Typography>;
 
 function ConnectedHeader(props) {
 
+	const invertTheme = () => {
+		props.setTheme(props.theme === 'light' ? 'dark' : 'light');
+	}
+
 	const [open, setOpen] = React.useState();
 	const toggleDrawer = (isOpen) => () => setOpen(isOpen);
 	const isDesktop = useMediaQuery('(min-width: 720px)');
-	const themeButton = <ThemeButton hasLeftMargin={!(isDesktop && props.isLoggedIn)} theme={props.theme} invertTheme={props.invertTheme} />;
+	const themeButton = <ThemeButton hasLeftMargin={!(isDesktop && props.isLoggedIn)} theme={props.theme} invertTheme={invertTheme} />;
 
 	let toolbar;
 	let drawer;

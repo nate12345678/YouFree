@@ -25,7 +25,7 @@
 	flex-direction: row;
 	align-items: center;
 	list-style: none;
-	padding: 0;
+	padding: 0 0 0 var(--content-margin);
 	margin: 0;
 }
 
