@@ -166,8 +166,9 @@ function updateSearchResultsDeleteFriend(searchResults, userId) {
 
 function createEntityState(entities, idName) {
 	const entityState = { items: entities };
-	for (let [entity, index] of entities.entries()) {
-		entity[idName] = index;
+	for (let [index, entity] of entities.entries()) {
+		const id = entity[idName];
+		entityState[id] = index;
 	}
 
 	return entityState;

@@ -34,7 +34,7 @@ class Search extends React.Component {
 			query: query
 		});
 
-		await this.searchUsers(query);
+		await this.props.searchUsers(query);
 	}
 
 
@@ -86,7 +86,7 @@ class Search extends React.Component {
 
 
 	componentDidMount() {
-		this.searchUsers('');
+		this.props.searchUsers('');
 	}
 
 

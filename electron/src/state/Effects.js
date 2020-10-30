@@ -129,16 +129,21 @@ export const getFriendSchedules = () => async (dispatch, getState) => {
 		const response = await youfree.getFriendSchedules(getState().token);
 		dispatch(fetchFriendSchedulesSuccess(response.data));
 	} catch (error) {
+		console.log(error);
 		handleError(dispatch, error);
 	}
 };
 
 export const getFriends = () => async (dispatch, getState) => {
+	console.log('begin');
 	dispatch(getFriendsBegin());
 
 	try {
+		console.log('sending request...');
 		const response = await youfree.getFriends(getState().token);
+		console.log(response);
 		dispatch(getFriendsSuccess(response.data));
+		console.log('dispatched');
 	} catch (error) {
 		handleError(dispatch, error);
 	}
