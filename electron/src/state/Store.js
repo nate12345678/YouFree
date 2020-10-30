@@ -70,6 +70,9 @@ const reducer = function (state = INITIAL_STATE, action) {
 			};
 		case Actions.LOGOUT_SUCCESS:
 			return INITIAL_STATE;
+		case Actions.ADD_INTERVAL_SUCCESS: // Fallthrough
+		case Actions.UPDATE_INTERVAL_SUCCESS: // Fallthrough
+		case Actions.DELETE_INTERVAL_SUCCESS: // Fallthrough
 		case Actions.FETCH_MY_SCHEDULE_SUCCESS:
 			return {
 				...state,
@@ -175,6 +178,7 @@ function createEntityState(entities, idName) {
 }
 
 
+// eslint-disable-next-line
 function addToEntityState(lastEntityState, entity, idName) {
 	return {
 		...lastEntityState,

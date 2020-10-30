@@ -12,6 +12,7 @@ import { dayOfWeek } from '../constants/DayOfWeek';
 import Markers from './common/Markers';
 import { connect } from 'react-redux';
 import {
+	addInterval,
 	fetchMySchedule,
 	getFriendSchedules
 } from '../state/Effects';
@@ -30,7 +31,8 @@ function mapDispatchToProps(dispatch) {
 		getDashboard: () => {
 			dispatch(getFriendSchedules());
 			dispatch(fetchMySchedule());
-		}
+		},
+		addInterval: (dayOfWeek, startMin, endMin) => dispatch(addInterval(dayOfWeek, startMin, endMin))
 	};
 }
 

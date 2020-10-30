@@ -1,9 +1,11 @@
 import youfree from '../api/Youfree';
 import {
 	addFriendSuccess,
+	addIntervalSuccess,
 	createUserBegin,
 	createUserSuccess,
 	deleteFriendSuccess,
+	deleteIntervalSuccess,
 	fetchFriendSchedulesBegin,
 	fetchFriendSchedulesSuccess,
 	fetchMyScheduleBegin,
@@ -21,7 +23,8 @@ import {
 	setError,
 	setSelf,
 	setThemeSuccess,
-	setToken
+	setToken,
+	updateIntervalSuccess
 } from './Actions';
 
 const handleError = (dispatch, error) => {
@@ -122,6 +125,33 @@ export const fetchMySchedule = () => async (dispatch, getState) => {
 	}
 };
 
+export const addInterval = (dayOfWeek, startMin, endMin) => async (dispatch, getState) => {
+	try {
+		const response = await youfree.addInterval(getState().token, dayOfWeek, startMin, endMin);
+		dispatch(addIntervalSuccess(response.data));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+};
+
+export const updateInterval = (intervalId, dayOfWeek, startMin, endMin) => async (dispatch, getState) => {
+	try {
+		const response = await youfree.updateInterval(getState().token, intervalId, dayOfWeek, startMin, endMin);
+		dispatch(updateIntervalSuccess(response.data));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+};
+
+export const deleteInterval = (intervalId) => async (dispatch, getState) => {
+	try {
+		const response = await youfree.deleteInterval(getState().token, intervalId);
+		dispatch(deleteIntervalSuccess(response.data));
+	} catch (error) {
+		handleError(error);
+	}
+};
+
 export const getFriendSchedules = () => async (dispatch, getState) => {
 	dispatch(fetchFriendSchedulesBegin());
 
@@ -135,15 +165,11 @@ export const getFriendSchedules = () => async (dispatch, getState) => {
 };
 
 export const getFriends = () => async (dispatch, getState) => {
-	console.log('begin');
 	dispatch(getFriendsBegin());
 
 	try {
-		console.log('sending request...');
 		const response = await youfree.getFriends(getState().token);
-		console.log(response);
 		dispatch(getFriendsSuccess(response.data));
-		console.log('dispatched');
 	} catch (error) {
 		handleError(dispatch, error);
 	}
@@ -151,6 +177,7 @@ export const getFriends = () => async (dispatch, getState) => {
 
 export const addFriend = (user) => async (dispatch, getState) => {
 	try {
+		// eslint-disable-next-line
 		const response = await youfree.addFriend(getState().token, user.id);
 		dispatch(addFriendSuccess(user));
 	} catch (error) {
@@ -160,6 +187,7 @@ export const addFriend = (user) => async (dispatch, getState) => {
 
 export const deleteFriend = (user) => async (dispatch, getState) => {
 	try {
+		// eslint-disable-next-line
 		const response = await youfree.deleteFriend(getState().token, user.id);
 		dispatch(deleteFriendSuccess(user));
 	} catch (error) {

@@ -18,6 +18,9 @@ export const Actions = {
 
 	FETCH_MY_SCHEDULE_BEGIN: '[SCHEDULE] Begin fetching schedule',
 	FETCH_MY_SCHEDULE_SUCCESS: '[SCHEDULE] Successfully got schedule',
+	ADD_INTERVAL_SUCCESS: '[SCHEDULE] Successfully added interval',
+	UPDATE_INTERVAL_SUCCESS: '[SCHEDULE] Successfully edited interval',
+	DELETE_INTERVAL_SUCCESS: '[SCHEDULE] Successfully deleted interval',
 
 	FETCH_FRIEND_SCHEDULES_BEGIN: '[DASHBOARD] Begin fetching friend schedules',
 	FETCH_FRIEND_SCHEDULES_SUCCESS: '[DASHBOARD] Successfully got friend schedules',
@@ -131,6 +134,27 @@ export function fetchMyScheduleBegin() {
 export function fetchMyScheduleSuccess(schedule) {
 	return {
 		type: Actions.FETCH_MY_SCHEDULE_SUCCESS,
+		payload: schedule
+	};
+}
+
+export function addIntervalSuccess(schedule) {
+	return {
+		type: Actions.ADD_INTERVAL_SUCCESS,
+		payload: schedule
+	};
+}
+
+export function updateIntervalSuccess(schedule) {
+	return {
+		type: Actions.UPDATE_INTERVAL_SUCCESS,
+		payload: schedule
+	};
+}
+
+export function deleteIntervalSuccess(schedule) {
+	return {
+		type: Actions.DELETE_INTERVAL_SUCCESS,
 		payload: schedule
 	};
 }

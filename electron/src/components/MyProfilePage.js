@@ -19,7 +19,12 @@ import {
 import WeeklySchedule from './WeeklySchedule';
 import EditScheduleForm from './common/EditScheduleForm';
 import Checkbox from '@material-ui/core/Checkbox';
-import { fetchMySchedule } from '../state/Effects';
+import {
+	addInterval,
+	deleteInterval,
+	fetchMySchedule,
+	updateInterval
+} from '../state/Effects';
 import { connect } from 'react-redux';
 
 
@@ -33,7 +38,10 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		getSchedule: () => dispatch(fetchMySchedule())
+		getSchedule: () => dispatch(fetchMySchedule()),
+		addInterval: (dayOfWeek, startMin, endMin) => dispatch(addInterval(dayOfWeek, startMin, endMin)),
+		updateInterval: (intervalId, dayOfWeek, startMin, endMin) => dispatch(updateInterval(intervalId, dayOfWeek, startMin, endMin)),
+		deleteInterval: (intervalId) => dispatch(deleteInterval(intervalId))
 	};
 }
 

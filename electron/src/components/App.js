@@ -1,6 +1,5 @@
 import '../css//App.css';
 import React from 'react';
-import youfree from '../api/Youfree';
 import Dashboard from './Dashboard';
 import Header from './Header';
 import AuthenticationPage from './login/AuthenticationPage';
@@ -26,7 +25,7 @@ import {
 import {
 	initApp,
 	logout,
-	setTheme
+	setTheme,
 } from '../state/Effects';
 
 
@@ -77,69 +76,6 @@ class ConnectedApp extends React.Component {
 	}
 
 
-	handleError = (error) => {
-		if (error.response !== undefined) {
-			console.log(error.response);
-			this.props.setError(error.response.data);
-			return;
-		}
-
-		console.log('An unknown error has occurred');
-		this.props.setError('An unknown error has occurred');
-	};
-
-
-	addInterval = async (dayOfWeek, startMin, endMin) => {
-		try {
-			const addIntervalReq = await youfree.addInterval(this.props.token, dayOfWeek, startMin, endMin);
-
-			console.log('Added interval');
-			const schedule = addIntervalReq.data;
-
-			this.setState({
-				schedule: schedule
-			});
-		} catch (error) {
-			this.handleError(error);
-		}
-	};
-
-
-	updateInterval = async (intervalId, dayOfWeek, startMin, endMin) => {
-		try {
-			const updateIntervalResponse = await youfree.updateInterval(this.props.token, intervalId, dayOfWeek, startMin, endMin);
-
-			console.log('Updated interval');
-			const schedule = updateIntervalResponse.data;
-
-			this.setState({
-				schedule: schedule
-			});
-		} catch (error) {
-			this.handleError(error);
-		}
-	};
-
-
-	deleteInterval = async (intervalId) => {
-		// TODO: save old schedule and make copy of new one
-		try {
-			// TODO: locally remove interval from copy of schedule, set state to new schedule
-			const delIntervalResponse = await youfree.deleteInterval(this.props.token, intervalId);
-
-			console.log('Deleted interval');
-			const schedule = delIntervalResponse.data;
-
-			this.setState({
-				schedule: schedule
-			});
-		} catch (error) {
-			this.handleError(error);
-			// TODO: revert to old schedule
-		}
-	};
-
-
 	render() {
 		let content;
 		if (this.props.token == null || this.props.self == null) {
@@ -151,16 +87,13 @@ class ConnectedApp extends React.Component {
 						<PeoplePage/>
 					</Route>
 					<Route path="/profile">
-						<MyProfilePage onAddInterval={this.addInterval}
-						               onUpdateInterval={this.updateInterval}
-						               onDeleteInterval={this.deleteInterval}
-						/>
+						<MyProfilePage/>
 					</Route>
 					{/*<Route path="/about">*/}
 					{/*	<AboutPage/>*/}
 					{/*</Route>*/}
 					<Route path="/">
-						<Dashboard onAddInterval={this.addInterval}/>
+						<Dashboard/>
 					</Route>
 				</Switch>
 			);

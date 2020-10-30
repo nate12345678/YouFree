@@ -14,19 +14,6 @@ class Search extends React.Component {
 	}
 
 
-	// searchUsers = async (query) => {
-	// 	try {
-	// 		const searchUsersResponse = await youfree.searchUsers(this.props.token, query);
-	// 		console.log(searchUsersResponse.data);
-	// 		this.setState({
-	// 			results: searchUsersResponse.data
-	// 		});
-	// 	} catch (error) {
-	// 		this.props.handleError(error);
-	// 	}
-	// }
-
-
 	handleOnChange = async (event) => {
 		const query = event.target.value;
 
