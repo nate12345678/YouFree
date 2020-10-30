@@ -17,6 +17,9 @@ const INITIAL_STATE = {
 	pendingRequests: {
 		items: []
 	},
+	searchResults: {
+		items: []
+	},
 	errorMessage: null
 };
 
@@ -85,7 +88,12 @@ const reducer = function (state = INITIAL_STATE, action) {
 		case Actions.GET_PENDING_REQUESTS_SUCCESS:
 			return {
 				...state,
-				pendingRequests: action.payload
+				pendingRequests: createEntityState(action.payload, 'id')
+			};
+		case Actions.SEARCH_USERS_SUCCESS:
+			return {
+				...state,
+				searchResults: createEntityState(action.payload, 'id')
 			};
 		case Actions.ADD_FRIEND_SUCCESS:
 			// We don't actually add the friend to the 'friends list' entity state
@@ -93,17 +101,18 @@ const reducer = function (state = INITIAL_STATE, action) {
 			// And I don't want to deal with inserting the user into proper alphabetical order in list
 			return {
 				...state,
-				// TODO: if in search, update
 				pendingRequests: removeFromEntityState(state.pendingRequests, action.payload.id),
+				searchResults: updateSearchResultsAddFriend(state.searchResults, action.payload.id)
 				// friends: addToEntityState(state.friends, action.payload, 'id')
 			};
 		case Actions.DELETE_FRIEND_SUCCESS:
 			return {
 				...state,
 				pendingRequests: removeFromEntityState(state.pendingRequests, action.payload.id),
+				searchResults: updateSearchResultsDeleteFriend(state.searchResults, action.payload.id),
 				friends: removeFromEntityState(state.friends, action.payload.id)
 				// TODO: remove from friendSchedules
-			}
+			};
 		default:
 			return state;
 	}
@@ -112,8 +121,51 @@ const reducer = function (state = INITIAL_STATE, action) {
 export const store = createStore(reducer, applyMiddleware(thunk));
 
 
+function updateSearchResultsAddFriend(searchResults, userId) {
+	if (!searchResults.hasOwnProperty(userId)) return searchResults;
+
+	const index = searchResults[userId];
+	const updatedItem = { ...searchResults.items[index] };
+
+	switch (updatedItem.relationship) {
+		case 'PENDING':
+			updatedItem.relationship = 'FRIENDS';
+			break;
+		case 'NONE':
+			updatedItem.relationship = 'SENT';
+			break;
+		default:
+			console.error(`Should not be able to add friend with state ${updatedItem.relationship}`);
+			break;
+	}
+
+	return updateEntityStateItem(searchResults, updatedItem, index);
+}
+
+
+function updateSearchResultsDeleteFriend(searchResults, userId) {
+	if (!searchResults.hasOwnProperty(userId)) return searchResults;
+
+	const index = searchResults[userId];
+	const updatedItem = { ...searchResults.items[index] };
+
+	switch (updatedItem.relationship) {
+		case 'FRIENDS': // Fallthrough
+		case 'SENT':  // Fallthrough
+		case 'PENDING':
+			updatedItem.relationship = 'NONE';
+			break;
+		default:
+			console.error(`Should not be able to remove friend with state ${updatedItem.relationship}`);
+			break;
+	}
+
+	return updateEntityStateItem(searchResults, updatedItem, index);
+}
+
+
 function createEntityState(entities, idName) {
-	const entityState = { items: entities }
+	const entityState = { items: entities };
 	for (let [entity, index] of entities.entries()) {
 		entity[idName] = index;
 	}
@@ -128,6 +180,17 @@ function addToEntityState(lastEntityState, entity, idName) {
 		[entity[idName]]: lastEntityState.items.length,
 		items: lastEntityState.items.concat(entity)
 	};
+}
+
+
+function updateEntityStateItem(lastEntityState, updatedItem, index) {
+	const updatedEntityState = { ...lastEntityState };
+	const updatedItems = { ...lastEntityState.items };
+
+	updatedItems[index] = updatedItem;
+	updatedEntityState.items = updatedItems;
+
+	return updatedEntityState;
 }
 
 

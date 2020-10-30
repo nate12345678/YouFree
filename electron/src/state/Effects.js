@@ -16,6 +16,8 @@ import {
 	loginSuccess,
 	logoutBegin,
 	logoutSuccess,
+	searchUsersBegin,
+	searchUsersSuccess,
 	setError,
 	setSelf,
 	setThemeSuccess,
@@ -166,6 +168,21 @@ export const getPendingRequests = () => async (dispatch, getState) => {
 	try {
 		const response = await youfree.getPending(getState().token);
 		dispatch(getPendingRequestsSuccess(response.data));
+	} catch (error) {
+		handleError(dispatch, error);
+	}
+};
+
+export const searchUsers = (query) => async (dispatch, getState) => {
+	dispatch(searchUsersBegin());
+
+	try {
+		const searchUsersResponse = await youfree.searchUsers(getState().token, query);
+		const userRelationships = searchUsersResponse.data.map(result => ({
+			...result.user,
+			relationship: result.relationship
+		}));
+		dispatch(searchUsersSuccess(userRelationships));
 	} catch (error) {
 		handleError(dispatch, error);
 	}

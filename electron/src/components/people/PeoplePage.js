@@ -15,15 +15,16 @@ import {
 	addFriend,
 	deleteFriend,
 	getFriends,
-	getPendingRequests
+	getPendingRequests,
+	searchUsers
 } from '../../state/Effects';
 
 
 function select(state) {
 	return {
 		friends: state.friends.items,
-		pendingRequests: state.pendingRequests,
-		token: state.token // TODO: remove when possible
+		pendingRequests: state.pendingRequests.items,
+		searchResults: state.searchResults.items,
 	};
 }
 
@@ -33,7 +34,8 @@ function mapDispatchToProps(dispatch) {
 		getFriends: () => dispatch(getFriends()),
 		addFriend: (user) => dispatch(addFriend(user)),
 		deleteFriend: (user) => dispatch(deleteFriend(user)),
-		getPending: () => dispatch(getPendingRequests())
+		getPending: () => dispatch(getPendingRequests()),
+		searchUsers: (query) => dispatch(searchUsers(query))
 	};
 }
 
@@ -60,7 +62,9 @@ class ConnectedPeoplePage extends React.Component {
 		let content;
 		switch (this.state.currentTab) {
 			case 0:
-				content = <Friends getFriends={this.props.getFriends} friends={this.props.friends} />;
+				content = <Friends getFriends={this.props.getFriends}
+				                   friends={this.props.friends}
+				/>;
 				break;
 			case 1:
 				content = <Pending getPending={this.props.getPending}
@@ -70,10 +74,10 @@ class ConnectedPeoplePage extends React.Component {
 				/>
 				break;
 			default:
-				content = <Search token={this.props.token}
+				content = <Search searchUsers={this.props.searchUsers}
+				                  searchResults={this.props.searchResults}
 				                  addFriend={this.props.addFriend}
 				                  deleteFriend={this.props.deleteFriend}
-				                  handleError={this.props.handleError}
 				/>
 				break;
 		}

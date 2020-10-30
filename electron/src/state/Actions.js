@@ -26,6 +26,8 @@ export const Actions = {
 	GET_FRIENDS_SUCCESS: '[PEOPLE] Successfully got friends',
 	GET_PENDING_REQUESTS_BEGIN: '[PEOPLE] Begin getting pending requests',
 	GET_PENDING_REQUESTS_SUCCESS: '[PEOPLE] Successfully got pending requests',
+	SEARCH_USERS_BEGIN: '[PEOPLE] Begin searching for users',
+	SEARCH_USERS_SUCCESS: '[PEOPLE] Successfully searched users',
 	ADD_FRIEND_SUCCESS: '[PEOPLE] Successfully sent friend request',
 	DELETE_FRIEND_SUCCESS: '[PEOPLE] Successfully deleted friend'
 };
@@ -165,9 +167,23 @@ export function getPendingRequestsBegin() {
 	};
 }
 
-export function getPendingRequestsSuccess() {
+export function getPendingRequestsSuccess(pendingRequests) {
 	return {
-		type: Actions.GET_PENDING_REQUESTS_SUCCESS
+		type: Actions.GET_PENDING_REQUESTS_SUCCESS,
+		payload: pendingRequests
+	};
+}
+
+export function searchUsersBegin() {
+	return {
+		type: Actions.SEARCH_USERS_BEGIN
+	};
+}
+
+export function searchUsersSuccess(users) {
+	return {
+		type: Actions.SEARCH_USERS_SUCCESS,
+		payload: users
 	};
 }
 

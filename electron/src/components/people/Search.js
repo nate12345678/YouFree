@@ -1,6 +1,5 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import youfree from '../../api/Youfree';
 import User from './User';
 
 class Search extends React.Component {
@@ -10,22 +9,22 @@ class Search extends React.Component {
 
 		this.state = {
 			query: '',
-			results: []
+			// results: []
 		};
 	}
 
 
-	searchUsers = async (query) => {
-		try {
-			const searchUsersResponse = await youfree.searchUsers(this.props.token, query);
-			console.log(searchUsersResponse.data);
-			this.setState({
-				results: searchUsersResponse.data
-			});
-		} catch (error) {
-			this.props.handleError(error);
-		}
-	}
+	// searchUsers = async (query) => {
+	// 	try {
+	// 		const searchUsersResponse = await youfree.searchUsers(this.props.token, query);
+	// 		console.log(searchUsersResponse.data);
+	// 		this.setState({
+	// 			results: searchUsersResponse.data
+	// 		});
+	// 	} catch (error) {
+	// 		this.props.handleError(error);
+	// 	}
+	// }
 
 
 	handleOnChange = async (event) => {
@@ -39,51 +38,51 @@ class Search extends React.Component {
 	}
 
 
-	onAddFriend = (index) => () => {
-		const results = [...this.state.results];
-		const result = { ...results[index] }
-		switch (result.relationship) {
-			case 'PENDING':
-				result.relationship = 'FRIENDS';
-				break;
-			case 'NONE':
-				result.relationship = 'SENT';
-				break;
-			default:
-				console.error(`Should not be able to add friend with state ${result.relationship}`);
-				break;
-		}
-
-		results[index] = result;
-		this.setState({
-			results: results
-		});
-
-		this.props.addFriend(result.user);
-	}
-
-
-	onDeleteFriend = (index) => () => {
-		const results = [...this.state.results];
-		const result = { ...results[index] }
-		switch (result.relationship) {
-			case 'FRIENDS': // Fallthrough
-			case 'SENT': // Fallthrough
-			case 'PENDING':
-				result.relationship = 'NONE';
-				break;
-			default:
-				console.error(`Should not be able to remove friend with state ${result.relationship}`);
-				break;
-		}
-
-		results[index] = result;
-		this.setState({
-			results: results
-		});
-
-		this.props.deleteFriend(result.user.id);
-	}
+	// onAddFriend = (index) => () => {
+	// 	const results = [...this.state.results];
+	// 	const result = { ...results[index] }
+	// 	switch (result.relationship) {
+	// 		case 'PENDING':
+	// 			result.relationship = 'FRIENDS';
+	// 			break;
+	// 		case 'NONE':
+	// 			result.relationship = 'SENT';
+	// 			break;
+	// 		default:
+	// 			console.error(`Should not be able to add friend with state ${result.relationship}`);
+	// 			break;
+	// 	}
+	//
+	// 	results[index] = result;
+	// 	this.setState({
+	// 		results: results
+	// 	});
+	//
+	// 	this.props.addFriend(result.user);
+	// }
+	//
+	//
+	// onDeleteFriend = (index) => () => {
+	// 	const results = [...this.state.results];
+	// 	const result = { ...results[index] }
+	// 	switch (result.relationship) {
+	// 		case 'FRIENDS': // Fallthrough
+	// 		case 'SENT': // Fallthrough
+	// 		case 'PENDING':
+	// 			result.relationship = 'NONE';
+	// 			break;
+	// 		default:
+	// 			console.error(`Should not be able to remove friend with state ${result.relationship}`);
+	// 			break;
+	// 	}
+	//
+	// 	results[index] = result;
+	// 	this.setState({
+	// 		results: results
+	// 	});
+	//
+	// 	this.props.deleteFriend(result.user.id);
+	// }
 
 
 	componentDidMount() {
@@ -93,14 +92,14 @@ class Search extends React.Component {
 
 	render() {
 
-		const userDivs = this.state.results.map((result, index) => {
+		const userDivs = this.props.searchResults.map(result => {
 			return (
-				<li className="users-li" key={result.user.id}>
+				<li className="users-li" key={result.id}>
 					<User variant={result.relationship.toLowerCase()}
-					      username={result.user.username}
-					      email={result.user.email}
-					      addFriend={this.onAddFriend(index)}
-					      deleteFriend={this.onDeleteFriend(index)}
+					      username={result.username}
+					      email={result.email}
+					      addFriend={() => this.props.addFriend(result)}
+					      deleteFriend={() => this.props.deleteFriend(result)}
 					/>
 				</li>
 			);

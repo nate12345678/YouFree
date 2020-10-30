@@ -148,7 +148,7 @@ class ConnectedApp extends React.Component {
 			content = (
 				<Switch>
 					<Route path="/friends">
-						<PeoplePage handleError={this.handleError} />
+						<PeoplePage/>
 					</Route>
 					<Route path="/profile">
 						<MyProfilePage onAddInterval={this.addInterval}
