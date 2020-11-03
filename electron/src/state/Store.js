@@ -58,7 +58,7 @@ const reducer = function (state = INITIAL_STATE, action) {
 		case Actions.CLEAR_ERROR:
 			return {
 				...state,
-				error: null
+				errorMessage: null
 			};
 		case Actions.CREATE_USER_SUCCESS:
 			// Fallthrough
