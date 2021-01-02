@@ -8,14 +8,12 @@ buildscript {
 
 	dependencies {
 		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.3.4.RELEASE'
-//		classpath 'com.github.node-gradle:gradle-node-plugin:2.2.4'
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-//apply plugin: 'com.github.node-gradle.node'
 
 group = "team.gif"
 version = "1.1.0"
@@ -40,33 +38,3 @@ dependencies {
 
 	implementation group: 'org.springdoc',  name: 'springdoc-openapi-ui',   version: '1.4.8'
 }
-
-wrapper {
-	gradleVersion '6.6.1'
-}
-
-//task copyReact(type: Copy) {
-//	from 'react/build'
-//	into 'build/resources/main/static/.'
-//}
-//
-//task appNpmBuild(type: NpmTask) {
-//	description = 'Builds production version of the webapp'
-//	args = ['run', 'build']
-//}
-//
-//task appNpmInstall(type: NpmTask) {
-//	description = 'Installs all dependencies from package.json'
-//	args = ['install']
-//}
-
-//appNpmBuild.dependsOn appNpmInstall
-//copyReact.dependsOn appNpmBuild
-//compileJava.dependsOn copyReact
-//
-//node {
-//	version = '14.13.0'
-//	npmVersion = '6.13.7'
-//	download = false
-//	nodeModulesDir = file("${project.projectDir}/react") // TODO: Change this to `nodeProjectDir` in node-gradle v3.0
-//}

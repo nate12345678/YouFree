@@ -26,6 +26,7 @@ import {
 	setToken,
 	updateIntervalSuccess
 } from './Actions';
+import Notifier from '../api/Notifier';
 
 const handleError = (dispatch, error) => {
 	if (error.response !== undefined) {
@@ -45,6 +46,8 @@ export const initApp = () => async (dispatch) => {
 	if (token && self) {
 		dispatch(setToken(token));
 		dispatch(setSelf(self));
+
+		Notifier.connect();
 	}
 
 	// Load theme
@@ -57,6 +60,8 @@ export const initApp = () => async (dispatch) => {
 export const setTheme = (theme) => async (dispatch, getState) => {
 	const from = getState().theme;
 	const to = theme;
+
+	Notifier.sendHello();
 
 	document.body.classList.replace(from, to);
 	localStorage.setItem('theme', to);
@@ -103,6 +108,7 @@ export const login = (email, password, remember) => async (dispatch) => {
 
 export const logout = () => async (dispatch, getState) => {
 	dispatch(logoutBegin());
+	Notifier.disconnect();
 
 	try {
 		await youfree.logout(getState().token);
