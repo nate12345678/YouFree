@@ -1,24 +1,8 @@
 {
 	"name": "youfree-desktop",
 	"version": "0.1.0",
-	"main": "public/electron.js",
 	"homepage": "./",
 	"private": true,
-	"author": {
-		"name": "team.gif",
-		"url": "https://youfree.patrickubelhor.com"
-	},
-	"build": {
-		"appId": "team.gif.youfree",
-		"productName": "YouFree-Desktop",
-		"files": [
-			"build/**/*",
-			"node_modules/**/*"
-		],
-		"directories": {
-			"buildResources": "assets"
-		}
-	},
 	"dependencies": {
 		"@material-ui/core": "^4.11.1",
 		"@material-ui/lab": "^4.0.0-alpha.56",
@@ -41,11 +25,7 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject",
-		"start-electron": "electron .",
-		"postinstall": "electron-builder install-app-deps",
-		"preelectron-pack": "npm run build",
-		"electron-pack": "electron-builder build -w"
+		"eject": "react-scripts eject"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
@@ -61,9 +41,5 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
-	},
-	"devDependencies": {
-		"electron": "^9.0.3",
-		"electron-builder": "^22.7.0"
 	}
 }
