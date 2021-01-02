@@ -1,4 +1,5 @@
 import youfree from '../api/Youfree';
+import { User } from '../models/Responses';
 import {
 	addFriendSuccess,
 	addIntervalSuccess,
@@ -28,7 +29,7 @@ import {
 } from './Actions';
 import Notifier from '../api/Notifier';
 
-const handleError = (dispatch, error) => {
+const handleError = (dispatch, error: any) => {
 	if (error.response !== undefined) {
 		console.log(error.response);
 		dispatch(setError(error.response.data));
@@ -57,7 +58,7 @@ export const initApp = () => async (dispatch) => {
 	}
 };
 
-export const setTheme = (theme) => async (dispatch, getState) => {
+export const setTheme = (theme: string) => async (dispatch, getState) => {
 	const from = getState().theme;
 	const to = theme;
 
@@ -68,7 +69,7 @@ export const setTheme = (theme) => async (dispatch, getState) => {
 	dispatch(setThemeSuccess(to));
 };
 
-export const createUser = (email, username, password, remember) => async (dispatch) => {
+export const createUser = (email: string, username: string, password: string, remember: boolean) => async (dispatch) => {
 	dispatch(createUserBegin());
 
 	try {
@@ -87,7 +88,7 @@ export const createUser = (email, username, password, remember) => async (dispat
 	}
 };
 
-export const login = (email, password, remember) => async (dispatch) => {
+export const login = (email: string, password: string, remember: boolean) => async (dispatch) => {
 	dispatch(loginBegin());
 
 	try {
@@ -131,7 +132,7 @@ export const fetchMySchedule = () => async (dispatch, getState) => {
 	}
 };
 
-export const addInterval = (dayOfWeek, startMin, endMin) => async (dispatch, getState) => {
+export const addInterval = (dayOfWeek: number, startMin: number, endMin: number) => async (dispatch, getState) => {
 	try {
 		const response = await youfree.addInterval(getState().token, dayOfWeek, startMin, endMin);
 		dispatch(addIntervalSuccess(response.data));
@@ -140,7 +141,7 @@ export const addInterval = (dayOfWeek, startMin, endMin) => async (dispatch, get
 	}
 };
 
-export const updateInterval = (intervalId, dayOfWeek, startMin, endMin) => async (dispatch, getState) => {
+export const updateInterval = (intervalId: number, dayOfWeek: number, startMin: number, endMin: number) => async (dispatch, getState) => {
 	try {
 		const response = await youfree.updateInterval(getState().token, intervalId, dayOfWeek, startMin, endMin);
 		dispatch(updateIntervalSuccess(response.data));
@@ -149,12 +150,12 @@ export const updateInterval = (intervalId, dayOfWeek, startMin, endMin) => async
 	}
 };
 
-export const deleteInterval = (intervalId) => async (dispatch, getState) => {
+export const deleteInterval = (intervalId: number) => async (dispatch, getState) => {
 	try {
 		const response = await youfree.deleteInterval(getState().token, intervalId);
 		dispatch(deleteIntervalSuccess(response.data));
 	} catch (error) {
-		handleError(error);
+		handleError(dispatch, error);
 	}
 };
 
@@ -181,7 +182,7 @@ export const getFriends = () => async (dispatch, getState) => {
 	}
 };
 
-export const addFriend = (user) => async (dispatch, getState) => {
+export const addFriend = (user: User) => async (dispatch, getState) => {
 	try {
 		// eslint-disable-next-line
 		const response = await youfree.addFriend(getState().token, user.id);
@@ -191,7 +192,7 @@ export const addFriend = (user) => async (dispatch, getState) => {
 	}
 }
 
-export const deleteFriend = (user) => async (dispatch, getState) => {
+export const deleteFriend = (user: User) => async (dispatch, getState) => {
 	try {
 		// eslint-disable-next-line
 		const response = await youfree.deleteFriend(getState().token, user.id);
@@ -212,7 +213,7 @@ export const getPendingRequests = () => async (dispatch, getState) => {
 	}
 };
 
-export const searchUsers = (query) => async (dispatch, getState) => {
+export const searchUsers = (query: string) => async (dispatch, getState) => {
 	dispatch(searchUsersBegin());
 
 	try {

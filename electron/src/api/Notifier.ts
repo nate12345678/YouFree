@@ -27,7 +27,7 @@ class Notifier {
 	}
 
 	disconnect = () => {
-		if (this.client !== null) {
+		if (this.stompClient !== null) {
 			this.stompClient.disconnect();
 			console.log('Disconnected websocket');
 		}

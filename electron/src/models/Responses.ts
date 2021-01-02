@@ -1,0 +1,31 @@
+import { Relationship } from './Relationship';
+
+export interface User {
+	id: number;
+	username: string;
+	email: string;
+}
+
+export interface UserSearchResponse {
+	user: User;
+	relationship: Relationship;
+}
+
+export interface RelatedUser extends User {
+	relationship: Relationship
+}
+
+export interface IntervalResponse {
+	id: number;
+	userId: number;
+	dayOfWeek: number;
+	startMin: number;
+	endMin: number;
+}
+
+export type Schedule = IntervalResponse[][];
+
+export interface NamedSchedule {
+	user: User;
+	schedule: Schedule;
+}

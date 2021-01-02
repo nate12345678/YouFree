@@ -1,15 +1,17 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { NamedSchedule, Schedule, User, UserSearchResponse } from '../models/Responses';
 
+type YoufreeResponse<T> = Promise<AxiosResponse<T>>;
 
 class Youfree {
 
 	client = axios.create({
-		// baseURL: '/api/v1'
-		baseURL: 'https://youfree.patrickubelhor.com/api/v1'
+		baseURL: process.env.REACT_APP_SERVER_URL
 	});
 
 
-	createUser = (email, username, password) => {
+	createUser = (email: string, username: string, password: string): YoufreeResponse<User> =>
+	{
 		return this.client.post('/user', {
 			email: email,
 			username: username,
@@ -18,7 +20,8 @@ class Youfree {
 	};
 
 
-	login = (email, password) => {
+	login = (email: string, password: string): YoufreeResponse<User> =>
+	{
 		return this.client.get('/login', {
 			headers: {
 				email: email,
@@ -28,7 +31,8 @@ class Youfree {
 	};
 
 
-	logout = (token) => {
+	logout = (token: string): YoufreeResponse<void> =>
+	{
 		return this.client.get('/logout', {
 			headers: {
 				token: token
@@ -37,7 +41,8 @@ class Youfree {
 	};
 
 
-	addInterval = (token, dayOfWeek, startMin, endMin) => {
+	addInterval = (token: string, dayOfWeek: number, startMin: number, endMin: number): YoufreeResponse<Schedule> =>
+	{
 		return this.client.put('/schedule', {
 			dayOfWeek: dayOfWeek,
 			startMin: startMin,
@@ -50,7 +55,8 @@ class Youfree {
 	};
 
 
-	updateInterval = (token, intervalId, dayOfWeek, startMin, endMin) => {
+	updateInterval = (token: string, intervalId: number, dayOfWeek: number, startMin: number, endMin: number): YoufreeResponse<Schedule> =>
+	{
 		return this.client.put(`/schedule/${intervalId}`, {
 			dayOfWeek: dayOfWeek,
 			startMin: startMin,
@@ -63,7 +69,8 @@ class Youfree {
 	}
 
 
-	deleteInterval = (token, intervalId) => {
+	deleteInterval = (token: string, intervalId: number): YoufreeResponse<Schedule> =>
+	{
 		return this.client.delete(`/schedule/${intervalId}`, {
 			headers: {
 				token: token
@@ -72,7 +79,8 @@ class Youfree {
 	};
 
 
-	getSchedule = (token, userId) => {
+	getSchedule = (token: string, userId: number): YoufreeResponse<Schedule> =>
+	{
 		return this.client.get(`/schedule/${userId}`, {
 			headers: {
 				token: token
@@ -81,7 +89,8 @@ class Youfree {
 	};
 
 
-	getFriendSchedules = (token) => {
+	getFriendSchedules = (token: string): YoufreeResponse<NamedSchedule[]> =>
+	{
 		return this.client.get('/schedule/friends', {
 			headers: {
 				token: token
@@ -90,7 +99,8 @@ class Youfree {
 	};
 
 
-	getFriends = (token) => {
+	getFriends = (token: string): YoufreeResponse<User[]> =>
+	{
 		return this.client.get('/friends', {
 			headers: {
 				token: token
@@ -99,7 +109,8 @@ class Youfree {
 	};
 
 
-	addFriend = (token, userId) => {
+	addFriend = (token: string, userId: number): YoufreeResponse<void> =>
+	{
 		return this.client.put(`/friends/${userId}`, {}, {
 			headers: {
 				token: token
@@ -108,7 +119,8 @@ class Youfree {
 	};
 
 
-	deleteFriend = (token, userId) => {
+	deleteFriend = (token: string, userId: number): YoufreeResponse<void> =>
+	{
 		return this.client.delete(`/friends/${userId}`, {
 			headers: {
 				token: token
@@ -117,7 +129,8 @@ class Youfree {
 	};
 
 
-	getPending = (token) => {
+	getPending = (token: string): YoufreeResponse<User[]> =>
+	{
 		return this.client.get('/friends/pending', {
 			headers: {
 				token: token
@@ -126,7 +139,8 @@ class Youfree {
 	};
 
 
-	searchUsers = (token, query) => {
+	searchUsers = (token: string, query: string): YoufreeResponse<UserSearchResponse[]> =>
+	{
 		return this.client.get('/search', {
 			headers: {
 				token: token,

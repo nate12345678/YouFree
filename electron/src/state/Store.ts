@@ -3,9 +3,10 @@ import {
 	createStore
 } from 'redux';
 import thunk from 'redux-thunk';
-import { Actions } from './Actions';
+import { AppState, EntityState } from '../models/State';
+import { Action, Actions } from './Actions';
 
-const INITIAL_STATE = {
+const INITIAL_STATE: AppState = {
 	token: null,
 	self: null,
 	theme: 'light',
@@ -23,7 +24,7 @@ const INITIAL_STATE = {
 	errorMessage: null
 };
 
-const reducer = function (state = INITIAL_STATE, action) {
+const reducer = function (state: AppState = INITIAL_STATE, action: Action): AppState {
 	switch (action.type) {
 		case Actions.SET_TOKEN:
 			return {
@@ -124,7 +125,7 @@ const reducer = function (state = INITIAL_STATE, action) {
 export const store = createStore(reducer, applyMiddleware(thunk));
 
 
-function updateSearchResultsAddFriend(searchResults, userId) {
+function updateSearchResultsAddFriend(searchResults, userId: number) {
 	if (!searchResults.hasOwnProperty(userId)) return searchResults;
 
 	const index = searchResults[userId];
@@ -146,7 +147,7 @@ function updateSearchResultsAddFriend(searchResults, userId) {
 }
 
 
-function updateSearchResultsDeleteFriend(searchResults, userId) {
+function updateSearchResultsDeleteFriend(searchResults, userId: number) {
 	if (!searchResults.hasOwnProperty(userId)) return searchResults;
 
 	const index = searchResults[userId];
@@ -167,7 +168,7 @@ function updateSearchResultsDeleteFriend(searchResults, userId) {
 }
 
 
-function createEntityState(entities, idName) {
+function createEntityState<T>(entities, idName: string): EntityState<T> {
 	const entityState = { items: entities };
 	for (let [index, entity] of entities.entries()) {
 		const id = entity[idName];
@@ -179,7 +180,7 @@ function createEntityState(entities, idName) {
 
 
 // eslint-disable-next-line
-function addToEntityState(lastEntityState, entity, idName) {
+function addToEntityState<T>(lastEntityState: EntityState<T>, entity: T, idName: string): EntityState<T> {
 	return {
 		...lastEntityState,
 		[entity[idName]]: lastEntityState.items.length,
@@ -188,7 +189,7 @@ function addToEntityState(lastEntityState, entity, idName) {
 }
 
 
-function updateEntityStateItem(lastEntityState, updatedItem, index) {
+function updateEntityStateItem<T>(lastEntityState: EntityState<T>, updatedItem: T, index: number): EntityState<T> {
 	const updatedEntityState = { ...lastEntityState };
 	const updatedItems = { ...lastEntityState.items };
 
@@ -199,7 +200,7 @@ function updateEntityStateItem(lastEntityState, updatedItem, index) {
 }
 
 
-function removeFromEntityState(lastEntityState, id) {
+function removeFromEntityState<T>(lastEntityState: EntityState<T>, id: number) {
 	let nextEntityState = { ...lastEntityState };
 
 	// Only remove if ID exists in entity state
