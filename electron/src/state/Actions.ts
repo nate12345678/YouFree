@@ -38,7 +38,9 @@ export enum Actions {
 	SEARCH_USERS_BEGIN = '[PEOPLE] Begin searching for users',
 	SEARCH_USERS_SUCCESS = '[PEOPLE] Successfully searched users',
 	ADD_FRIEND_SUCCESS = '[PEOPLE] Successfully sent friend request',
-	DELETE_FRIEND_SUCCESS = '[PEOPLE] Successfully deleted friend'
+	DELETE_FRIEND_SUCCESS = '[PEOPLE] Successfully deleted friend',
+
+	RECEIVE_NOTIFICATION = '[NOTIFICATION] Received notification'
 }
 
 export const setToken = (token: string): Action => ({
@@ -173,4 +175,9 @@ export const addFriendSuccess = (user: User): Action => ({
 export const deleteFriendSuccess = (user: User): Action => ({
 	type: Actions.DELETE_FRIEND_SUCCESS,
 	payload: user
+});
+
+export const receiveNotification = (notification): Action => ({
+	type: Actions.RECEIVE_NOTIFICATION,
+	payload: notification
 });

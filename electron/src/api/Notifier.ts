@@ -4,22 +4,25 @@ import Stomp from 'stompjs';
 
 class Notifier {
 
-	stompClient = null;
+	private client = null;
+	private token: string = null;
+	private userId: number = null;
 
 	constructor() {
-		this.stompClient = null;
+		this.client = null;
 	}
 
-	connect = () => {
+	connect = (notificationCallback: (frame) => void) => {
 		const socket = new SockJS('https://youfree.patrickubelhor.com/websocket-connect');
-		this.stompClient = Stomp.over(socket);
-		this.stompClient.connect({}, this.onConnectSuccess, this.onConnectFailure);
+		this.client = Stomp.over(socket);
+		this.client.connect({}, this.onConnectSuccess(notificationCallback), this.onConnectFailure);
 	}
 
-	onConnectSuccess = (frame) => {
+	onConnectSuccess = (notificationCallback) => (frame) => {
 		console.log('Connected to YouFree websocket!');
 		console.log(frame);
 		this.subscribeToHello();
+		this.subscribeToNotifications(notificationCallback)
 	}
 
 	onConnectFailure = () => {
@@ -27,20 +30,26 @@ class Notifier {
 	}
 
 	disconnect = () => {
-		if (this.stompClient !== null) {
-			this.stompClient.disconnect();
-			console.log('Disconnected websocket');
-		}
+		this.client.deactivate();
+		console.log('Disconnected websocket');
 	}
 
 	subscribeToHello = () => {
-		this.stompClient.subscribe('/topic/hello', (frame) => {
+		this.client.subscribe('/topic/hello', (frame) => {
 			console.log(frame.body);
 		});
 	}
 
 	sendHello = () => {
-		this.stompClient.send('/app/hello', {}, 'Hello YouFree');
+		this.client.send('/app/hello', {}, 'Hello YouFree');
+	}
+
+	subscribeToNotifications = (callback: (frame) => void) => {
+		const headers = {
+			token: this.token
+		};
+
+		this.client.subscribe(`/queue/notifications/${this.userId}`, callback, headers);
 	}
 
 }

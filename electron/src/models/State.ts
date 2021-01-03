@@ -10,6 +10,7 @@ export interface AppState {
 	friends: EntityState<any>;
 	pendingRequests: EntityState<any>;
 	searchResults: EntityState<any>;
+	numNotifications: number;
 }
 
 export interface EntityState<T> {

@@ -19,6 +19,7 @@ import {
 	loginSuccess,
 	logoutBegin,
 	logoutSuccess,
+	receiveNotification,
 	searchUsersBegin,
 	searchUsersSuccess,
 	setError,
@@ -40,6 +41,10 @@ const handleError = (dispatch, error: any) => {
 	dispatch(setError('An unknown error has occurred'));
 };
 
+const handleNotification = (dispatch) => (frame) => {
+	dispatch(receiveNotification(frame.body));
+}
+
 export const initApp = () => async (dispatch) => {
 	// Auto-login
 	const token = localStorage.getItem('token');
@@ -48,7 +53,7 @@ export const initApp = () => async (dispatch) => {
 		dispatch(setToken(token));
 		dispatch(setSelf(self));
 
-		Notifier.connect();
+		Notifier.connect(handleNotification(dispatch));
 	}
 
 	// Load theme
@@ -82,6 +87,7 @@ export const createUser = (email: string, username: string, password: string, re
 			localStorage.setItem('self', JSON.stringify(self));
 		}
 
+		Notifier.connect(handleNotification(dispatch));
 		dispatch(createUserSuccess(token, self));
 	} catch (error) {
 		handleError(dispatch, error);
@@ -101,6 +107,7 @@ export const login = (email: string, password: string, remember: boolean) => asy
 			localStorage.setItem('self', JSON.stringify(self));
 		}
 
+		Notifier.connect(handleNotification(dispatch));
 		dispatch(loginSuccess(token, self));
 	} catch (error) {
 		handleError(dispatch, error);

@@ -21,6 +21,7 @@ const INITIAL_STATE: AppState = {
 	searchResults: {
 		items: []
 	},
+	numNotifications: 0,
 	errorMessage: null
 };
 
@@ -116,6 +117,13 @@ const reducer = function (state: AppState = INITIAL_STATE, action: Action): AppS
 				searchResults: updateSearchResultsDeleteFriend(state.searchResults, action.payload.id),
 				friends: removeFromEntityState(state.friends, action.payload.id)
 				// TODO: remove from friendSchedules
+			};
+		case Actions.RECEIVE_NOTIFICATION:
+			console.log('Received notification');
+			console.log(action.payload);
+			return {
+				...state,
+				numNotifications: state.numNotifications + 1
 			};
 		default:
 			return state;
