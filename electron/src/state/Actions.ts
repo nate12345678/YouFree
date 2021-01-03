@@ -1,4 +1,4 @@
-import { NamedSchedule, RelatedUser, Schedule, User } from '../models/Responses';
+import { FriendRequestNotification, NamedSchedule, RelatedUser, Schedule, User } from '../models/Responses';
 
 export interface Action {
 	type: Actions;
@@ -177,7 +177,7 @@ export const deleteFriendSuccess = (user: User): Action => ({
 	payload: user
 });
 
-export const receiveNotification = (notification): Action => ({
+export const receiveNotification = (notifications: FriendRequestNotification[]): Action => ({
 	type: Actions.RECEIVE_NOTIFICATION,
-	payload: notification
+	payload: notifications
 });

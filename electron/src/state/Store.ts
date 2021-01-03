@@ -123,7 +123,7 @@ const reducer = function (state: AppState = INITIAL_STATE, action: Action): AppS
 			console.log(action.payload);
 			return {
 				...state,
-				numNotifications: state.numNotifications + 1
+				numNotifications: state.numNotifications + action.payload.length
 			};
 		default:
 			return state;

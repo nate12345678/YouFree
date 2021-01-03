@@ -29,3 +29,9 @@ export interface NamedSchedule {
 	user: User;
 	schedule: Schedule;
 }
+
+export interface FriendRequestNotification {
+	id: number;
+	recipientId: number;
+	requesterId: number;
+}

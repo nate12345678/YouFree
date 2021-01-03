@@ -12,13 +12,15 @@ class Notifier {
 		this.client = null;
 	}
 
-	connect = (notificationCallback: (frame) => void) => {
+	connect = (userId: number, token: string, notificationCallback: (frame) => void) => {
+		this.userId = userId;
+		this.token = token;
 		const socket = new SockJS('https://youfree.patrickubelhor.com/websocket-connect');
 		this.client = Stomp.over(socket);
 		this.client.connect({}, this.onConnectSuccess(notificationCallback), this.onConnectFailure);
 	}
 
-	onConnectSuccess = (notificationCallback) => (frame) => {
+	onConnectSuccess = (notificationCallback: (frame) => void) => (frame) => {
 		console.log('Connected to YouFree websocket!');
 		console.log(frame);
 		this.subscribeToHello();
@@ -30,7 +32,7 @@ class Notifier {
 	}
 
 	disconnect = () => {
-		this.client.deactivate();
+		this.client.disconnect();
 		console.log('Disconnected websocket');
 	}
 

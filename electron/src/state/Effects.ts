@@ -53,7 +53,7 @@ export const initApp = () => async (dispatch) => {
 		dispatch(setToken(token));
 		dispatch(setSelf(self));
 
-		Notifier.connect(handleNotification(dispatch));
+		Notifier.connect(self.id, token, handleNotification(dispatch));
 	}
 
 	// Load theme
@@ -87,7 +87,7 @@ export const createUser = (email: string, username: string, password: string, re
 			localStorage.setItem('self', JSON.stringify(self));
 		}
 
-		Notifier.connect(handleNotification(dispatch));
+		Notifier.connect(self.id, token, handleNotification(dispatch));
 		dispatch(createUserSuccess(token, self));
 	} catch (error) {
 		handleError(dispatch, error);
@@ -107,7 +107,7 @@ export const login = (email: string, password: string, remember: boolean) => asy
 			localStorage.setItem('self', JSON.stringify(self));
 		}
 
-		Notifier.connect(handleNotification(dispatch));
+		Notifier.connect(self.id, token, handleNotification(dispatch));
 		dispatch(loginSuccess(token, self));
 	} catch (error) {
 		handleError(dispatch, error);
@@ -119,10 +119,9 @@ export const logout = () => async (dispatch, getState) => {
 	Notifier.disconnect();
 
 	try {
+		dispatch(logoutSuccess());
 		await youfree.logout(getState().token);
 		localStorage.clear();
-
-		dispatch(logoutSuccess());
 	} catch (error) {
 		handleError(dispatch, error);
 	}

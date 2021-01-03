@@ -3,6 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
 	AppBar,
+	Badge,
 	Button,
 	Drawer,
 	Icon,
@@ -22,7 +23,8 @@ import { connect } from 'react-redux';
 function select(state) {
 	return {
 		isLoggedIn: !!state.token,
-		theme: state.theme
+		theme: state.theme,
+		numNotifications: state.numNotifications
 	};
 }
 
@@ -34,17 +36,32 @@ function mapDispatchToProps(dispatch) {
 	};
 }
 
-
-const routes = [
-	{ route: '/', label: 'Home' },
-	{ route: '/friends', label: 'Friends' },
-	{ route: '/profile', label: 'My Profile' },
-	// { route: '/about', label: 'About' }
-];
-
 const title = <Typography variant="h5" color="inherit">You Free</Typography>;
 
 function ConnectedHeader(props) {
+
+	const routes = [
+		{
+			route: '/',
+			label: 'Home',
+			badge: null
+		},
+		{
+			route: '/friends',
+			label: 'Friends',
+			badge: props.numNotifications
+		},
+		{
+			route: '/profile',
+			label: 'My Profile',
+			badge: null
+		},
+		// {
+		// 	route: '/about',
+		// 	label: 'About',
+		// 	badge: null
+		// }
+	];
 
 	const invertTheme = () => {
 		props.setTheme(props.theme === 'light' ? 'dark' : 'light');
@@ -59,12 +76,12 @@ function ConnectedHeader(props) {
 	let drawer;
 	if (props.isLoggedIn) {
 		toolbar = isDesktop
-			? <DesktopToolbar onLogout={props.logout} themeButton={themeButton} />
+			? <DesktopToolbar routes={routes} onLogout={props.logout} themeButton={themeButton} />
 			: <MobileToolbar onMenuClick={toggleDrawer(true)} themeButton={themeButton} />;
 
 		drawer = isDesktop
 			? null
-			: <MyDrawer isOpen={open} onClose={toggleDrawer(false)} />;
+			: <MyDrawer routes={routes} isOpen={open} onClose={toggleDrawer(false)} />;
 	} else {
 		toolbar = <EmptyToolbar themeButton={themeButton} />;
 		drawer = null;
@@ -83,7 +100,21 @@ function ConnectedHeader(props) {
 }
 
 
-function MyDrawer({ isOpen, onClose }) {
+function MyDrawer({ routes, isOpen, onClose }) {
+	const links = routes.map(route => {
+		let link = <div className="drawer-nav-link-label">{route.label}</div>;
+
+		if (!!route.badge) {
+			link = <Badge color="secondary" badgeContent={route.badge}>{link}</Badge>
+		}
+
+		return (
+			<NavLink key={route.route} exact to={route.route} className="drawer-nav-link" activeClassName="drawer-nav-link-active" onClick={onClose}>
+				{link}
+			</NavLink>
+		);
+	});
+
 	return (
 		<Drawer className="drawer" anchor="left" open={isOpen} onClose={onClose}>
 			<div className="drawer-content">
@@ -93,13 +124,7 @@ function MyDrawer({ isOpen, onClose }) {
 				</div>
 				<div className="drawer-divider" />
 				<ul className="drawer-nav">
-					{
-						routes.map(route => (
-							<NavLink key={route.route} exact to={route.route} className="drawer-nav-link" activeClassName="drawer-nav-link-active" onClick={onClose}>
-								<div className="drawer-nav-link-label">{route.label}</div>
-							</NavLink>
-						))
-					}
+					{links}
 				</ul>
 			</div>
 		</Drawer>
@@ -128,20 +153,34 @@ function EmptyToolbar({ themeButton }) {
 }
 
 
-function DesktopToolbar({ onLogout, themeButton }) {
+function DesktopToolbar({ routes, onLogout, themeButton }) {
+	const links = routes.map(route => {
+		let link = (
+			<NavLink exact to={route.route} className="header-nav-link" activeClassName="header-nav-link-active">
+				<span>{route.label.toUpperCase()}</span>
+			</NavLink>
+		);
+
+		if (!!route.badge) {
+			link = (
+				<Badge color="secondary" badgeContent={route.badge}>
+					{link}
+				</Badge>
+			);
+		}
+
+		return (
+			<li key={route.route} className="header-nav-item">
+				{link}
+			</li>
+		);
+	});
+
 	return (
 		<React.Fragment>
 			{title}
 			<ul className="header-nav-list">
-				{
-					routes.map(route => (
-						<li key={route.route} className="header-nav-item">
-							<NavLink exact to={route.route} className="header-nav-link" activeClassName="header-nav-link-active">
-								<span>{route.label.toUpperCase()}</span>
-							</NavLink>
-						</li>
-					))
-				}
+				{links}
 			</ul>
 			<Button id="logout-button" variant="text" color="inherit" onClick={onLogout} disableElevation>Logout</Button>
 			{themeButton}
