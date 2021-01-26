@@ -60,11 +60,11 @@ public class WebsocketController {
 	 *
 	 */
 	@SubscribeMapping("/queue/notifications/{userId}")
-	public List<FriendRequestNotification> subscribeToNotifications(
+	public void subscribeToNotifications(
 			@DestinationVariable Long userId,
 			@Header String token
 	) {
-		logger.info("Received notification subscription");
+		logger.info("Received notification subscription: '/queue/notifications/{}", userId);
 		
 		authService.validateTokenString(token);
 		Long requesterId = authService.getUserIdFromToken(token);
@@ -74,7 +74,8 @@ public class WebsocketController {
 			throw new UnauthorizedException();
 		}
 		
-		return notificationService.getAllNotificationsForUser(requesterId);
+//		return notificationService.getAllNotificationsForUser(requesterId);
+		notificationService.deliverAllStoredNotifications(requesterId);
 	}
 	
 

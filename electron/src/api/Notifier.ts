@@ -51,7 +51,7 @@ class Notifier {
 			token: this.token
 		};
 
-		this.client.subscribe(`/queue/notifications/${this.userId}`, callback, headers);
+		this.client.subscribe(`/app/queue/notifications/${this.userId}`, callback, headers);
 	}
 
 }

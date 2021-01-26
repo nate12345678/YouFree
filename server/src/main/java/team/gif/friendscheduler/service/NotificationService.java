@@ -1,5 +1,7 @@
 package team.gif.friendscheduler.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ public class NotificationService {
 	
 	private final NotificationRepository notificationRepository;
 	private final SimpMessagingTemplate websocket;
+	private static final Logger logger = LogManager.getLogger(NotificationService.class);
 	
 	@Autowired
 	public NotificationService(
@@ -63,6 +66,14 @@ public class NotificationService {
 	public List<FriendRequestNotification> getAllNotificationsForUser(Long recipientId) {
 		List<FriendRequestNotification> notifications = notificationRepository.getFriendRequestNotificationsByRecipientId(recipientId);
 		return notifications;
+	}
+	
+	
+	public void deliverAllStoredNotifications(Long recipientId) {
+		List<FriendRequestNotification> notifications = getAllNotificationsForUser(recipientId);
+		logger.info("Pushing to queue: '/queue/notifications/{}", recipientId);
+		String destination = String.format("/queue/notifications/%d", recipientId);
+		websocket.convertAndSend(destination, notifications);
 	}
 	
 }

@@ -48,8 +48,8 @@ class Pending extends React.Component {
 					<User variant="pending"
 					      username={user.username}
 					      email={user.email}
-					      addFriend={this.addFriend(user)}
-					      deleteFriend={this.deleteFriend(user.id)}/>
+					      addFriend={() => this.props.addFriend(user)}
+					      deleteFriend={() => this.props.deleteFriend(user)}/>
 				</li>
 			);
 		});

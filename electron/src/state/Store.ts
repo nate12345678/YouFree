@@ -55,7 +55,7 @@ const reducer = function (state: AppState = INITIAL_STATE, action: Action): AppS
 		case Actions.SET_ERROR:
 			return {
 				...state,
-				errorMessage: action.payload
+				errorMessage: JSON.stringify(action.payload)
 			};
 		case Actions.CLEAR_ERROR:
 			return {
