@@ -119,9 +119,9 @@ export const logout = () => async (dispatch, getState) => {
 	Notifier.disconnect();
 
 	try {
-		dispatch(logoutSuccess());
 		await youfree.logout(getState().token);
 		localStorage.clear();
+		dispatch(logoutSuccess());
 	} catch (error) {
 		handleError(dispatch, error);
 	}
