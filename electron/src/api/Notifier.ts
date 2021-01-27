@@ -21,7 +21,6 @@ class Notifier {
 	}
 
 	onConnectSuccess = (notificationCallback: (frame) => void) => (frame) => {
-		console.log('Connected to YouFree websocket!');
 		console.log(frame);
 		this.subscribeToHello();
 		this.subscribeToNotifications(notificationCallback)

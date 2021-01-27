@@ -155,23 +155,17 @@ function EmptyToolbar({ themeButton }) {
 
 function DesktopToolbar({ routes, onLogout, themeButton }) {
 	const links = routes.map(route => {
-		let link = (
-			<NavLink exact to={route.route} className="header-nav-link" activeClassName="header-nav-link-active">
-				<span>{route.label.toUpperCase()}</span>
-			</NavLink>
-		);
+		let label = <span className="header-nav-label">{route.label}</span>;
 
 		if (!!route.badge) {
-			link = (
-				<Badge color="secondary" badgeContent={route.badge}>
-					{link}
-				</Badge>
-			);
+			label = <Badge color="secondary" badgeContent={route.badge}>{label}</Badge>;
 		}
 
 		return (
 			<li key={route.route} className="header-nav-item">
-				{link}
+				<NavLink exact to={route.route} className="header-nav-link" activeClassName="header-nav-link-active">
+					{label}
+				</NavLink>
 			</li>
 		);
 	});

@@ -82,11 +82,12 @@ class Search extends React.Component {
 		const userDivs = this.props.searchResults.map(result => {
 			return (
 				<li className="users-li" key={result.id}>
-					<User variant={result.relationship.toLowerCase()}
-					      username={result.username}
-					      email={result.email}
-					      addFriend={() => this.props.addFriend(result)}
-					      deleteFriend={() => this.props.deleteFriend(result)}
+					<User
+						variant={result.relationship.toLowerCase()}
+						username={result.username}
+						email={result.email}
+						addFriend={() => this.props.addFriend(result)}
+						deleteFriend={() => this.props.deleteFriend(result)}
 					/>
 				</li>
 			);
@@ -94,13 +95,14 @@ class Search extends React.Component {
 
 		return (
 			<div id="search-card">
-				<TextField id="search-field"
-				           variant="outlined"
-				           margin="normal"
-				           placeholder="Search"
-				           label="Search"
-				           onChange={this.handleOnChange}
-				           fullWidth
+				<TextField
+					id="search-field"
+				    variant="outlined"
+				    margin="normal"
+				    placeholder="Search"
+				    label="Search"
+				    onChange={this.handleOnChange}
+				    fullWidth
 				/>
 				<ul className="users-ul">
 					{userDivs}
