@@ -6,6 +6,7 @@ class Pending extends React.Component {
 
 	componentDidMount() {
 		this.props.getPending();
+		this.props.clearNotifications();
 	}
 
 
@@ -49,7 +50,8 @@ class Pending extends React.Component {
 					      username={user.username}
 					      email={user.email}
 					      addFriend={() => this.props.addFriend(user)}
-					      deleteFriend={() => this.props.deleteFriend(user)}/>
+					      deleteFriend={() => this.props.deleteFriend(user)}
+					/>
 				</li>
 			);
 		});

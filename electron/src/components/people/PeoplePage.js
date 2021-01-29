@@ -7,6 +7,7 @@ import {
 	Tab,
 	Tabs
 } from '@material-ui/core';
+import { clearFriendRequestNotifications } from '../../state/Actions';
 import Search from './Search';
 import Friends from './Friends';
 import Pending from './Pending';
@@ -35,7 +36,8 @@ function mapDispatchToProps(dispatch) {
 		addFriend: (user) => dispatch(addFriend(user)),
 		deleteFriend: (user) => dispatch(deleteFriend(user)),
 		getPending: () => dispatch(getPendingRequests()),
-		searchUsers: (query) => dispatch(searchUsers(query))
+		searchUsers: (query) => dispatch(searchUsers(query)),
+		clearNotifications: () => dispatch(clearFriendRequestNotifications())
 	};
 }
 
@@ -71,6 +73,7 @@ class ConnectedPeoplePage extends React.Component {
 				                   pending={this.props.pendingRequests}
 				                   addFriend={this.props.addFriend}
 				                   deleteFriend={this.props.deleteFriend}
+				                   clearNotifications={this.props.clearNotifications}
 				/>
 				break;
 			default:

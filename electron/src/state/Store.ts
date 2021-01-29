@@ -125,6 +125,11 @@ const reducer = function (state: AppState = INITIAL_STATE, action: Action): AppS
 				...state,
 				numNotifications: state.numNotifications + action.payload.length
 			};
+		case Actions.CLEAR_FRIEND_REQUEST_NOTIFICATIONS:
+			return {
+				...state,
+				numNotifications: 0
+			};
 		default:
 			return state;
 	}
