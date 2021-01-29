@@ -36,7 +36,7 @@ class Notifier {
 	}
 
 	subscribeToHello = () => {
-		this.client.subscribe('/topic/hello', (frame) => {
+		this.client.subscribe('/app/topic/hello', (frame) => {
 			console.log(frame.body);
 		});
 	}

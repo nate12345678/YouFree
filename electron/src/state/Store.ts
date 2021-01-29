@@ -198,8 +198,8 @@ function addToEntityState<T>(lastEntityState: EntityState<T>, entity: T, idName:
 
 
 function updateEntityStateItem<T>(lastEntityState: EntityState<T>, updatedItem: T, index: number): EntityState<T> {
-	const updatedEntityState = { ...lastEntityState };
-	const updatedItems = { ...lastEntityState.items };
+	const updatedEntityState: EntityState<T> = { ...lastEntityState };
+	const updatedItems: T[] = lastEntityState.items.slice();
 
 	updatedItems[index] = updatedItem;
 	updatedEntityState.items = updatedItems;

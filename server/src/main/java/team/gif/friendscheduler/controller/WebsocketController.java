@@ -3,6 +3,7 @@ package team.gif.friendscheduler.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -60,7 +61,7 @@ public class WebsocketController {
 	 *
 	 */
 	@SubscribeMapping("/queue/notifications/{userId}")
-	public void subscribeToNotifications(
+	public List<FriendRequestNotification> subscribeToNotifications(
 			@DestinationVariable Long userId,
 			@Header String token
 	) {
@@ -74,8 +75,8 @@ public class WebsocketController {
 			throw new UnauthorizedException();
 		}
 		
-//		return notificationService.getAllNotificationsForUser(requesterId);
-		notificationService.deliverAllStoredNotifications(requesterId);
+		return notificationService.getAllNotificationsForUser(requesterId);
+//		notificationService.deliverAllStoredNotifications(requesterId);
 	}
 	
 
