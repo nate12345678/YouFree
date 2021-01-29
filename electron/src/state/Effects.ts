@@ -1,5 +1,5 @@
 import youfree from '../api/Youfree';
-import { User } from '../models/Responses';
+import { FriendRequestNotification, User } from '../models/Responses';
 import {
 	addFriendSuccess,
 	addIntervalSuccess,
@@ -42,7 +42,8 @@ const handleError = (dispatch, error: any) => {
 };
 
 const handleNotification = (dispatch) => (frame) => {
-	dispatch(receiveNotification(frame.body));
+	const notifications: FriendRequestNotification[] = JSON.parse(frame.body)
+	dispatch(receiveNotification(notifications));
 }
 
 export const initApp = () => async (dispatch) => {

@@ -35,7 +35,7 @@ public class NotificationService {
 		notificationRepository.save(notification);
 		
 		// Send notification
-		String destination = String.format("/queue/notifications/%d", recipientId);
+		String destination = String.format("/app/queue/notifications/%d", recipientId);
 		FriendRequestNotification[] content = { notification };
 		websocket.convertAndSend(destination, content);
 	}
@@ -66,14 +66,6 @@ public class NotificationService {
 	public List<FriendRequestNotification> getAllNotificationsForUser(Long recipientId) {
 		List<FriendRequestNotification> notifications = notificationRepository.getFriendRequestNotificationsByRecipientId(recipientId);
 		return notifications;
-	}
-	
-	
-	public void deliverAllStoredNotifications(Long recipientId) {
-		List<FriendRequestNotification> notifications = getAllNotificationsForUser(recipientId);
-		logger.info("Pushing to queue: '/queue/notifications/{}", recipientId);
-		String destination = String.format("/queue/notifications/%d", recipientId);
-		websocket.convertAndSend(destination, notifications);
 	}
 	
 }
