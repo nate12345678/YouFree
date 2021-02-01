@@ -25,6 +25,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/websocket-connect")
+				.setAllowedOrigins("https://youfree.patrickubelhor.com")
 				.withSockJS()
 				.setWebSocketEnabled(true)
 				.setHeartbeatTime(25000)
