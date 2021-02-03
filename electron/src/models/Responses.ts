@@ -35,3 +35,15 @@ export interface FriendRequestNotification {
 	recipientId: number;
 	requesterId: number;
 }
+
+export interface Frame {
+	command: string;
+	headers: {
+		'content-length': string;
+		'content-type': string;
+		'message-id': string;
+		destination: string;
+		subscription: string;
+	};
+	body: string
+}

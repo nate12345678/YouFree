@@ -41,7 +41,7 @@ export enum Actions {
 	DELETE_FRIEND_SUCCESS = '[PEOPLE] Successfully deleted friend',
 
 	RECEIVE_NOTIFICATION = '[NOTIFICATION] Received notification',
-	CLEAR_FRIEND_REQUEST_NOTIFICATIONS = '[NOTIFICATION] Clear FR notifications'
+	ACK_NOTIFICATIONS = '[NOTIFICATION] Begin acknowledge notifications'
 }
 
 export const setToken = (token: string): Action => ({
@@ -183,6 +183,6 @@ export const receiveNotification = (notifications: FriendRequestNotification[]):
 	payload: notifications
 });
 
-export const clearFriendRequestNotifications = (): Action => ({
-	type: Actions.CLEAR_FRIEND_REQUEST_NOTIFICATIONS
+export const ackNotificationsSuccess = (): Action => ({
+	type: Actions.ACK_NOTIFICATIONS
 });

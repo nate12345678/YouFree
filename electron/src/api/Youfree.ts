@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { NamedSchedule, Schedule, User, UserSearchResponse } from '../models/Responses';
+import { FriendRequestNotification, NamedSchedule, Schedule, User, UserSearchResponse } from '../models/Responses';
 
 type YoufreeResponse<T> = Promise<AxiosResponse<T>>;
 
@@ -146,6 +146,17 @@ class Youfree {
 				token: token,
 				query: query
 			}
+		});
+	};
+
+
+	acknowledgeNotifications = (token: string, notificationIds: number[]): YoufreeResponse<FriendRequestNotification[]> =>
+	{
+		return this.client.delete('/notifications', {
+			headers: {
+				token: token
+			},
+			data: notificationIds
 		});
 	};
 

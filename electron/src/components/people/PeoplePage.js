@@ -7,13 +7,13 @@ import {
 	Tab,
 	Tabs
 } from '@material-ui/core';
-import { clearFriendRequestNotifications } from '../../state/Actions';
 import Search from './Search';
 import Friends from './Friends';
 import Pending from './Pending';
 import { connect } from 'react-redux';
 import {
 	addFriend,
+	clearFriendRequestNotifications,
 	deleteFriend,
 	getFriends,
 	getPendingRequests,

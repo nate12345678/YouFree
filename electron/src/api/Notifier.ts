@@ -1,5 +1,6 @@
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import { Frame } from '../models/Responses';
 
 
 class Notifier {
@@ -20,38 +21,27 @@ class Notifier {
 		this.client.connect({}, this.onConnectSuccess(notificationCallback), this.onConnectFailure);
 	}
 
-	onConnectSuccess = (notificationCallback: (frame) => void) => (frame) => {
+	onConnectSuccess = (notificationCallback: (frame: Frame) => void) => (frame) => {
 		console.log(frame);
-		this.subscribeToHello();
-		this.subscribeToNotifications(notificationCallback)
-	}
+		this.subscribeToNotifications(notificationCallback);
+	};
 
 	onConnectFailure = () => {
 		console.log('Failed to connect again :(');
-	}
+	};
 
 	disconnect = () => {
 		this.client.disconnect();
 		console.log('Disconnected websocket');
-	}
+	};
 
-	subscribeToHello = () => {
-		this.client.subscribe('/topic/hello', (frame) => {
-			console.log(frame.body);
-		});
-	}
-
-	sendHello = () => {
-		this.client.send('/app/hello', {}, 'Hello YouFree');
-	}
-
-	subscribeToNotifications = (callback: (frame) => void) => {
+	subscribeToNotifications = (callback: (frame: Frame) => void) => {
 		const headers = {
 			token: this.token
 		};
 
 		this.client.subscribe(`/app/queue/notifications/${this.userId}`, callback, headers);
-	}
+	};
 
 }
 

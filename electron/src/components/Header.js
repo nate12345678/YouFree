@@ -24,7 +24,7 @@ function select(state) {
 	return {
 		isLoggedIn: !!state.token,
 		theme: state.theme,
-		numNotifications: state.numNotifications
+		numNotifications: state.notifications.count
 	};
 }
 

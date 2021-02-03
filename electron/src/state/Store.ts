@@ -3,7 +3,8 @@ import {
 	createStore
 } from 'redux';
 import thunk from 'redux-thunk';
-import { AppState, EntityState } from '../models/State';
+import { FriendRequestNotification, User } from '../models/Responses';
+import { AppState, EntityCalculator } from '../models/State';
 import { Action, Actions } from './Actions';
 
 const INITIAL_STATE: AppState = {
@@ -12,16 +13,10 @@ const INITIAL_STATE: AppState = {
 	theme: 'light',
 	mySchedule: null,
 	friendSchedules: null,
-	friends: {
-		items: []
-	},
-	pendingRequests: {
-		items: []
-	},
-	searchResults: {
-		items: []
-	},
-	numNotifications: 0,
+	friends: EntityCalculator.initEntityState<User>(),
+	pendingRequests: EntityCalculator.initEntityState<User>(),
+	searchResults: EntityCalculator.initEntityState<User>(),
+	notifications: EntityCalculator.initEntityState<FriendRequestNotification>(),
 	errorMessage: null
 };
 
@@ -88,17 +83,17 @@ const reducer = function (state: AppState = INITIAL_STATE, action: Action): AppS
 		case Actions.GET_FRIENDS_SUCCESS:
 			return {
 				...state,
-				friends: createEntityState(action.payload, 'id')
+				friends: EntityCalculator.createEntityState(action.payload)
 			};
 		case Actions.GET_PENDING_REQUESTS_SUCCESS:
 			return {
 				...state,
-				pendingRequests: createEntityState(action.payload, 'id')
+				pendingRequests: EntityCalculator.createEntityState(action.payload)
 			};
 		case Actions.SEARCH_USERS_SUCCESS:
 			return {
 				...state,
-				searchResults: createEntityState(action.payload, 'id')
+				searchResults: EntityCalculator.createEntityState(action.payload)
 			};
 		case Actions.ADD_FRIEND_SUCCESS:
 			// We don't actually add the friend to the 'friends list' entity state
@@ -106,16 +101,16 @@ const reducer = function (state: AppState = INITIAL_STATE, action: Action): AppS
 			// And I don't want to deal with inserting the user into proper alphabetical order in list
 			return {
 				...state,
-				pendingRequests: removeFromEntityState(state.pendingRequests, action.payload.id),
+				pendingRequests: EntityCalculator.removeEntity(state.pendingRequests, action.payload.id),
 				searchResults: updateSearchResultsAddFriend(state.searchResults, action.payload.id)
 				// friends: addToEntityState(state.friends, action.payload, 'id')
 			};
 		case Actions.DELETE_FRIEND_SUCCESS:
 			return {
 				...state,
-				pendingRequests: removeFromEntityState(state.pendingRequests, action.payload.id),
+				pendingRequests: EntityCalculator.removeEntity(state.pendingRequests, action.payload.id),
 				searchResults: updateSearchResultsDeleteFriend(state.searchResults, action.payload.id),
-				friends: removeFromEntityState(state.friends, action.payload.id)
+				friends: EntityCalculator.removeEntity(state.friends, action.payload.id)
 				// TODO: remove from friendSchedules
 			};
 		case Actions.RECEIVE_NOTIFICATION:
@@ -123,12 +118,12 @@ const reducer = function (state: AppState = INITIAL_STATE, action: Action): AppS
 			console.log(action.payload);
 			return {
 				...state,
-				numNotifications: state.numNotifications + action.payload.length
+				notifications: EntityCalculator.addAllEntities(state.notifications, action.payload)
 			};
-		case Actions.CLEAR_FRIEND_REQUEST_NOTIFICATIONS:
+		case Actions.ACK_NOTIFICATIONS:
 			return {
 				...state,
-				numNotifications: 0
+				notifications: EntityCalculator.initEntityState<FriendRequestNotification>()
 			};
 		default:
 			return state;
@@ -156,7 +151,7 @@ function updateSearchResultsAddFriend(searchResults, userId: number) {
 			break;
 	}
 
-	return updateEntityStateItem(searchResults, updatedItem, index);
+	return EntityCalculator.upsertEntity(searchResults, updatedItem, index);
 }
 
 
@@ -177,50 +172,5 @@ function updateSearchResultsDeleteFriend(searchResults, userId: number) {
 			break;
 	}
 
-	return updateEntityStateItem(searchResults, updatedItem, index);
-}
-
-
-function createEntityState<T>(entities, idName: string): EntityState<T> {
-	const entityState = { items: entities };
-	for (let [index, entity] of entities.entries()) {
-		const id = entity[idName];
-		entityState[id] = index;
-	}
-
-	return entityState;
-}
-
-
-// eslint-disable-next-line
-function addToEntityState<T>(lastEntityState: EntityState<T>, entity: T, idName: string): EntityState<T> {
-	return {
-		...lastEntityState,
-		[entity[idName]]: lastEntityState.items.length,
-		items: lastEntityState.items.concat(entity)
-	};
-}
-
-
-function updateEntityStateItem<T>(lastEntityState: EntityState<T>, updatedItem: T, index: number): EntityState<T> {
-	const updatedEntityState: EntityState<T> = { ...lastEntityState };
-	const updatedItems: T[] = lastEntityState.items.slice();
-
-	updatedItems[index] = updatedItem;
-	updatedEntityState.items = updatedItems;
-
-	return updatedEntityState;
-}
-
-
-function removeFromEntityState<T>(lastEntityState: EntityState<T>, id: number) {
-	let nextEntityState = { ...lastEntityState };
-
-	// Only remove if ID exists in entity state
-	if (lastEntityState.hasOwnProperty(id)) {
-		nextEntityState.items = lastEntityState.items.filter((user, index) => index !== lastEntityState[id]);
-		delete nextEntityState[id];
-	}
-
-	return nextEntityState;
+	return EntityCalculator.upsertEntity(searchResults, updatedItem, index);
 }

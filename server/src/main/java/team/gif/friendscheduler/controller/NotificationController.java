@@ -3,13 +3,14 @@ package team.gif.friendscheduler.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import team.gif.friendscheduler.exception.UnauthorizedException;
 import team.gif.friendscheduler.model.notification.FriendRequestNotification;
 import team.gif.friendscheduler.service.AuthService;
@@ -18,27 +19,19 @@ import team.gif.friendscheduler.service.NotificationService;
 import java.util.List;
 
 @Controller
-public class WebsocketController {
+public class NotificationController {
 	
 	private final AuthService authService;
 	private final NotificationService notificationService;
-	private static final Logger logger = LogManager.getLogger(WebsocketController.class);
+	private static final Logger logger = LogManager.getLogger(NotificationController.class);
 	
 	@Autowired
-	public WebsocketController(
+	public NotificationController(
 			AuthService authService,
 			NotificationService notificationService
 	) {
 		this.authService = authService;
 		this.notificationService = notificationService;
-	}
-	
-	
-	// There is also @SubscribeMapping
-	@MessageMapping("/hello")
-	@SendTo("/topic/hello")
-	public String sayHello(String message) {
-		return "Hello world!";
 	}
 	
 	
@@ -78,12 +71,17 @@ public class WebsocketController {
 	}
 	
 
-	// TODO: add parameter that takes in a login token
-	@MessageMapping("/notifications")
-	@SendTo("/topic/notification")
-	public String ackNotification(@Payload List<Long> notificationIds) {
-		notificationService.deleteNotifications(notificationIds);
-		return null;
+	@DeleteMapping("/notifications")
+	public ResponseEntity<Void> acknowledgeNotifications(
+			@RequestHeader("token") String token,
+			@RequestBody List<Long> notificationIds
+	) {
+		logger.info("Received ackNotification request");
+		authService.validateTokenString(token);
+		Long requesterId = authService.getUserIdFromToken(token);
+		
+		notificationService.deleteNotifications(notificationIds, requesterId);
+		return ResponseEntity.noContent().build();
 	}
 	
 }

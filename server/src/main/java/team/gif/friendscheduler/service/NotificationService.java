@@ -36,7 +36,7 @@ public class NotificationService {
 		
 		// Send notification
 		String destination = String.format("/app/queue/notifications/%d", recipientId);
-		FriendRequestNotification[] content = { notification };
+		List<FriendRequestNotification> content = List.of(notification);
 		websocket.convertAndSend(destination, content);
 	}
 	
@@ -53,8 +53,8 @@ public class NotificationService {
 	
 	
 	// TODO: add userId parameter, so only the recipient can delete their own notifications
-	public void deleteNotifications(List<Long> notificationIds) {
-		notificationRepository.deleteAllByIdIn(notificationIds);
+	public void deleteNotifications(List<Long> notificationIds, Long notificationRecipientId) {
+		notificationRepository.deleteAllByIdInAndRecipientId(notificationIds, notificationRecipientId);
 	}
 	
 	

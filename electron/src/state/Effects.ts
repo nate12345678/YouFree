@@ -1,5 +1,5 @@
 import youfree from '../api/Youfree';
-import { FriendRequestNotification, User } from '../models/Responses';
+import { Frame, FriendRequestNotification, User } from '../models/Responses';
 import {
 	addFriendSuccess,
 	addIntervalSuccess,
@@ -41,7 +41,8 @@ const handleError = (dispatch, error: any) => {
 	dispatch(setError('An unknown error has occurred'));
 };
 
-const handleNotification = (dispatch) => (frame) => {
+const handleNotification = (dispatch) => (frame: Frame) => {
+	console.log(frame);
 	const notifications: FriendRequestNotification[] = JSON.parse(frame.body)
 	dispatch(receiveNotification(notifications));
 }
@@ -67,8 +68,6 @@ export const initApp = () => async (dispatch) => {
 export const setTheme = (theme: string) => async (dispatch, getState) => {
 	const from = getState().theme;
 	const to = theme;
-
-	Notifier.sendHello();
 
 	document.body.classList.replace(from, to);
 	localStorage.setItem('theme', to);
@@ -234,3 +233,15 @@ export const searchUsers = (query: string) => async (dispatch, getState) => {
 		handleError(dispatch, error);
 	}
 };
+
+export const clearFriendRequestNotifications = () => async (dispatch, getState) => {
+	try {
+		const ackResponse = await youfree.acknowledgeNotifications(getState().token, getState().notifications.items);
+		const notifications: FriendRequestNotification[] = ackResponse.data;
+		dispatch() // TODO: SET notifications
+	} catch (error) {
+		// We don't want to display an error message. User shouldn't care this failed.
+		// Truly, this shouldn't ever fail unless the server is offline
+		// TODO: log something to the screen?
+	}
+}

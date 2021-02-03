@@ -8,7 +8,7 @@ import java.util.List;
 public interface NotificationRepository extends CrudRepository<FriendRequestNotification, Long> {
 	
 	void deleteFriendRequestNotificationByRecipientIdAndRequesterId(Long recipientId, Long requesterId);
-	void deleteAllByIdIn(List<Long> notificationIds);
+	void deleteAllByIdInAndRecipientId(List<Long> notificationIds, Long recipientId);
 	void deleteAllByRecipientId(Long recipientId);
 	List<FriendRequestNotification> getFriendRequestNotificationsByRecipientId(Long recipientId);
 	
