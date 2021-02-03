@@ -102,3 +102,7 @@
 .drawer-nav-link:hover {
 	background-color: var(--element_hover);
 }
+
+.drawer-nav-link-label {
+	padding-right: 8px;
+}

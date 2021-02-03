@@ -96,7 +96,7 @@ class ConnectedApp extends React.Component {
 			<ThemeProvider theme={this.props.theme === 'light' ? lightTheme : darkTheme}>
 				<Router>
 					<Header/>
-					<div id="content">
+					<div className="app-content">
 						{content}
 					</div>
 				</Router>

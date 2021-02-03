@@ -14,7 +14,7 @@ class Friends extends React.Component {
 			return (
 				<React.Fragment>
 					<div className="filler-content">
-						<Icon className="filler-icon" color="inherit" style={{ marginLeft: '-0.25em' }}>person_add</Icon>
+						<Icon className="filler-icon" color="inherit" style={{ paddingRight: '0.25em' }}>person_add</Icon>
 						<div>Your friends list is empty.</div>
 						<div>Try searching for your friends!</div>
 					</div>

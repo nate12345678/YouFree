@@ -120,7 +120,7 @@ const reducer = function (state: AppState = INITIAL_STATE, action: Action): AppS
 				...state,
 				notifications: EntityCalculator.addAllEntities(state.notifications, action.payload)
 			};
-		case Actions.ACK_NOTIFICATIONS:
+		case Actions.ACK_NOTIFICATIONS_BEGIN:
 			return {
 				...state,
 				notifications: EntityCalculator.initEntityState<FriendRequestNotification>()

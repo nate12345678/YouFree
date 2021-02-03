@@ -2,7 +2,7 @@ import youfree from '../api/Youfree';
 import { Frame, FriendRequestNotification, User } from '../models/Responses';
 import {
 	addFriendSuccess,
-	addIntervalSuccess,
+	addIntervalSuccess, beginAckNotifications,
 	createUserBegin,
 	createUserSuccess,
 	deleteFriendSuccess,
@@ -238,7 +238,7 @@ export const clearFriendRequestNotifications = () => async (dispatch, getState) 
 	try {
 		const ackResponse = await youfree.acknowledgeNotifications(getState().token, getState().notifications.items);
 		const notifications: FriendRequestNotification[] = ackResponse.data;
-		dispatch() // TODO: SET notifications
+		dispatch(beginAckNotifications()) // TODO: SET notifications
 	} catch (error) {
 		// We don't want to display an error message. User shouldn't care this failed.
 		// Truly, this shouldn't ever fail unless the server is offline

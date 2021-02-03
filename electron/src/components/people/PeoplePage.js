@@ -86,7 +86,7 @@ class ConnectedPeoplePage extends React.Component {
 		}
 
 		return (
-			<Card id="people-card" elevation={4}>
+			<Card className="people-card" elevation={4}>
 				<Paper id="tabs" square elevation={1}>
 					<Tabs value={this.state.currentTab}
 					      variant="fullWidth"
@@ -100,7 +100,7 @@ class ConnectedPeoplePage extends React.Component {
 					</Tabs>
 				</Paper>
 
-				<CardContent id="peopleCardContent">
+				<CardContent className="people-card-content">
 					{content}
 				</CardContent>
 			</Card>
