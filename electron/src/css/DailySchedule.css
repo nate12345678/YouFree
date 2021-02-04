@@ -10,7 +10,7 @@
 .daily-schedule-bar {
 	height: 100%;
 	background-color: var(--primary);
-	transition: var(--button-transition);
+	transition: var(--button_transition);
 	cursor: pointer;
 }
 

@@ -236,8 +236,7 @@ export const searchUsers = (query: string) => async (dispatch, getState) => {
 
 export const clearFriendRequestNotifications = () => async (dispatch, getState) => {
 	try {
-		const ackResponse = await youfree.acknowledgeNotifications(getState().token, getState().notifications.items);
-		const notifications: FriendRequestNotification[] = ackResponse.data;
+		await youfree.acknowledgeNotifications(getState().token, getState().notifications.items);
 		dispatch(beginAckNotifications()) // TODO: SET notifications
 	} catch (error) {
 		// We don't want to display an error message. User shouldn't care this failed.

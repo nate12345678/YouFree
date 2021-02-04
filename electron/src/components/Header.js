@@ -81,7 +81,7 @@ function ConnectedHeader(props) {
 
 		drawer = isDesktop
 			? null
-			: <MyDrawer routes={routes} isOpen={open} onClose={toggleDrawer(false)} />;
+			: <MyDrawer routes={routes} isOpen={open} onClose={toggleDrawer(false)} onLogout={props.logout} />;
 	} else {
 		toolbar = <EmptyToolbar themeButton={themeButton} />;
 		drawer = null;
@@ -100,7 +100,7 @@ function ConnectedHeader(props) {
 }
 
 
-function MyDrawer({ routes, isOpen, onClose }) {
+function MyDrawer({ routes, isOpen, onClose, onLogout }) {
 	const links = routes.map(route => {
 		let link = <div className="drawer-nav-link-label">{route.label}</div>;
 
@@ -115,6 +115,7 @@ function MyDrawer({ routes, isOpen, onClose }) {
 		);
 	});
 
+	// TODO: Make the logout button a proper button for accessibility
 	return (
 		<Drawer className="drawer" anchor="left" open={isOpen} onClose={onClose}>
 			<div className="drawer-content">
@@ -126,6 +127,10 @@ function MyDrawer({ routes, isOpen, onClose }) {
 				<ul className="drawer-nav">
 					{links}
 				</ul>
+			</div>
+			<div className="drawer-divider"/>
+			<div className="drawer-logout" onClick={onLogout}>
+				Logout
 			</div>
 		</Drawer>
 	);
