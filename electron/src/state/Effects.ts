@@ -31,9 +31,23 @@ import {
 import Notifier from '../api/Notifier';
 
 const handleError = (dispatch, error: any) => {
-	if (error.response !== undefined) {
+	// Request was made and server replied with non 2xx code
+	if (error.response) {
+		if (error.response.status === 401) { // UNAUTHORIZED (token is invalid)
+			Notifier.disconnect();
+			localStorage.clear();
+			dispatch(logoutSuccess());
+		}
+
 		console.log(error.response);
-		dispatch(setError(error.response.data));
+		dispatch(setError(`${error.response.status} ${error.response.data}`));
+		return;
+	}
+
+	// Request was made but server did not respond
+	if (error.request) {
+		console.log('Server failed to respond');
+		dispatch(setError('Server failed to respond'));
 		return;
 	}
 
