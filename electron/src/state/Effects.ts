@@ -251,7 +251,7 @@ export const searchUsers = (query: string) => async (dispatch, getState) => {
 export const clearFriendRequestNotifications = () => async (dispatch, getState) => {
 	try {
 		await youfree.acknowledgeNotifications(getState().token, getState().notifications.items);
-		dispatch(beginAckNotifications()) // TODO: SET notifications
+		dispatch(beginAckNotifications());
 	} catch (error) {
 		// We don't want to display an error message. User shouldn't care this failed.
 		// Truly, this shouldn't ever fail unless the server is offline

@@ -94,6 +94,8 @@
 }
 
 .drawer-nav-link {
+	display: flex;
+	align-items: center;
 	text-decoration: none;
 	color: inherit;
 	padding: 16px var(--content-margin);
@@ -113,12 +115,23 @@
 	background-color: var(--side-nav-link-active-hover);
 }
 
+.drawer-nav-link-icon {
+	margin-right: 8px;
+	color: #606060;
+}
+
+.drawer-nav-link-active > .drawer-nav-link-icon {
+	color: var(--primary);
+}
+
 .drawer-nav-link-label {
 	padding-right: 8px;
 }
 
 .drawer-logout {
 	padding: 16px var(--content-margin);
+	display: flex;
+	align-items: center;
 	transition: background-color 100ms ease-in-out;
 }
 

@@ -44,17 +44,20 @@ function ConnectedHeader(props) {
 		{
 			route: '/',
 			label: 'Home',
-			badge: null
+			badge: null,
+			icon: 'house'
 		},
 		{
 			route: '/friends',
 			label: 'Friends',
-			badge: props.numNotifications
+			badge: props.numNotifications,
+			icon: 'people'
 		},
 		{
 			route: '/profile',
 			label: 'My Profile',
-			badge: null
+			badge: null,
+			icon: 'account_circle'
 		},
 		// {
 		// 	route: '/about',
@@ -102,15 +105,16 @@ function ConnectedHeader(props) {
 
 function MyDrawer({ routes, isOpen, onClose, onLogout }) {
 	const links = routes.map(route => {
-		let link = <div className="drawer-nav-link-label">{route.label}</div>;
+		let link = <span className="drawer-nav-link-label">{route.label}</span>;
 
 		if (!!route.badge) {
-			link = <Badge color="secondary" badgeContent={route.badge}>{link}</Badge>
+			link = <Badge color="primary" badgeContent={route.badge}>{link}</Badge>
 		}
 
 		return (
 			<NavLink key={route.route} exact to={route.route} className="drawer-nav-link" activeClassName="drawer-nav-link-active" onClick={onClose}>
-				{link}
+					<Icon className="drawer-nav-link-icon">{route.icon}</Icon>
+					{link}
 			</NavLink>
 		);
 	});
@@ -130,6 +134,7 @@ function MyDrawer({ routes, isOpen, onClose, onLogout }) {
 			</div>
 			<div className="drawer-divider"/>
 			<div className="drawer-logout" onClick={onLogout}>
+				<Icon className="drawer-nav-link-icon">logout</Icon>
 				Logout
 			</div>
 		</Drawer>
@@ -141,7 +146,7 @@ function ThemeButton({ hasLeftMargin, theme, invertTheme }) {
 	return (
 		<Tooltip title="Toggle light/dark theme">
 			<IconButton className={hasLeftMargin ? 'theme-button-mobile' : ''} color="inherit" onClick={invertTheme}>
-				<Icon color="inherit">{theme === 'light' ? 'brightness_2' : 'brightness_5'}</Icon>
+				<Icon color="inherit">{theme === 'light' ? 'dark_mode' : 'light_mode'}</Icon>
 			</IconButton>
 		</Tooltip>
 	);
