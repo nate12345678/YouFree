@@ -122,12 +122,12 @@ class ConnectedMyProfilePage extends React.Component {
 		if (this.state.askOnOverlap && this.hasOverlap(dayOfWeek, startMin, endMin)) {
 			this.setState({
 				dialogOpen: true,
-				dialogSuccessCallback: () => this.props.onAddInterval(dayOfWeek, startMin, endMin)
+				dialogSuccessCallback: () => this.props.addInterval(dayOfWeek, startMin, endMin)
 			});
 			return;
 		}
 
-		this.props.onAddInterval(dayOfWeek, startMin, endMin);
+		this.props.addInterval(dayOfWeek, startMin, endMin);
 	}
 
 
@@ -135,12 +135,12 @@ class ConnectedMyProfilePage extends React.Component {
 		if (this.state.askOnOverlap && this.hasOverlap(dayOfWeek, startMin, endMin)) {
 			this.setState({
 				dialogOpen: true,
-				dialogSuccessCallback: () => this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin)
+				dialogSuccessCallback: () => this.props.updateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin)
 			});
 			return;
 		}
 
-		this.props.onUpdateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin);
+		this.props.updateInterval(this.state.selectedInterval.id, dayOfWeek, startMin, endMin);
 		this.setState({
 			selectedInterval: null
 		});
@@ -148,7 +148,7 @@ class ConnectedMyProfilePage extends React.Component {
 
 
 	deleteInterval = () => {
-		this.props.onDeleteInterval(this.state.selectedInterval.id);
+		this.props.deleteInterval(this.state.selectedInterval.id);
 
 		this.setState({
 			selectedInterval: null

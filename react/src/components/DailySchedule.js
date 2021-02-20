@@ -5,7 +5,7 @@ import {
 	Typography
 } from '@material-ui/core';
 
-export default function DailySchedule({ schedule, onIntervalSelection, selectedInterval }) {
+export default function DailySchedule({ schedule, onIntervalSelection = () => {}, selectedInterval }) {
 
 	const LENGTH_OF_DAY = 1440;
 	const onClick = (interval) => (event) => {

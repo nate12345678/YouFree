@@ -77,13 +77,27 @@ class ConnectedDashboard extends React.Component {
 		}
 
 		if (this.props.friends.length === 0) {
-			return null;
+			// TODO: Display a card to recommend adding friends
 		}
 
 		const friends = this.props.friends.slice().sort((a, b) => a.user.username.localeCompare(b.user.username));
 
 		let names = [];
 		let schedules = [];
+
+		// TODO: When my schedule is empty, display card to recommend editing my schedule
+		if (this.props.mySchedule) {
+			const name = <div key={0} className="friend-schedules-name">Me</div>;
+			const schedule = (
+				<React.Fragment key={0}>
+					<DailySchedule schedule={this.props.mySchedule[this.state.day]} />
+				</React.Fragment>
+			);
+
+			names.push(name);
+			schedules.push(schedule);
+		}
+
 		for (let i = 0; i < friends.length; i++) {
 			const name = (
 				<div key={friends[i].user.id} className="friend-schedules-name">
@@ -115,11 +129,9 @@ class ConnectedDashboard extends React.Component {
 					</div>
 					<div className="friend-schedules-content">
 						<div className="friend-schedules-names">
-							<div className="friend-schedules-name">Me</div>
 							{names}
 						</div>
 						<div className="friend-schedules-intervals">
-							<DailySchedule schedule={this.props.mySchedule[this.state.day]} />
 							{schedules}
 							<Markers variant="time" direction="vertical" />
 						</div>
