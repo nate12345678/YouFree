@@ -1,6 +1,9 @@
+import { Dispatch } from 'react';
 import youfree from '../api/Youfree';
 import { Frame, FriendRequestNotification, User } from '../models/Responses';
+import { AppState } from '../models/State';
 import {
+	Action,
 	addFriendSuccess,
 	addIntervalSuccess, beginAckNotifications,
 	createUserBegin,
@@ -30,7 +33,9 @@ import {
 } from './Actions';
 import Notifier from '../api/Notifier';
 
-const handleError = (dispatch, error: any) => {
+type GetState = () => AppState;
+
+const handleError = (dispatch: Dispatch<Action>, error: any) => {
 	// Request was made and server replied with non 2xx code
 	if (error.response) {
 		if (error.response.status === 401) { // UNAUTHORIZED (token is invalid)
@@ -79,7 +84,7 @@ export const initApp = () => async (dispatch) => {
 	}
 };
 
-export const setTheme = (theme: string) => async (dispatch, getState) => {
+export const setTheme = (theme: string) => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	const from = getState().theme;
 	const to = theme;
 
@@ -128,7 +133,7 @@ export const login = (email: string, password: string, remember: boolean) => asy
 	}
 };
 
-export const logout = () => async (dispatch, getState) => {
+export const logout = () => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	dispatch(logoutBegin());
 	Notifier.disconnect();
 
@@ -141,7 +146,7 @@ export const logout = () => async (dispatch, getState) => {
 	}
 };
 
-export const fetchMySchedule = () => async (dispatch, getState) => {
+export const fetchMySchedule = () => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	dispatch(fetchMyScheduleBegin());
 
 	try {
@@ -152,7 +157,7 @@ export const fetchMySchedule = () => async (dispatch, getState) => {
 	}
 };
 
-export const addInterval = (dayOfWeek: number, startMin: number, endMin: number) => async (dispatch, getState) => {
+export const addInterval = (dayOfWeek: number, startMin: number, endMin: number) => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	try {
 		const response = await youfree.addInterval(getState().token, dayOfWeek, startMin, endMin);
 		dispatch(addIntervalSuccess(response.data));
@@ -161,7 +166,7 @@ export const addInterval = (dayOfWeek: number, startMin: number, endMin: number)
 	}
 };
 
-export const updateInterval = (intervalId: number, dayOfWeek: number, startMin: number, endMin: number) => async (dispatch, getState) => {
+export const updateInterval = (intervalId: number, dayOfWeek: number, startMin: number, endMin: number) => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	try {
 		const response = await youfree.updateInterval(getState().token, intervalId, dayOfWeek, startMin, endMin);
 		dispatch(updateIntervalSuccess(response.data));
@@ -170,7 +175,7 @@ export const updateInterval = (intervalId: number, dayOfWeek: number, startMin: 
 	}
 };
 
-export const deleteInterval = (intervalId: number) => async (dispatch, getState) => {
+export const deleteInterval = (intervalId: number) => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	try {
 		const response = await youfree.deleteInterval(getState().token, intervalId);
 		dispatch(deleteIntervalSuccess(response.data));
@@ -179,7 +184,7 @@ export const deleteInterval = (intervalId: number) => async (dispatch, getState)
 	}
 };
 
-export const getFriendSchedules = () => async (dispatch, getState) => {
+export const getFriendSchedules = () => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	dispatch(fetchFriendSchedulesBegin());
 
 	try {
@@ -191,7 +196,7 @@ export const getFriendSchedules = () => async (dispatch, getState) => {
 	}
 };
 
-export const getFriends = () => async (dispatch, getState) => {
+export const getFriends = () => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	dispatch(getFriendsBegin());
 
 	try {
@@ -202,7 +207,7 @@ export const getFriends = () => async (dispatch, getState) => {
 	}
 };
 
-export const addFriend = (user: User) => async (dispatch, getState) => {
+export const addFriend = (user: User) => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	try {
 		// eslint-disable-next-line
 		const response = await youfree.addFriend(getState().token, user.id);
@@ -212,7 +217,7 @@ export const addFriend = (user: User) => async (dispatch, getState) => {
 	}
 }
 
-export const deleteFriend = (user: User) => async (dispatch, getState) => {
+export const deleteFriend = (user: User) => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	try {
 		// eslint-disable-next-line
 		const response = await youfree.deleteFriend(getState().token, user.id);
@@ -222,7 +227,7 @@ export const deleteFriend = (user: User) => async (dispatch, getState) => {
 	}
 }
 
-export const getPendingRequests = () => async (dispatch, getState) => {
+export const getPendingRequests = () => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	dispatch(getPendingRequestsBegin());
 
 	try {
@@ -233,7 +238,7 @@ export const getPendingRequests = () => async (dispatch, getState) => {
 	}
 };
 
-export const searchUsers = (query: string) => async (dispatch, getState) => {
+export const searchUsers = (query: string) => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	dispatch(searchUsersBegin());
 
 	try {
@@ -248,9 +253,10 @@ export const searchUsers = (query: string) => async (dispatch, getState) => {
 	}
 };
 
-export const clearFriendRequestNotifications = () => async (dispatch, getState) => {
+export const clearFriendRequestNotifications = () => async (dispatch: Dispatch<Action>, getState: GetState) => {
 	try {
-		await youfree.acknowledgeNotifications(getState().token, getState().notifications.items);
+		const notificationIds = getState().notifications.items.map(notification => notification.id);
+		await youfree.acknowledgeNotifications(getState().token, notificationIds);
 		dispatch(beginAckNotifications());
 	} catch (error) {
 		// We don't want to display an error message. User shouldn't care this failed.
