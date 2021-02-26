@@ -9,6 +9,8 @@ import team.gif.friendscheduler.exception.IncorrectCredentialsException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
 import team.gif.friendscheduler.model.User;
 
+import java.util.List;
+
 @Service
 public class UserService {
 	
@@ -21,16 +23,6 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	
-	public Long getIdFromToken(Long token) {
-		return token;
-	}
-	
-	
-	public Long generateSessionToken(Long id) {
-		return id;
-	}
-	
 	
 	/**
 	 * Checks if there exists a username with the given password.
@@ -110,6 +102,17 @@ public class UserService {
 		}
 		
 		return null;
+	}
+	
+	
+	/**
+	 * Searches for users whose usernames contain the specified substring.
+	 *
+	 * @param query The substring that a username should contain.
+	 * @return All users whose usernames contain the substring.
+	 */
+	public List<User> searchUsers(String query) {
+		return userRepository.searchUsers(query);
 	}
 	
 	

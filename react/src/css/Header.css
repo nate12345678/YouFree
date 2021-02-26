@@ -1,0 +1,141 @@
+
+#appBar {
+	margin-bottom: 1.4em;
+	transition: var(--background_transition), var(--color_transition) !important;
+}
+
+.title-link {
+	text-decoration: none;
+	color: inherit;
+	height: var(--header-height);
+	display: flex;
+	align-items: center;
+	margin-right: var(--content-margin);
+}
+
+.menu-button {
+	position: relative;
+	left: -12px;
+	margin-right: -8px !important;
+	color: var(--header_text) !important;
+}
+
+.header-nav-label {
+	padding: 4px; /* If you remove this, increase the padding of the nav-link to compensate */
+	text-transform: uppercase;
+}
+
+.header-nav-list {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	list-style: none;
+	padding: 0 0 0 var(--content-margin);
+	margin: 0;
+}
+
+.header-nav-link {
+	box-sizing: border-box;
+	text-decoration: none;
+	color: inherit;
+	display: flex;
+	align-items: center;
+	height: var(--header-height);
+	padding-left: 12px;
+	padding-right: 12px;
+	cursor: pointer;
+	transition: background-color 100ms ease-in-out;
+}
+
+.header-nav-link:hover {
+	background-color: var(--element_hover);
+}
+
+.header-nav-link-active {
+	border-bottom: 2px solid var(--secondary);
+}
+
+#logout-button {
+	margin-left: auto;
+}
+
+.theme-button-mobile {
+	margin-left: auto !important;
+}
+
+.drawer {
+	/*font-size: 18px;*/
+	/*line-height: 20px;*/
+}
+
+.drawer-content {
+	height: 100%;
+	min-width: 250px;
+}
+
+.drawer-header {
+	box-sizing: border-box;
+	padding: 0.5em var(--content-margin);
+	height: var(--header-height);
+}
+
+.drawer-divider {
+	height: 0;
+	width: 100%;
+	border-bottom: 1px solid var(--border-color);
+}
+
+.drawer-nav {
+	display: flex;
+	flex-direction: column;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.drawer-nav-link {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: inherit;
+	padding: 16px var(--content-margin);
+	transition: background-color 100ms ease-in-out;
+}
+
+.drawer-nav-link:hover {
+	background-color: var(--side-nav-link-hover);
+}
+
+.drawer-nav-link-active {
+	background-color: var(--side-nav-link-active);
+	font-weight: 500;
+}
+
+.drawer-nav-link-active:hover {
+	background-color: var(--side-nav-link-active-hover);
+}
+
+.drawer-nav-link-icon {
+	margin-right: 8px;
+	color: #606060;
+}
+
+.drawer-nav-link-active > .drawer-nav-link-icon {
+	color: var(--primary);
+}
+
+.drawer-nav-link-label {
+	padding-right: 8px;
+}
+
+.drawer-logout {
+	padding: 16px var(--content-margin);
+	display: flex;
+	align-items: center;
+	transition: background-color 100ms ease-in-out;
+}
+
+.drawer-logout:hover {
+	cursor: pointer;
+	background-color: rgba(255, 0, 0, 0.1);
+}

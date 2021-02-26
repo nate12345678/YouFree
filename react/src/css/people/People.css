@@ -1,0 +1,45 @@
+
+.people-card {
+	transition: var(--background_transition), var(--color_transition);
+	min-width: 352px;
+
+}
+
+@media only screen and (min-width: 720px) {
+	.people-card {
+		min-width: 480px !important;
+	}
+}
+
+#tabs {
+	transition: var(--background_transition), var(--color_transition);
+}
+
+#search-card {
+	margin-top: -24px;
+}
+
+.users-ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+#search-card .users-ul {
+	margin-top: 16px;
+}
+
+.users-li {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid var(--border-color);
+}
+
+.users-li:first-child {
+	padding-top: 0;
+}
+
+.users-li:last-child {
+	padding-bottom: 0;
+	border: none;
+}

@@ -18,31 +18,46 @@ import org.springframework.web.bind.annotation.RestController;
 import team.gif.friendscheduler.exception.InvalidFieldException;
 import team.gif.friendscheduler.model.User;
 import team.gif.friendscheduler.model.request.NewUser;
+import team.gif.friendscheduler.model.response.Relationship;
+import team.gif.friendscheduler.model.response.UserResponse;
+import team.gif.friendscheduler.model.response.UserSearchResponse;
+import team.gif.friendscheduler.service.AuthService;
 import team.gif.friendscheduler.service.FieldValidator;
 import team.gif.friendscheduler.service.FriendshipService;
 import team.gif.friendscheduler.service.IntervalService;
+import team.gif.friendscheduler.service.NotificationService;
 import team.gif.friendscheduler.service.UserService;
 
 import javax.validation.Valid;
+import java.util.LinkedList;
+import java.util.List;
 
-/**
- * TODO: Add validation to ALL input strings (like headers) to disallow special characters
- */
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 	
 	private final FieldValidator fieldValidator;
+	private final AuthService authService;
 	private final FriendshipService friendshipService;
 	private final IntervalService intervalService;
+	private final NotificationService notificationService;
 	private final UserService userService;
 	private static final Logger logger = LogManager.getLogger(UserController.class);
 	
 	@Autowired
-	public UserController(FieldValidator fieldValidator, FriendshipService friendshipService, IntervalService intervalService, UserService userService) {
+	public UserController(
+			FieldValidator fieldValidator,
+			AuthService authService,
+			FriendshipService friendshipService,
+			IntervalService intervalService,
+			NotificationService notificationService,
+			UserService userService
+	) {
 		this.fieldValidator = fieldValidator;
+		this.authService = authService;
 		this.friendshipService = friendshipService;
 		this.intervalService = intervalService;
+		this.notificationService = notificationService;
 		this.userService = userService;
 	}
 	
@@ -56,10 +71,10 @@ public class UserController {
 		User user = userService.createUser(newUser);
 		logger.info("Created user " + user.getEmail());
 		
-		Long token = userService.generateSessionToken(user.getId());
+		String token = authService.generateSessionToken(user.getId());
 		
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.header("token", "" + token)
+				.header("token", token)
 				.body(user);
 	}
 	
@@ -69,13 +84,16 @@ public class UserController {
 			@RequestParam(value = "id", required = false) Long id,
 			@RequestParam(value = "username", required = false) String username,
 			@RequestParam(value = "email", required = false) String email,
-			@RequestHeader("token") Long token) {
+			@RequestHeader("token") String token) {
 		
 		logger.info("Received getUser request");
+		authService.validateTokenString(token);
+		
 		User result = userService.queryUsers(id, username, email);
 		
+		// If no query params specified, get self
 		if (result == null) {
-			result = userService.getUser(userService.getIdFromToken(token));
+			result = userService.getUser(authService.getUserIdFromToken(token));
 		}
 		
 		return ResponseEntity.ok(result);
@@ -84,16 +102,17 @@ public class UserController {
 	
 	@PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> updateUser(
-			@RequestHeader("token") Long token,
+			@RequestHeader("token") String token,
 			@Valid @RequestBody NewUser user) {
 		
 		logger.info("Received updateUser request");
+		authService.validateTokenString(token);
 		
 		if (!fieldValidator.validateOneNonNull(user)) {
 			throw new InvalidFieldException("One or more fields must be non-empty");
 		}
 		
-		Long id = userService.getIdFromToken(token);
+		Long id = authService.getUserIdFromToken(token);
 		User result = userService.updateUser(id, user);
 		
 		return ResponseEntity.ok(result);
@@ -102,15 +121,45 @@ public class UserController {
 	
 	@DeleteMapping(value = "/user")
 	public ResponseEntity<Void> deleteUser(
-			@RequestHeader("token") Long token) {
+			@RequestHeader("token") String token) {
 		
 		logger.info("Received deleteUser request");
-		Long id = userService.getIdFromToken(token);
+		authService.validateTokenString(token);
+		
+		Long id = authService.getUserIdFromToken(token);
+		authService.revokeToken(token);
 		friendshipService.removeUser(id);
 		intervalService.removeAllIntervals(id);
+		notificationService.deleteAllNotificationsForUser(id);
 		userService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	
+	@GetMapping(value = "/search")
+	public ResponseEntity<List<UserSearchResponse>> searchUsers(
+			@RequestHeader("token") String token,
+			@RequestHeader("query") String query) {
+		
+		logger.info("Received searchUsers request");
+		authService.validateTokenString(token);
+		
+		Long requesterId = authService.getUserIdFromToken(token);
+		List<User> users = userService.searchUsers(query);
+		
+		List<UserSearchResponse> result = new LinkedList<>();
+		for (User user : users) {
+			if (user.getId().equals(requesterId)) {
+				continue;
+			}
+			
+			UserResponse userResponse = UserResponse.convert(user);
+			Relationship relationship = friendshipService.getRelationship(requesterId, user.getId());
+			result.add(new UserSearchResponse(userResponse, relationship));
+		}
+		
+		return ResponseEntity.ok(result);
 	}
 	
 }

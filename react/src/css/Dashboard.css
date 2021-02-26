@@ -1,0 +1,50 @@
+
+.friend-schedules-card {
+	width: 100%;
+	transition: var(--background_transition), var(--color_transition) !important;
+}
+
+.friend-schedules-title-area {
+	display: flex;
+	margin: -8px auto 8px;
+	width: fit-content;
+	align-items: center;
+}
+
+.friend-schedules-title {
+}
+
+.friend-schedules-content {
+	position: relative;
+	display: flex;
+	margin-bottom: 1em;
+	margin-right: 1em;
+}
+
+.friend-schedules-name {
+	height: 1.5em;
+	line-height: 1.5em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.friend-schedules-names, .friend-schedules-intervals {
+	display: flex;
+	flex-direction: column;
+	padding-top: 0;
+	padding-bottom: 0.25em;
+}
+
+.friend-schedules-names {
+	margin-right: 0.5em;
+	width: 8em;
+}
+
+.friend-schedules-intervals {
+	position: relative;
+	border-left: 1px solid var(--text);
+	border-right: 1px solid var(--text);
+	width: 100%;
+	z-index: 2;
+}

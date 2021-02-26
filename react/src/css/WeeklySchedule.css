@@ -1,0 +1,36 @@
+
+.weekly-schedule-title {
+	margin-bottom: 0.75em !important;
+}
+
+.weekly-schedule-content {
+	position: relative;
+	display: flex;
+	margin-bottom: 1em;
+	margin-right: 1em;
+}
+
+.weekly-schedule-label {
+	height: 1.5em;
+	line-height: 1.5em;
+}
+
+.weekly-schedule-day-labels, .weekly-schedule-day-intervals {
+	display: flex;
+	flex-direction: column;
+	padding-top: 0;
+	padding-bottom: 0.25em;
+}
+
+.weekly-schedule-day-labels {
+	margin-right: 0.5em;
+	align-items: flex-end;
+}
+
+.weekly-schedule-day-intervals {
+	position: relative;
+	border-left: 1px solid var(--text);
+	border-right: 1px solid var(--text);
+	width: 100%;
+	z-index: 2;
+}

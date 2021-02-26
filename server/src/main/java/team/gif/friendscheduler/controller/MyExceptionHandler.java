@@ -1,9 +1,7 @@
 package team.gif.friendscheduler.controller;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,10 +11,10 @@ import team.gif.friendscheduler.exception.FriendshipNotFoundException;
 import team.gif.friendscheduler.exception.IncorrectCredentialsException;
 import team.gif.friendscheduler.exception.IntervalNotFoundException;
 import team.gif.friendscheduler.exception.InvalidFieldException;
+import team.gif.friendscheduler.exception.ServerConfigurationException;
+import team.gif.friendscheduler.exception.UnauthorizedException;
 import team.gif.friendscheduler.exception.UserNotFoundException;
-
-import java.util.HashMap;
-import java.util.Map;
+import team.gif.friendscheduler.exception.ValidationException;
 
 @RestControllerAdvice
 public class MyExceptionHandler {
@@ -34,23 +32,29 @@ public class MyExceptionHandler {
 	}
 	
 	
-	// TODO: Ensure this never gets thrown. Should be eliminated by handleValidationException()
-	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<String> handlePSQLException(ConstraintViolationException ex) {
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getConstraintName());
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException ex) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
 	}
 	
 	
+	// Should occur when request body fails @Valid
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-		Map<String, String> errors = new HashMap<>();
-		ex.getBindingResult().getAllErrors().forEach((error) -> {
-			String fieldName = ((FieldError) error).getField();
-			String errorMessage = error.getDefaultMessage();
-			errors.put(fieldName, errorMessage);
-		});
+	public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+//		Map<String, String> errors = new HashMap<>();
+//		ex.getBindingResult().getAllErrors().forEach((error) -> {
+//			String fieldName = ((FieldError) error).getField();
+//			String errorMessage = error.getDefaultMessage();
+//			errors.put(fieldName, errorMessage);
+//		});
 		
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+	
+	
+	@ExceptionHandler(ValidationException.class)
+	public ResponseEntity<String> handleValidationException(ValidationException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 	
 	
@@ -82,6 +86,12 @@ public class MyExceptionHandler {
 	@ExceptionHandler(FriendRequestException.class)
 	public ResponseEntity<String> handleFriendshipRequestException(FriendRequestException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ex.getMessage());
+	}
+	
+	
+	@ExceptionHandler(ServerConfigurationException.class)
+	public ResponseEntity<String> handleServerConfigurationException(ServerConfigurationException ex) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
 	}
 
 }

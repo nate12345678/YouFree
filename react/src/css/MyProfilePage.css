@@ -1,0 +1,34 @@
+
+.my-profile-card {
+	width: 100%;
+	transition: var(--background_transition), var(--color_transition) !important;
+	margin-bottom: 1em;
+}
+
+.my-profile-user {
+	display: flex;
+	flex-direction: row;
+}
+
+.my-profile-pic {
+	width: 8rem;
+	height: 8rem;
+	border-radius: 25%;
+	background-color: var(--grey_light);
+}
+
+.my-profile-info {
+	display: flex;
+	flex-direction: column;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.my-weekly-schedule-card {
+	width: 100%;
+	transition: var(--background_transition), var(--color_transition) !important;
+}
+
+#edit-button {
+	margin-left: auto;
+}

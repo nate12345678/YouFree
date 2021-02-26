@@ -1,0 +1,32 @@
+
+.marker {
+	position: absolute;
+	z-index: 1;
+}
+
+.marker-horizontal {
+	left: 0;
+	height: 0;
+	width: 100%;
+	border-bottom: 1px dashed var(--border-color-bold);
+}
+
+.marker-vertical {
+	top: 0;
+	height: 100%;
+	width: 0;
+	border-left: 1px dashed var(--border-color-bold);
+}
+
+.label {
+	position: absolute;
+	z-index: 1;
+}
+
+.label-horizontal {
+	right: calc(100% + 0.25em);
+}
+
+.label-vertical {
+	bottom: -1.5em;
+}

@@ -1,7 +1,0 @@
-{
-  "/v1": {
-    "target": "http://216.171.4.52:8080/api",
-    "secure": false,
-    "logLevel": "debug"
-  }
-}

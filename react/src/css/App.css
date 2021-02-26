@@ -1,0 +1,8 @@
+
+.app-content {
+	padding-left: var(--content-margin);
+	padding-right: var(--content-margin);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}

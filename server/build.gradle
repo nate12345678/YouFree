@@ -7,18 +7,16 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.2.5.RELEASE'
-		classpath 'com.github.node-gradle:gradle-node-plugin:2.2.2'
+		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.4.2'
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'com.github.node-gradle.node'
 
 group = "team.gif"
-version = "1.0.0-SNAPSHOT"
+version = "1.2.0"
 
 sourceCompatibility = 1.11
 targetCompatibility = 1.11
@@ -31,39 +29,12 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-websocket'
+
 	runtimeOnly group: 'org.postgresql', name: 'postgresql'
+//	runtimeOnly group: 'com.h2database', name: 'h2'
 
-	implementation group: 'org.apache.logging.log4j', name: 'log4j-core',   version: '2.13.0'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-core',   version: '2.14.0'
 
-	implementation group: 'org.springdoc',  name: 'springdoc-openapi-ui',   version: '1.2.32'
-}
-
-wrapper {
-	gradleVersion '6.2.1'
-}
-
-task copyReact(type: Copy) {
-	from 'react/build'
-	into 'build/resources/main/static/.'
-}
-
-task appNpmBuild(type: NpmTask) {
-	description = 'Builds production version of the webapp'
-	args = ['run', 'build']
-}
-
-task appNpmInstall(type: NpmTask) {
-	description = 'Installs all dependencies from package.json'
-	args = ['install']
-}
-
-appNpmBuild.dependsOn appNpmInstall
-copyReact.dependsOn appNpmBuild
-compileJava.dependsOn copyReact
-
-node {
-	version = '13.9.0'
-	npmVersion = '6.13.1'
-	download = false
-	nodeModulesDir = file("${project.projectDir}/react")
+	implementation group: 'org.springdoc',  name: 'springdoc-openapi-ui',   version: '1.5.2'
 }

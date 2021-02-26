@@ -1,0 +1,31 @@
+
+.daily-schedule {
+	display: flex;
+	height: 1.25em;
+	padding-top: 0.125em;
+	padding-bottom: 0.125em;
+	box-sizing: content-box;
+}
+
+.daily-schedule-bar {
+	height: 100%;
+	background-color: var(--primary);
+	transition: var(--button_transition);
+	cursor: pointer;
+}
+
+.daily-schedule-bar:hover {
+	background-color: var(--primary_dark);
+}
+
+.daily-schedule-bar.faded {
+	opacity: 0.24;
+}
+
+.daily-schedule-bar.faded:hover {
+	opacity: 0.36;
+}
+
+.daily-schedule-bar.selected {
+	opacity: 1;
+}
